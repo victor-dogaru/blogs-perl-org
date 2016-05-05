@@ -138,12 +138,10 @@ post '/comments' => sub {
   my $user         = resultset('Users')->find_by_session(session);
 
   my $username   = $user->username;
-  my ($owner_id) = $post->user_id;
 
   $parameters->{id}  = $post->id;
   $parameters->{uid} = $user->id;
   
-#  my ($blog_owner) = resultset('BlogOwner')->search({ user_id => $owner_id });
 #  my $blog         = resultset('Blog')->find({ id => $blog_owner->blog_id });
 
   my %result;
