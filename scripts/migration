@@ -221,8 +221,8 @@ EOS
 
   my @fields_owner = qw( id user_id );
   my $out_owner_sth = $out_dbh->prepare( <<'EOS' );
-INSERT INTO blog_owners(blog_id,user_id)
-          VALUES(?,?)
+INSERT INTO blog_owners(blog_id,user_id,is_admin)
+          VALUES(?,?,?)
 EOS
 
   $in_sth->execute;
@@ -247,7 +247,7 @@ EOS
     $out_sth->execute( @{$out_blog}{@fields} ) unless $dry_run;
 
     $blog_user{$out_blog->{id}} = $out_blog->{user_id};
-    $out_owner_sth->execute( @{$out_blog}{@fields_owner} ) unless $dry_run;
+    $out_owner_sth->execute( @{$out_blog}{@fields_owner}, 1 ) unless $dry_run;
   }
   print "\n";
 }
