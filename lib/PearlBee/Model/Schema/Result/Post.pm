@@ -14,6 +14,7 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
+use HTML::Entities;
 use DateTime;
 use DateTime::Format::MySQL;
 use Date::Period::Human;

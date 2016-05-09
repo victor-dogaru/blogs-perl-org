@@ -24,7 +24,22 @@ You will also need:
 
 * PostgreSQL version 8.4.20 or higher
 * ElasticSearch
-* An SMTP database
+* An SMTP email server
+
+Recommended:
+
+* Memcached
+(Use the config.yml fragment below to configure it)
+
+```
+session: Memcached
+
+engines:
+  ...
+  session:
+    Memcached:
+      memcached_servers: localhost:11211
+```
 
 # Installing / Updating perl modules
 
@@ -86,12 +101,12 @@ Admin
 =====
 
 Once you have started your web server.
-Open your browser and go to the url http:://<YOUR_IP>:5000/admin
+Open your browser and go to the url http://localhost:5000/admin
 Use the default login / password to enter, you should change them before starting using the blog!
 via "My Account -> Profile".
 
 ```
-http://127.0.0.1:5000/admin/
+http://localhost:5000/admin/
 
 user:     $admin_username
 password: $admin_password
