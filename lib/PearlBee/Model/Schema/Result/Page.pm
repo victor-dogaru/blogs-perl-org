@@ -420,6 +420,7 @@ sub as_hashref {
     type         => $self->type,
     status       => $self->status,
     user_id      => $self->user_id,
+    blog         => $self->blog->as_hashref,
   };          
               
   return $page_obj;
@@ -437,6 +438,7 @@ sub as_hashref_sanitized {
 
   delete $href->{id};
   delete $href->{user_id};
+  delete $href->{blog}->{id};
   return $href;
 }
 
