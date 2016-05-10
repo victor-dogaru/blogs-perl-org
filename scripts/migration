@@ -319,7 +319,7 @@ ORDER BY entry_id
 EOS
 
   my @fields =
-    qw(id title slug description content content_more created_date status);
+    qw(id title slug description content content_more created_date status user_id);
   my $out_sth = $out_dbh->prepare( <<'EOS' );
 INSERT INTO post(id,
                  title,
@@ -328,8 +328,9 @@ INSERT INTO post(id,
                  content,
                  content_more,
                  created_date,
-                 status)
-          VALUES(?,?,?,?,?,?,?,?)
+                 status,
+                 user_id)
+          VALUES(?,?,?,?,?,?,?,?,?)
 EOS
 
   $in_sth->execute();

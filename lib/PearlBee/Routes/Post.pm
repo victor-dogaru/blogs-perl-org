@@ -57,6 +57,7 @@ get '/post/:slug' => sub {
     comments      => \@comments,
     tags          => \@post_tags,
   };
+
 };
 
 =head2 /posts/category/:slug
