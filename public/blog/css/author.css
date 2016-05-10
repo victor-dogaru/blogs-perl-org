@@ -1,0 +1,200 @@
+
+
+/*author profile top: description*/
+.author-description {
+	position: relative;
+	margin-top: 0px;
+	width: 100%;
+}
+.author-description .container .row {
+	margin-top: 80px;
+}
+.author-description .description{
+    padding: 50px 0;
+}
+.author-name a{
+    font-size: 18px;
+}
+.author-info .author-name a{
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.author-info button{
+    padding: 10px 15px;
+    letter-spacing: 1px;
+    font-size: 15px;
+    font-weight: bold;
+}
+.author-description .profile-description p {
+    color: #fff;
+    font-size: 18px;
+    padding-bottom: 20px;
+    padding-top: 10px;
+}
+.author-description .rss-part a button{
+    border: 1px solid transparent;
+}
+    /*/author profile top: description*/
+
+/*tabs for author*/
+  .author-page .background-bar{
+      background-color: #dadada;
+      height: 110px;
+      width: 100%;
+  }
+    .author-page .background-bar .tabs{
+        padding-top: 15px;
+        /*background-color: #3F7F5F;*/
+    }
+    .author-page .background-bar .tabs label{
+        line-height: 5;
+    }
+    .entry .info-entry p.uppercase{
+        text-transform: uppercase;
+    }
+
+
+    /*style for tab 1*/
+  #author-tab-content1 ul{
+      list-style-type: none;
+      padding-left: 0;
+  }
+  #author-tab-content1 ul li{
+      font-size: 17px;
+  }
+  #author-tab-content1 ul li span{
+      font-weight: bold;
+  }
+  #author-tab-content1 .info-entry{
+      padding-bottom: 25px;
+  }
+  #author-tab-content1 .info-entry p.uppercase{
+      font-size: 20px;
+      margin-bottom: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+  }
+  #author-tab-content1 .info-blog li a{
+      /*color: #000;*/
+  }
+  #author-tab-content1 .loading-posts .view-more::before{
+      display: none;
+  }
+
+  /*author-tab2*/
+    .text-listing-entries .date{
+        font-size: 18px;
+        color: #8a8a8d;
+        font-family: 'Open Sans';
+    }
+    #author-tab-content2 h2 a{
+        font-family: "Montserrat","Open Sans",sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+    }
+    #author-tab-content2 .entry{
+        clear: both;
+        font-size: 18px;
+        line-height: 27px;
+    }
+    #author-tab-content2 .post_preview{
+        height: 81px;
+    }
+
+    /*author-tab 3*/
+    #author-tab-content2 p.no-posts,
+    #author-tab-content3 p.no-pages {
+        font-size: 36px;
+        font-family: "Montserrat","Open Sans",sans-serif;
+        color: #444;
+        /*padding: 8% 8% 8% 0;*/
+        line-height: 1.1;
+    }
+    .author-messages{
+        padding: 8% 8% 8% 0;
+    }
+		/*#author-tab-content3 p {*/
+				/*line-height: 2.5;*/
+				/*font-size: 18px;*/
+		/*}*/
+		#author-tab-content3 .page-preview-wrapper ul {
+			padding-left: 20px;
+		}
+
+/*/tabs for author*/
+
+    #author-tab-content2 .text-listing-entries::before, .loading-posts .view-more::before{
+        display: none;
+    }
+    #author-tab-content2 .entry .bubble img{
+        display: none;
+    }
+    .author-page .text-listing-entries {
+        padding-bottom: 25px;
+    }
+.author-description .author-info{
+    padding-left: 0px;
+}
+
+/*avatars to user profile*/
+.author-page .description .bubble img.user-image{
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+}
+
+/*pages tab*/
+.author-page .text-listing-pages .page-preview{
+    height: 220px;
+    overflow: hidden;
+}
+.author-pages .text-listing-pages .page{
+    font-size: 28px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.author-pages .text-listing-pages a.read-more{
+    font-size: 16px;
+    float: right;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+.author-pages .text-listing-pages{
+    padding: 0;
+}
+.author-pages .text-listing-pages .page-preview-wrapper{
+    font-size: 16px;
+    padding-top: 10px;
+}
+/*/pages tab*/
+
+
+/*Media queries*/
+@media all and (max-width: 360px) {
+    .author-description .author-info {
+        padding-left: 35%;
+    }
+}
+@media screen and (min-width: 360px) and (max-width:480px){
+    .author-description .author-info {
+        padding-left: 10%;
+    }
+}
+@media screen and (min-width: 480px) and (max-width:620px){
+    .author-description .author-info {
+        padding-left: 20%;
+    }
+}
+@media screen and (min-width: 620px) and (max-width:780px){
+    .author-description .author-info {
+        padding-left: 10%;
+    }
+}
+@media screen and (min-width: 780px) and (max-width:980px){
+    .author-description .author-info {
+        padding-left: 5%;
+    }
+}

@@ -1,0 +1,95 @@
+<div class="cookies">
+  <div class="container">
+    <div class="cookie"><button type="button" class="closeCookie">×</button>This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies.
+    </div>
+  </div>
+</div>
+
+<div class="header">
+    <div class="container header-container">
+      <div class="row">
+            <div class="pull-left">
+                <!-- Logo -->
+				        <img id="header_onion_logo" src="/blog/img/blog-logo2.png">
+                <img id="only-logo" src="/blog/img/only-logo.png">
+            </div>
+            <form id="switch-button" action="/theme" method="post">
+              <div class="switch"> 
+                [% IF session.theme == 'light' %]
+                <input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round-flat" type="checkbox" checked="checked" name="theme">
+
+                [%ELSE %]
+                <input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round-flat" type="checkbox"  name="theme" >  
+                [%END%]  
+
+                <label for="cmn-toggle-4"></label>
+              </div>
+            </form>
+            <div class="pull-right head-icons">
+      				<a href="/search">
+      					<div class="search header-icon bar">
+      						<span class="search-icon icon" aria-hidden="true"></span>
+      					</div>
+      				</a>
+                <div class="btn-group right-icon">
+      					<div class="user header-icon hidden" style="display:inline-block">
+[% IF session.user.username %]
+
+            <div class="user-logged icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="user_name">[% session.user.name %]</span> <!-- change name with actual user session -->
+                     <div class="bubble"> 
+                          [% IF session.user.avatar_path %]
+                            <img class="user-image" src="/avatar/[% session.user.username %]" />
+                          [% ELSE %]
+                            <img class="user-image defaultAvatar" src="/avatar/[% session.user.username %]" />
+                          [% END %]
+                     </div> 
+            </div>
+            <div class="dropdown-menu dropdown-login logged_in">
+              <div class="links-group header-menu-links write-post">
+                <a href="/author/posts/add" class="pull-left">Write a post</a>
+              </div>
+              <div class="links-group header-menu-links">
+                <a href="/profile" class="pull-left">Profile</a>
+              </div>
+              <div class="links-group header-menu-links">
+                <a href="/author/posts" class="pull-left">Publications</a>
+              </div>
+              <div class="links-group log-out">
+                <a href="/logout" class="pull-left">Log Out</a>
+              </div>
+            </div>
+[% ELSE %]
+            <form id="register_head" action="/login?redirect=[% IF session.redirect %][% session.redirect | uri %][% END %]" method="post">
+            <div class="male-user icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="bubble">
+                          [% IF session.user.avatar_path %]
+                            <img class="user-image" src="/avatar/[% session.user.username %]" />
+                          [% ELSE %]
+                            <img class="user-image defaultAvatar" src="/avatar/[% session.user.username %]" />
+                          [% END %]
+              </div>
+            </div>
+            <div class="dropdown-menu dropdown-login">
+              <div class="input-group input-login">
+                <input type="text" class="form-control dropdown_input" placeholder="Email or username" aria-describedby="basic-addon1" name="username">
+                <input type="password" class="form-control dropdown_input" placeholder="Password" aria-describedby="basic-addon1" name="password">
+              </div>
+              <div class="links-group">
+                <a href="/password_recovery" class="login-links pull-right">Forgotten Password?</a>
+                <a href="/register" class="login-links pull-left">Don't have an account? Register</a>
+              </div>
+              <div class="links-group buttons-group">
+                <button type="button" onclick="self.close()" class="light-button btn-xs pull-left">Close</button>
+                <button type="submit" class="dark-button btn-xs pull-right" id="submitRegister">Sign In</button>
+              </div>
+            </div>
+            </form>
+[% END # IF session.user.username %]
+      					</div>
+      				</div>
+            </div>
+              
+        </div>
+      </div>
+</div>
