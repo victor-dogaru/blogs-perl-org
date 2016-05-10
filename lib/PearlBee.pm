@@ -137,6 +137,10 @@ post '/comments' => sub {
   my $post         = resultset('Post')->find({ slug => $post_slug });
   my $user         = resultset('Users')->find_by_session(session);
   my $username     = $user->username;
+
+  $parameters->{id}  = $post->id;
+  $parameters->{uid} = $user->id;
+  
   my %result;
 
   # Notify the author that a new comment was submitted

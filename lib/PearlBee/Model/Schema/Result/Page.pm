@@ -86,6 +86,12 @@ __PACKAGE__->table("page");
   extra: {list => ["published","trash","draft"]}
   is_nullable: 1
 
+=head2 user_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 0
+
 =cut
 
 __PACKAGE__->load_components(qw/InflateColumn::DateTime/);
@@ -120,6 +126,8 @@ __PACKAGE__->add_columns(
     extra => { list => ["published", "trash", "draft"] },
     is_nullable => 1,
   },
+  "user_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
 );
 
 =head1 PRIMARY KEY
@@ -179,6 +187,21 @@ __PACKAGE__->has_many(
   "PearlBee::Model::Schema::Result::PageTag",
   { "foreign.page_id" => "self.id" },
   { cascade_copy => 0, cascade_delete => 0 },
+);
+
+=head2 user
+
+Type: belongs_to
+
+Related object: L<PearlBee::Model::Schema::Result::Users>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "user",
+  "PearlBee::Model::Schema::Result::Users",
+  { id => "user_id" },
+  { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
 
 =head2 categories
@@ -275,23 +298,6 @@ sub trash {
   my ($self, $user) = @_;
 
   $self->update({ status => 'trash' }) if ( $self->is_authorized( $user ) );
-}
-
-=head2 page_id
-
-Check if the user has enough authorization for modifying
-
-=cut
-
-sub user_id {
-  my ($self) = @_;
-
-  my $schema    = $self->result_source->schema;
-  my $blog_page = $schema->resultset('BlogPage')->
-                  find({ page_id => $self->id });
-  my $user      = $schema->resultset('BlogOwener')->
-                  find({ blog_id => $blog_page->id });
-  return $user->id;
 }
 
 =head2 is_authorized
