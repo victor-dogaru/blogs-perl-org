@@ -529,4 +529,21 @@ sub content_more_formatted {
   return $self->massaged_content_more;
 }
 
+=head2 blog
+
+Return the blog associated with this post
+
+=cut
+
+sub blog {
+  my ($self)    = @_;
+  my $schema    = $self->result_source->schema;
+  my $blog_post = $schema->resultset('BlogPost')->
+                    find({ post_id => $self->id });
+  my $blog      = $schema->resultset('Blog')->
+                    find({ id => $blog_post->blog_id });
+
+  return $blog;
+}
+
 1;

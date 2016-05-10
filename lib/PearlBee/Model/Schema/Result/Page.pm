@@ -485,4 +485,21 @@ sub massaged_content_more {
   return $self->_massage_content( $self->content_more );
 }
 
+=head2 blog
+
+Return the blog object for the given page
+
+=cut
+
+sub blog {
+  my ($self)    = @_;
+  my $schema    = $self->result_source->schema;
+  my $blog_post = $schema->resultset('BlogPage')->
+                    find({ page_id => $self->id });
+  my $blog      = $schema->resultset('Blog')->
+                    find({ id => $blog_post->blog_id });
+
+  return $blog;
+}
+
 1;
