@@ -1,26 +1,27 @@
 use utf8;
-package PearlBee::Model::Schema::Result::User;
+package PearlBee::Model::Schema::Result::Users;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
 
 =head1 NAME
 
-PearlBee::Model::Schema::Result::User - User table.
+PearlBee::Model::Schema::Result::Users - Users table.
 
 =cut
 
 use strict;
 use warnings;
 use Dancer2; # Pick up the default avatar
+use PearlBee::Helpers::Util qw( string_to_slug );
 
 use base 'DBIx::Class::Core';
 
-=head1 TABLE: C<user>
+=head1 TABLE: C<users>
 
 =cut
 
-__PACKAGE__->table("user");
+__PACKAGE__->table("users");
 
 =head1 ACCESSORS
 
@@ -249,88 +250,118 @@ __PACKAGE__->has_many(
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
-=head
+
+=head2 is_admin
 
 Check if the user has administration authority
 
 =cut
 
 sub is_admin {
-  my ($self) = shift;
+  my ($self) = @_;
 
   return 1 if ( $self->role eq 'admin' );
-
   return 0;
 }
 
-=head
+=head2 is_author
 
 Check if the user has author authority
 
 =cut
 
 sub is_author {
-  my ($self) = shift;
+  my ($self) = @_;
 
   return 1 if ( $self->role eq 'author' );
-
   return 0;
 }
 
-=head
+=head2 is_active
 
 Check if the user is active
 
 =cut
 
 sub is_active {
-  my ($self) = shift;
+  my ($self) = @_;
 
   return 1 if ( $self->role eq 'active' );
-
   return 0;
 }
 
-=head
+=head2 is_inactive
 
-Check if the user is deactived
+Check if the user is inactive
 
 =cut
 
-sub is_deactive {
-  my ($self) = shift;
+sub is_inactive {
+  my ($self) = @_;
 
   return 1 if ( $self->role eq 'inactive' );
 
   return 0;
 }
 
-=head
+=head2 is_pending
 
-Status changes
+Check if the user is pending
+
+=cut
+
+sub is_pending {
+  my ($self) = @_;
+
+  return 1 if ( $self->status eq 'pending' );
+
+  return 0;
+}
+
+=head2 deactivate
+
+Deactivate a user
 
 =cut
 
 sub deactivate {
-  my $self = shift;
+  my ($self) = @_;
 
   $self->update({ status => 'inactive' });
 }
 
+=head2 activate
+
+Activate a user
+
+=cut
+
 sub activate {
-  my $self = shift;
+  my ($self) = @_;
 
   $self->update({ status => 'active' });
 }
 
+=head2 suspend
+
+Suspend a user
+
+=cut
+
 sub suspend {
-  my $self = shift;
+  my ($self) = @_;
 
   $self->update({ status => 'suspended' });
 }
 
+=head2 allow
+
+Allow a user
+
+=cut
+
 sub allow {
-  my $self = shift;
+  my ($self) = @_;
   
   # set a password for the user
   
@@ -339,35 +370,96 @@ sub allow {
   $self->update({ status => 'inactive' });
 }
 
-sub avatar {
-  my $self = shift;
+=head2 avatar
 
-  return $self->avatar_path
-    if $self->avatar_path and $self->avatar_path ne '';
+Return an avatar based on the path
+
+=cut
+
+sub avatar {
+  my ($self)       = @_;
+  my $id           = $self->id;
+  my $userpic_path = "userpics/userpic-${id}-100x100.png";
+
+  if ( $self->avatar_path and
+       $self->avatar_path ne '' and
+       -e "public/" . $self->avatar_path ) {
+    return $self->avatar_path;
+  }
   return config->{default_avatar};
 }
 
+=head2 as_hashref
+
+Return a non-blessed version of a users database row
+
+=cut
+
 sub as_hashref {
-  my $self = shift;
+  my ($self)   = @_;
   my $user_obj = {
-    is_admin  => $self->is_admin,
-    role      => $self->role,
-    id        => $self->id,
-    username  => $self->username,
-    avatar    => $self->avatar,
-    theme     => $self->theme,
-    biography => $self->biography,
+    id             => $self->id,
+    name           => $self->name,
+    username       => $self->username,
+    slug           => $self->slug,
+    password       => $self->password,
+    register_date  => $self->register_date,
+    email          => $self->email,
+    biography      => $self->biography,
+    theme          => $self->theme,
+    avatar_path    => $self->avatar_path,
+    avatar         => $self->avatar,
+    #company        => $self->company,
+    #telephone      => $self->telephone,
+    role           => $self->role,
+    activation_key => $self->activation_key,
+    status         => $self->status,
+    is_admin       => $self->is_admin,
   };
 
   return $user_obj;
 
 }
 
+=head2 as_hashref_sanitized
+
+Remove ID from the users database row
+
+=cut
+
 sub as_hashref_sanitized {
-  my $self = shift;
-  my $user_href = $self->as_hashref;
-  delete $user_href->{id};
-  return $user_href;
+  my ($self) = @_;
+  my $href   = $self->as_hashref;
+
+  delete $href->{id};
+  delete $href->{password};
+  return $href;
+}
+
+=head2 slug
+
+Get a user's "slug", this shouldn't actually be used.
+
+=cut
+
+sub slug {
+  my ($self) = @_;
+
+  return string_to_slug( $self->username );
+}
+
+=head2 validate
+
+Validate a user's password
+
+=cut
+
+sub validate {
+  my ($self, $password) = @_;
+
+  my $hashed = crypt( $password, $self->password );
+
+  return $self->password eq $hashed;
 }
 
 1;

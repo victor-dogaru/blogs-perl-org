@@ -4,7 +4,7 @@ use Dancer2;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Password;
 
-=head
+=head2 hook 'before'
 
 Check if the user has authorization for this part of the web site
 
@@ -16,7 +16,7 @@ hook 'before' => sub {
   redirect session('app_url') . '/'  if ( !$user );
 };
 
-=head
+=head2 /dashboard route
 
 Dashboard index
 
@@ -24,8 +24,7 @@ Dashboard index
 
 any '/dashboard' => sub {
 
-  my $user = session('user');
-     $user = resultset('User')->find( $user->{id} );
+  my $user = resultset('Users')->find_by_session(session);
 
   if ( $user->status eq 'inactive' ) {
 
@@ -51,13 +50,13 @@ any '/dashboard' => sub {
     }
   }
   else {
-    redirect session('app_url') . '/admin/posts'  if ( $user->is_admin );
-    redirect session('app_url') . '/author/posts';
+    redirect '/admin/posts'  if ( $user->is_admin );
+    redirect '/author/posts';
   }
 
 };
 
-=head
+=head2 /profile route
 
 Edit profile
 
@@ -65,22 +64,20 @@ Edit profile
 
 any '/profile' => sub {
 
-  my $user = session('user');
-  $user    = resultset('User')->find( $user->{id} );
-
+  my $user  = resultset('Users')->find_by_session(session);
   my $name  = params->{name};
   my $email = params->{email};
 
-  my $old_password   = params->{old_password};
-  my $new_password   = params->{new_password};
-  my $new_password2  = params->{new_password2};
+  my $old_password  = params->{old_password};
+  my $new_password  = params->{new_password};
+  my $new_password2 = params->{new_password2};
 
   if ( $name && $email ) {
 
     $user->update({
-        name  => $name,
-        email => $email
-      });
+      name  => $name,
+      email => $email
+    });
 
     template 'admin/profile', { user => $user, success => 'Your data was updated succesfully!' }, { layout => 'admin' };
 

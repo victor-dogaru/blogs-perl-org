@@ -3,26 +3,53 @@ package ResetPassword;
 use strict;
 use warnings;
 
+use Try::Tiny;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 use Dancer2::Plugin::reCAPTCHA;
 
 use PearlBee::Helpers::Util;
+use PearlBee::Helpers::Email;
 
 use PearlBee::Password;
 
 use DateTime;
 
+=head2 /activation
+
+Activate your account
+
+=cut
 
 get '/activation' => sub {
-
-    info "\n\n~~~~~~~~~~~~ activation link ~~~~~~~~~~~~~~~~~~~~~~~~\n\n";
     my $token = params->{'token'};
 
-    my $user_reset_token = resultset('User')->search( {activation_key => $token} )->first();
+    my $user_reset_token =
+         resultset('Users')->find({ activation_key => $token });
+    if ($user_reset_token and
+        $user_reset_token->status eq 'pending' ) 
+    {
+        $user_reset_token->update({ 
+            status         => 'active',
+            activation_key => ''          
+        });
 
-    if ($user_reset_token) {
-        template 'set-password' => {show_input => 1,token      => $token,}, {layout => 'admin'};
+        my $user = $user_reset_token->as_hashref_sanitized;
+
+        session user    => $user;
+        session user_id => $user_reset_token->id;
+        
+        template 'register_done' ;
+    }  
+    elsif ($user_reset_token and
+           $user_reset_token->status eq 'active') {
+        template 'set-password' => {
+            show_input => 1,
+            token      => $token,
+        }, { layout => 'admin' };
+    }
+    elsif ( session('user') ) {
+        redirect '/'
     }
     else {
         session error => 'Your activation token is invalid, please try the forgot password option again.';
@@ -31,48 +58,60 @@ get '/activation' => sub {
     }
 };
 
+=head2 /set-pasword route
+
+Reset user password
+
+=cut
+
 any ['post', 'get'] => '/set-password' => sub {
     my $params = params;
 
-    if ( $params->{'token'} ) {
-
-        my $al = resultset('User')->search( {activation_key => $params->{'token'}} )->first();
-
-        if ( defined($al) ) {
-
-            # post request
-            if ( $params->{'password'} ) {
-
-                # passwords must be typed in twice and they were the same
-                if ( $params->{'password'} eq $params->{'rep_password'} ) {
-                    my $password = crypt( $params->{'password'}, $al->salt );
-                    
-                    if ( $al->update( {password => $password->{hash}, activation_key => ''} ) ) {
-                        my $user_obj->{is_admin} = $al->is_admin;
-                        $user_obj->{role}     = $al->role;
-                        $user_obj->{id}       = $al->id;
-                        $user_obj->{username} = $al->username;
-
-                        session user    => $user_obj;
-                        session user_id => $al->id;
-
-                        session success => 'Your password was sucessfuly changed';
-                        redirect('/dashboard');
-                    }
-                }
-                else {
-                    session error                 => 'Your inputed passwords do not match';
-                    template 'set-password' => {show_input => 1,token      => $params->{'token'},}, {layout => 'admin'};
-                }
-            }
-        }
+    unless ( $params->{token} and $params->{password} ) {
+        template 'set-password' => {
+            show_input => 1,
+            token      => $params->{'token'}
+        }, {layout => 'admin'};
+        return;
     }
-    #get request
-    else {
+
+    my $user =
+        resultset('Users')->search({
+            activation_key => $params->{'token'} })->first();
+    unless ( defined $user ) {
+        error "No activation key found for this user";
+        return;
+    }
+
+    # Password must match the confirmation
+    #
+    unless ( $params->{'password'} eq $params->{'rep_password'} ) {
+        session error           => 'Entered and confirmed passwords do not match';
         template 'set-password' => {show_input => 1,token      => $params->{'token'},}, {layout => 'admin'};
     }
+
+    my $hashed_password =
+        crypt( $params->{'password'}, $user->password );
+    my $updated = $user->update({
+        password       => $hashed_password,
+        activation_key => '',
+        status         => 'active'
+    });
+
+    my $user_hashref = $user->as_hashref_sanitized;
+
+    session user    => $user_hashref;
+    session user_id => $user->id;
+
+    session success => 'Your password was sucessfuly changed';
+    redirect('/');
 };
 
+=head2 /forgot-password route
+
+Forgot password?
+
+=cut
 
 any ['get', 'post'] => '/forgot-password' => sub {
     my $params = params;
@@ -84,32 +123,37 @@ any ['get', 'post'] => '/forgot-password' => sub {
         my $result = recaptcha_verify($secret);
         if ( $result->{success} || $ENV{CAPTCHA_BYPASS} ) {
 
-            my $user = resultset('User')->search( {email => $params->{email}} )->first;
+            my $user = resultset('Users')->search({ email => $params->{email} })->first;
 
             if ($user) {
                 my $date             = DateTime->now();
                 my $activation_token = generate_hash( $params->{email} . $date );
 
-                my $token = $activation_token->{hash};
+                my $token = $activation_token;
 
                 if ($token) {
                     if ( $user->status ne 'suspended' ) {
-                        $user->update( {activation_key => $token} );
-                        Email::Template->send(
-                            config->{email_templates} . 'forgot-password.tt',
-                            {   From    => config->{default_email_sender},
-                                To      => $params->{email},
-                                Subject => 'Reset password link on blog.cluj.pm',
+                        $user->update({ activation_key => $token });
 
-                                tt_vars => {
+                        try {
+                            PearlBee::Helpers::Email::send_email_complete({
+                                template => 'forgot-password.tt',
+                                from     => config->{default_email_sender},
+                                to       => $params->{email},
+                                subject  => 'Reset password link on blog.cluj.pm',
+
+                                template_params => {
                                     name      => $user->name,
                                     app_url   => config->{app_url},
                                     token     => "/activation?token=$token",
                                     blog_name => session('blog_name'),
                                     signature => config->{email_signature}
-                                },
-                            }
-                        ) or error "Could not send the email";
+                                }
+                            });
+                        }
+                        catch {
+                            error "Could not send the email";
+                        };
 
                         session success => 'You have successfully reset you password! Please check your inbox!';
                         template 'forgot-password', {show_input => 0}, {layout => 'admin'};
@@ -142,10 +186,9 @@ any ['get', 'post'] => '/forgot-password' => sub {
     else {
         template 'forgot-password', {
             show_input => 1,
-            recaptcha => recaptcha_display(),
-        }, {layout => 'admin'};
+            recaptcha  => recaptcha_display(),
+        }, { layout => 'admin' };
     }
-
 };
 
 true;

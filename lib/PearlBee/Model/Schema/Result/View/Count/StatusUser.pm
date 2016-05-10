@@ -19,7 +19,7 @@ __PACKAGE__->result_source_instance->view_definition(
         SUM( CASE WHEN status = 'pending'   THEN 1 ELSE 0 END ) AS pending,
       	COUNT(*)                                                AS total
       FROM
-      	user
+      	"user"
     ]
 );
 
@@ -36,11 +36,19 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
 );
 
+=head2 get_all_status_counts
+
+=cut
+
 sub get_all_status_counts {
-  my $self = shift;
+  my ($self) = @_;
 
   return ( $self->total, $self->active, $self->inactive, $self->suspended, $self->pending );
 }
+
+=head2 get_status_count
+
+=cut
 
 sub get_status_count {
   my ($self, $status) = @_;

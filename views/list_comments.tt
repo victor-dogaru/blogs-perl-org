@@ -1,21 +1,30 @@
-<div class="comments" id="comments">
-
+ <div class="comments" id="comments">
+    <div id="display_msg_commments" class="col-xs-12">
+        <div class="col-xs-2">
+        </div>
+        <h4 class="display_msg hidden col-xs-10">Your comment will be displayed after the post owner's approval</h4>
+    </div>
     <ul class="comment-list">
-
         <li class="comment clearfix hidden " id="comment_[% comment.id %]">
                 <div class="col-xs-2">
                 </div>
                 <div class="col-xs-10 content-comment">
                     <div class="bubble">
-			<img class="user-image" src="[% comment.uid.avatar %]">
+                              [% IF comment.uid.avatar_path %]
+                                <img class="user-image" src="/avatar/[% comment.uid.username %]" />
+                              [% ELSE %]
+                                <img class="user-image defaultAvatar" src="/avatar/" />
+                              [% END %]
+                        
                     </div>
                 [% IF comment.fullname %]
+
                     <div class="comment-author">
-                        <b><a href="/posts/user/[% comment.uid.username %]">[% comment.fullname %]</a></b>
+                        <a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]<b></b></a>
                     </div>
                 [% ELSE %]
                     <div class="comment-author comment-author-registered">
-                         <b><a href="/posts/user/[% comment.uid.username %]">[% comment.uid.username %]</a></b>
+                         <a href="/profile/author/[% comment.uid.username | uri %]">[% comment.uid.name %]<b></b></a>
                     </div>
                 [% END %]
                 
@@ -37,20 +46,24 @@
                 </div>
                 <div class="col-xs-10 content-comment">
                     <div class="bubble">
-			            <img class="user-image" src="[% comment.uid.avatar %]">
+                              [% IF comment.uid.avatar_path %]
+                                <img class="user-image" src="/avatar/[% comment.uid.username %]" />
+                              [% ELSE %]
+                                <img class="user-image defaultAvatar" src="/avatar/" />
+                              [% END %]
                     </div>
                 [% IF comment.fullname %]
                     <div class="comment-author">
-                        <b><a href="/posts/user/[% comment.uid.username %]">[% comment.fullname %]</a></b>
+                        <b><a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]</a></b>
                     </div>
                 [% ELSE %]
                     <div class="comment-author comment-author-registered">
-                        <i class="icon-user"></i> <a href="/posts/user/[% comment.uid.username %]" >[% comment.uid.username %]</a>
+                        <i class="icon-user"></i> <a href="/profile/author/[% comment.uid.username | uri %]" >[% comment.uid.username %]</a>
                     </div>
                 [% END %]
                 
                 <div class="cmeta">
-		     <span class="hours">[% comment.comment_date_human %]</span>
+             <span class="hours">[% comment.comment_date_human %]</span>
                 </div>
                 <p>
                     [% comment.content %]
@@ -62,4 +75,4 @@
             </li>
         [% END %]
     </ul>
-</div>
+</div> 

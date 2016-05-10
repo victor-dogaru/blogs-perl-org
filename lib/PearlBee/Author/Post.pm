@@ -18,7 +18,7 @@ use DateTime;
 
 get '/author/posts' => sub { redirect '/author/posts/page/1'; };
 
-=head
+=head2 /author/posts/page/:page
 
 list all posts method
 
@@ -29,8 +29,9 @@ get '/author/posts/page/:page' => sub {
   my $nr_of_rows  = 5; # Number of posts per page
   my $page        = params->{page};
   my $user        = session('user');
-  my @posts       = resultset('Post')->search({ user_id => $user->{id} }, { order_by => \'created_date DESC', rows => $nr_of_rows, page => $page });
-  my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user->{id} ] })->first;
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @posts       = resultset('Post')->search({ user_id => $user_obj->id }, { order_by => \'created_date DESC', rows => $nr_of_rows, page => $page });
+  my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
 
   my ($all, $publish, $draft, $trash) = $count->get_all_status_counts;
 
@@ -45,7 +46,7 @@ get '/author/posts/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
 
-  template '/admin/posts/list',
+  template 'admin/posts/list',
     {
       posts         => \@posts,
       trash         => $trash,
@@ -61,7 +62,7 @@ get '/author/posts/page/:page' => sub {
     { layout => 'admin' };
 };
 
-=head
+=head2 /author/posts/:status/page/:page route
 
 list all posts grouped by status
 
@@ -73,8 +74,9 @@ get '/author/posts/:status/page/:page' => sub {
   my $page        = params->{page};
   my $status      = params->{status};
   my $user        = session('user');
-  my @posts       = resultset('Post')->search({ user_id => $user->{id}, status => $status }, { order_by => \'created_date DESC' });
-  my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user->{id} ] })->first;
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @posts       = resultset('Post')->search({ user_id => $user_obj->id, status => $status }, { order_by => \'created_date DESC' });
+  my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
 
   my ($all, $publish, $draft, $trash) = $count->get_all_status_counts;
   my $status_count                    = $count->get_status_count($status);
@@ -90,7 +92,7 @@ get '/author/posts/:status/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
 
-  template '/admin/posts/list',
+  template 'admin/posts/list',
     {
       posts         => \@posts,
       trash         => $trash,
@@ -106,7 +108,7 @@ get '/author/posts/:status/page/:page' => sub {
     { layout => 'admin' };
 };
 
-=head
+=head2 /author/posts/publish/:id
 
 publish method
 
@@ -118,12 +120,18 @@ get '/author/posts/publish/:id' => sub {
   my $post    = resultset('Post')->find($post_id);
   my $user    = session('user');
 
-  eval { $post->publish($user); };
+  try {
+    $post->publish($user);
+  }
+  catch {
+    info $_;
+    error "Could not publish post for $user->{username}";
+  };
 
   redirect '/author/posts';
 };
 
-=head
+=head2 /author/posts/draft/:id
 
 draft method
 
@@ -135,12 +143,18 @@ get '/author/posts/draft/:id' => sub {
   my $post    = resultset('Post')->find($post_id);
   my $user    = session('user');
 
-  eval { $post->draft($user); };
+  try {
+    $post->draft($user);
+  }
+  catch {
+    info $_;
+    error "Could not file draft post for $user->{username}";
+  };
 
   redirect '/author/posts';
 };
 
-=head
+=head2 /author/posts/trash/:id
 
 trash method
 
@@ -157,7 +171,7 @@ get '/author/posts/trash/:id' => sub {
   redirect '/author/posts';
 };
 
-=head
+=head2 /author/posts/add
 
 add method
 
@@ -166,38 +180,47 @@ add method
 post '/author/posts/add' => sub {
 
   my $user             = session('user');
+  my $user_obj         = resultset('Users')->find_by_session(session);
   my @categories       = resultset('Category')->all();
   my ($slug, $changed) = resultset('Post')->check_slug( params->{slug} );
   my $post;
   my $cover_filename;
 
   session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
+
+  # Upload the cover image first so we'll have the generated filename
+  # if it exists
+  if ( upload('cover') ) {
+    my $cover        = upload('cover');
+    $cover_filename  = generate_crypted_filename();
+    my ($ext)        = $cover->filename =~ /(\.[^.]+)$/;
+    $ext             = lc($ext);
+    $cover_filename .= $ext;
+
+    $cover->copy_to( config->{covers_folder} . $cover_filename );
+  }
+
+  # Next we can store the post into the database safely
+  my $params = {
+    title   => params->{title},
+    slug    => $slug,
+    content => params->{post},
+    user_id => $user_obj->id,
+    status  => params->{status},
+    cover   => ( $cover_filename ) ? $cover_filename : '',
+    type    => params->{type} || 'HTML',
+  };
+  my $count = () = $params->{content} =~ m{ <p> }gx;
+  if ( $count == 1 ) {
+    $params->{content} =~ s{ ^ <p> (.+) </p>\r $ }{$1}msx;
+  }
+
   try {
-    # Upload the cover image first so we'll have the generated filename
-    # if it exists
-    if ( upload('cover') ) {
-      my $cover        = upload('cover');
-      $cover_filename  = generate_crypted_filename();
-      my ($ext)        = $cover->filename =~ /(\.[^.]+)$/;  #extract the extension
-      $ext             = lc($ext);
-      $cover_filename .= $ext;
-
-      $cover->copy_to( config->{covers_folder} . $cover_filename );
-    }
-
-    # Next we can store the post into the database safely
-    my $params = {
-      title   => params->{title},
-      slug    => $slug,
-      content => params->{post},
-      user_id => $user->{id},
-      status  => params->{status},
-      cover   => ( $cover_filename ) ? $cover_filename : '',
-    };
     $post = resultset('Post')->can_create($params);
 
     # Insert the categories selected with the new post
-    resultset('PostCategory')->connect_categories( params->{categories}, $post->id, $user->{id} );
+    resultset('PostCategory')->
+      connect_categories( params->{categories}, $post->id, $user_obj->id );
 
     # Connect and update the tags table
     resultset('PostTag')->connect_tags( params->{tags}, $post->id );
@@ -207,27 +230,33 @@ post '/author/posts/add' => sub {
   };
 
   # If the post was added successfully, store a success message to show on the view
-  session success => 'The post was added successfully' if ( !$@ && $post );
+  session success => "The <a href='/post/$slug'>post</a> was added successfully" if ( !$@ && $post );
 
   # If the user created a new post redirect him to the post created
   if ( $post ) {
     redirect '/author/posts/edit/' . $post->slug;
   }
   else {
-    template '/admin/posts/add', { categories => \@categories }, { layout => 'admin' };
+    template 'admin/posts/add', { categories => \@categories }, { layout => 'admin' };
   }
 };
+
+=head2 /author/posts/add
+
+Display page for add method
+
+=cut
 
 get '/author/posts/add' => sub {
 
   my @categories = resultset('Category')->all();
 
-  template '/admin/posts/add',
+  template 'admin/posts/add',
            { categories => \@categories },
            { layout => 'admin' };
 };
 
-=head
+=head2 /author/posts/edit/:slug
 
 edit method
 
@@ -235,14 +264,16 @@ edit method
 
 get '/author/posts/edit/:slug' => sub {
 
-  my $post_slug       = params->{slug};
+  my $post_slug       = route_parameters->{'slug'};
   my $post            = resultset('Post')->find({ slug => $post_slug });
   my @post_categories = $post->post_categories;
   my @post_tags       = $post->post_tags;
   my @all_categories  = resultset('Category')->all;
   
   # Check if the author has enough permissions for editing this post
-  my $user = session('user');
+  my $user     = session('user');
+  my $user_obj = resultset('Users')->find_by_session(session);
+  $user->{id}  = $user_obj->id;
   redirect '/author/posts' if ( !$post->is_authorized( $user ) );
   
   # Prepare tags for the UI
@@ -258,32 +289,34 @@ get '/author/posts/edit/:slug' => sub {
 
   # Array of post categories id for populating the checkboxes
   my @categories_ids;
- # push( @categories_ids, $_->id ) foreach (@categories);
+  # push( @categories_ids, $_->id ) foreach (@categories);
 
   my $params = {
-      post           => $post,
-      tags           => $joined_tags,
-      categories     => $joined_categories,
-      all_categories => \@all_categories,
-      ids            => \@categories_ids
-    };
+    post           => $post,
+    tags           => $joined_tags,
+    categories     => $joined_categories,
+    all_categories => \@all_categories,
+    ids            => \@categories_ids
+  };
 
   # Check if there are any messages to show
   # Delete them after stored on the stash
   if ( session('warning') ) {
     $params->{warning} = session('warning');
-    session warning => undef
+    #session warning => undef
+    delete session->{'warning'};    
   }
   elsif ( session('success') ) {
     $params->{success} = session('success');
-    session success => undef;
+    #session success => undef;
+    delete session->{'success'};    
   }
 
-  template '/admin/posts/edit', $params, { layout => 'admin' };
+  template 'admin/posts/edit', $params, { layout => 'admin' };
 
 };
 
-=head
+=head2 /author/posts/update/:id
 
 update method
 
@@ -330,7 +363,7 @@ post '/author/posts/update/:id' => sub {
       );
 
       # Reconnect the categories with the new one and delete the old ones
-        resultset('PostCategory')->connect_categories( params->{category}, $post->id, $user->{id} );
+        resultset('PostCategory')->connect_categories( params->{categories}, $post->id, $user->{id} );
 
         # Reconnect and update the selected tags
         resultset('PostTag')->connect_tags( params->{tags}, $post->id );
@@ -339,7 +372,8 @@ post '/author/posts/update/:id' => sub {
 
   error $@ if ($@);
 
-  session success => 'The post was updated successfully!';
+  session success => "The <a href='/post/$slug'>post</a> was updated successfully!";
+
 
   redirect '/author/posts/edit/' . $post->slug;
 

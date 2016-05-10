@@ -16,7 +16,7 @@
 		                  
 		        	[% INCLUDE components/alerts.tt %]
 
-					<form method="post" action="[% config.app_url %]/admin/categories/edit/[% category.id %]">
+					<form method="post" action="/admin/categories/edit/[% category.id %]">
 
 			        	<div class="form-group">
 	                      <label class="col-lg-2 control-label">Name</label>
@@ -60,7 +60,7 @@
 		                  
 		        	[% INCLUDE components/alerts.tt %]
 
-					<form method="post" action="[% config.app_url %]/admin/categories/add">
+					<form method="post" action="/admin/categories/add">
 
 			        	<div class="form-group">
 	                      <label class="col-lg-2 control-label">Name</label>
@@ -119,7 +119,7 @@
 							<tr>
 								<td> [% category.name %] 		  </td>	
 								<td> [% category.slug %] 		  </td>	
-								<td> [% category.user.username %] </td>						
+								<td> [% category.user.name %] </td>						
 								<td style="width: 5%"> 
 									<a href="/admin/categories/edit/[% category.id %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
 									<a href="/admin/categories/delete/[% category.id %]"> <button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button> </a>

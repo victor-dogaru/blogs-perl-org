@@ -107,13 +107,13 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<PearlBee::Model::Schema::Result::User>
+Related object: L<PearlBee::Model::Schema::Result::Users>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "user",
-  "PearlBee::Model::Schema::Result::User",
+  "PearlBee::Model::Schema::Result::Users",
   { id => "user_id" },
   { is_deferrable => 1, on_delete => "RESTRICT", on_update => "RESTRICT" },
 );
@@ -135,14 +135,14 @@ __PACKAGE__->many_to_many("posts", "post_categories", "post");
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
-=head
+=head2 safe_cascade_delete
 
 Safely cascade delete a category
 
 =cut
 
 sub safe_cascade_delete {
-  my $self = shift;
+  my ($self) = @_;
 
   my $schema = $self->result_source->schema;
   
@@ -152,9 +152,9 @@ sub safe_cascade_delete {
 
       if ( scalar ( @post_categories ) == 1 ) {
         $schema->resultset('PostCategory')->create({
-            post_id => $post->id,
+            post_id     => $post->id,
             category_id => '1'
-          });
+        });
       }
 
       $_->delete();
@@ -163,8 +163,14 @@ sub safe_cascade_delete {
     $self->delete();
 }
 
+=head2 as_hashref
+
+Return a non-blessed version of a category database row
+
+=cut
+
 sub as_hashref {
-  my $self = shift;
+  my ($self)        = @_;
   my $category_href = {
     id      => $self->id,
     name    => $self->name,
@@ -175,11 +181,18 @@ sub as_hashref {
   return $category_href;
 }             
 
+=head2 as_hashref_sanitized
+
+Remove ID from the category database row
+
+=cut
+
 sub as_hashref_sanitized {
-  my $self = shift;
-  my $category_href = $self->as_hashref;
-  delete $category_href->{id};
-  return $category_href;
+  my ($self) = @_;
+  my $href   = $self->as_hashref;
+
+  delete $href->{id};
+  return $href;
 }
 
 1;

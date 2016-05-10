@@ -1,3 +1,10 @@
+<div class="cookies">
+  <div class="container">
+    <div class="cookie"><button type="button" class="closeCookie">×</button>This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies.
+    </div>
+  </div>
+</div>
+
 <div class="header">
     <div class="container header-container">
       <div class="row">
@@ -6,9 +13,15 @@
 				        <img id="header_onion_logo" src="/blog/img/blog-logo2.png">
                 <img id="only-logo" src="/blog/img/only-logo.png">
             </div>
-            <form id="switch-button" action="/theme/update" method="post">
-              <div class="switch">
-                <input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round-flat" type="checkbox" name="theme">
+            <form id="switch-button" action="/theme" method="post">
+              <div class="switch"> 
+                [% IF session.theme == 'light' %]
+                <input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round-flat" type="checkbox" checked="checked" name="theme">
+
+                [%ELSE %]
+                <input id="cmn-toggle-4" class="cmn-toggle cmn-toggle-round-flat" type="checkbox"  name="theme" >  
+                [%END%]  
+
                 <label for="cmn-toggle-4"></label>
               </div>
             </form>
@@ -20,11 +33,17 @@
       				</a>
                 <div class="btn-group right-icon">
       					<div class="user header-icon hidden" style="display:inline-block">
-[% IF session.user.id %]
-            <div class="user-logged icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="user_name">[% session.user.username %]</span> <!-- change name with actual user session -->
-	        <img class="user-image" src="[% session.user.avatar %]">
+[% IF session.user.username %]
 
+            <div class="user-logged icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="user_name">[% session.user.name %]</span> <!-- change name with actual user session -->
+                     <div class="bubble"> 
+                          [% IF session.user.avatar_path %]
+                            <img class="user-image" src="/avatar/[% session.user.username %]" />
+                          [% ELSE %]
+                            <img class="user-image defaultAvatar" src="/avatar/[% session.user.username %]" />
+                          [% END %]
+                     </div> 
             </div>
             <div class="dropdown-menu dropdown-login logged_in">
               <div class="links-group header-menu-links write-post">
@@ -34,16 +53,23 @@
                 <a href="/profile" class="pull-left">Profile</a>
               </div>
               <div class="links-group header-menu-links">
-                <a href="#" class="pull-left">Publications</a>
+                <a href="/author/posts" class="pull-left">Publications</a>
               </div>
               <div class="links-group log-out">
                 <a href="/logout" class="pull-left">Log Out</a>
               </div>
             </div>
 [% ELSE %]
-            <form id="register_head" action="/login" method="post">
-  <!--                <span class="male-user icon icon-toggle"></span>-->
-            <div class="male-user icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></div>
+            <form id="register_head" action="/login?redirect=[% IF session.redirect %][% session.redirect | uri %][% END %]" method="post">
+            <div class="male-user icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <div class="bubble">
+                          [% IF session.user.avatar_path %]
+                            <img class="user-image" src="/avatar/[% session.user.username %]" />
+                          [% ELSE %]
+                            <img class="user-image defaultAvatar" src="/avatar/[% session.user.username %]" />
+                          [% END %]
+              </div>
+            </div>
             <div class="dropdown-menu dropdown-login">
               <div class="input-group input-login">
                 <input type="text" class="form-control dropdown_input" placeholder="Email or username" aria-describedby="basic-addon1" name="username">
@@ -54,12 +80,12 @@
                 <a href="/register" class="login-links pull-left">Don't have an account? Register</a>
               </div>
               <div class="links-group buttons-group">
-                <button type="submit" class="light-button btn-xs pull-left" id="submitRegister">Close</button>
+                <button type="button" onclick="self.close()" class="light-button btn-xs pull-left">Close</button>
                 <button type="submit" class="dark-button btn-xs pull-right" id="submitRegister">Sign In</button>
               </div>
             </div>
             </form>
-[% END # IF session.user.id %]
+[% END # IF session.user.username %]
       					</div>
       				</div>
             </div>

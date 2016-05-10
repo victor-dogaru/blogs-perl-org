@@ -1,4 +1,4 @@
-=head
+=head1
 
 Author: Andrei Cacio
 Email: andrei.cacio@evozon.com
@@ -19,7 +19,7 @@ use POSIX qw(tzset);
 use XML::Simple qw(:strict);
 
 
-=head
+=head2 /admin/settings route
 
 Index of settings page
 
@@ -32,23 +32,27 @@ get '/admin/settings' => sub {
 
 	template 'admin/settings/index.tt', 
 		{ 
-			setting  => $settings,
+			setting   => $settings,
 			timezones => \@timezones
 		}, 
 		{ layout => 'admin' };
 };
 
+=head2 /admin/settings/save
+
+=cut
+
 post '/admin/settings/save' => sub {
 	
 	my $settings;
 	my @timezones 	 = DateTime::TimeZone->all_names;
-	my $path 		 = params->{path};
+	my $path 	     = params->{path};
 	my $social_media = (params->{social_media} ? 1 : 0); # If the social media checkbox isn't checked the value will be undef
 	my $timezone  	 = params->{timezone};
 	my $multiuser    = (params->{multiuser} ? 1 : 0); # If the multiuser checkbox isn't checked the value will be undef
 	my $blog_name 	 = params->{blog_name};
 
-	eval {
+	try {
 		$settings = resultset('Setting')->first;
 
 		$settings->update({
@@ -58,9 +62,10 @@ post '/admin/settings/save' => sub {
 			multiuser    => ($multiuser ? '1' : '0'),
 			blog_name    => $blog_name
 		});
+	}
+	catch {
+		error $_;
 	};
-
-	error $@ if ( $@ );
 
 	template 'admin/settings/index.tt', 
 		{ 
@@ -71,13 +76,23 @@ post '/admin/settings/save' => sub {
 		{ layout => 'admin' };
 };
 
+=head2 /admin/settings/import route
+
+=cut
+
 get '/admin/settings/import' => sub {
+
     template 'admin/settings/import.tt', 
 		{}, 
 		{ layout => 'admin' };    
 };
 
+=head2 /admin/settings/wp_import route
+
+=cut
+
 post '/admin/settings/wp_import' => sub {
+
     if ( upload('source') ) {
         my $import          = upload('source');
         my $import_filename = generate_crypted_filename();
@@ -117,7 +132,7 @@ post '/admin/settings/wp_import' => sub {
             { layout => 'admin' };            
     }
     
-    return	template 'admin/settings/import.tt', 
+    return template 'admin/settings/import.tt', 
         { 
             error   => 'No file chosen for import'
         }, 

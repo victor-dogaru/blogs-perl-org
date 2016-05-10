@@ -100,7 +100,7 @@ __PACKAGE__->table("comment");
 
 =cut
 
-__PACKAGE__->load_components(qw/InflateColumn::DateTime/);
+__PACKAGE__->load_components('TimeStamp');
 __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
@@ -117,6 +117,7 @@ __PACKAGE__->add_columns(
   "comment_date",
   {
     data_type => 'datetime',
+    set_on_create => 1,
     datetime_undef_if_invalid => 1,
     default_value => \"current_timestamp",
     is_nullable => 0,
@@ -171,13 +172,13 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<PearlBee::Model::Schema::Result::User>
+Related object: L<PearlBee::Model::Schema::Result::Users>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "uid",
-  "PearlBee::Model::Schema::Result::User",
+  "PearlBee::Model::Schema::Result::Users",
   { id => "uid" },
   {
     is_deferrable => 1,
@@ -194,31 +195,55 @@ __PACKAGE__->belongs_to(
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
+=head2 approve
+
+Approve a comment
+
+=cut
+
 sub approve {
   my ($self, $user) = @_;
 
-  $self->update({ status => 'approved '}) if ( $self->is_authorized( $user ) );
+  $self->update({ status => 'approved' }) if ( $self->is_authorized( $user ) );
 }
+
+=head2 trash
+
+Trash a comment
+
+=cut
 
 sub trash {
   my ($self, $user) = @_;
 
-  $self->update({ status => 'trash '}) if ( $self->is_authorized( $user ) );
+  $self->update({ status => 'trash' }) if ( $self->is_authorized( $user ) );
 }
+
+=head2 spam
+
+Mark a comment as spam
+
+=cut
 
 sub spam {
   my ($self, $user) = @_;
 
-  $self->update({ status => 'spam '}) if ( $self->is_authorized( $user ) );
+  $self->update({ status => 'spam' }) if ( $self->is_authorized( $user ) );
 }
+
+=head2 pending
+
+Mark a comment as pending
+
+=cut
 
 sub pending {
   my ($self, $user) = @_;
 
-  $self->update({ status => 'pending '}) if ( $self->is_authorized( $user ) );
+  $self->update({ status => 'pending' }) if ( $self->is_authorized( $user ) );
 }
 
-=haed
+=head2 is_authorized
 
 Check if the user has enough authorization for modifying
 
@@ -228,13 +253,19 @@ sub is_authorized {
   my ($self, $user) = @_;
 
   my $schema     = $self->result_source->schema;
-  $user          = $schema->resultset('User')->find( $user->{id} );
+  $user          = $schema->resultset('Users')->find( $user->{id} );
   my $authorized = 0;
   $authorized    = 1 if ( $user->is_admin );
   $authorized    = 1 if ( !$user->is_admin && $self->post->user_id == $user->id );
 
   return $authorized;
 }
+
+=head2 comment_date_human
+
+Return a human-readable duration
+
+=cut
 
 sub comment_date_human {
 
@@ -249,6 +280,12 @@ sub comment_date_human {
                 return $self->comment_date->strftime('%b %d, %Y %l:%m%p');
         }
 }
+
+=head2 as_hashref
+
+Return a non-blessed version of a comment database row
+
+=cut
 
 sub as_hashref {
   my $self = shift;
@@ -272,10 +309,17 @@ sub as_hashref {
               
 }             
 
+=head2 as_hashref_sanitized
+
+Remove ID from the comment database row
+
+=cut
+
 sub as_hashref_sanitized {
-  my $self = shift;
-  my $user_href = $self->as_hashref;
-  delete $user_href->{id};
-  return $user_href;
+  my ($self) = @_;
+  my $href   = $self->as_hashref;
+
+  delete $href->{id};
+  return $href;
 }
 1;

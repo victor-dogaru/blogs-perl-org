@@ -2,75 +2,60 @@
 
 use strict;
 use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
-use Encode;
+use PearlBee::Helpers::Util qw( string_to_slug );
+
+use Encode qw( decode_utf8 );
 
 use DBI;
-use String::Dirify qw( dirify );
 use Try::Tiny;
 use Getopt::Long;
 
-my ( $in_driver, $out_driver ) = ( 'mysql', 'Pg' );
+my ( $in_driver,   $out_driver   ) = ( 'mysql', 'Pg' );
 my ( $in_database, $out_database ) = ( 'mt_blogs_perl_org', 'blogs_perl_org' );
-my ( $in_user, $out_user ) = ( 'root', 'jgoff' );
+my ( $in_user,     $out_user     ) = ( 'root', 'jgoff' );
 my ( $in_password, $out_password ) = ( '', '' );
+my ( $dry_run                    ) = ( 0 );
+
 GetOptions(
-  'in-driver=s' => \$in_driver,
+  'in-driver=s'  => \$in_driver,
   'out-driver=s' => \$out_driver,
-  'in-db=s' => \$in_database,
-  'out-db=s' => \$out_database,
-  'in-user=s' => \$in_user,
-  'out-user=s' => \$out_user,
+  'in-db=s'      => \$in_database,
+  'out-db=s'     => \$out_database,
+  'in-user=s'    => \$in_user,
+  'out-user=s'   => \$out_user,
+  'dry-run'      => \$dry_run,
 );
 
-my $in_dsn = "dbi:$in_driver:database=$in_database";
+my $in_dsn  = "dbi:$in_driver:database=$in_database";
 my $out_dsn = "dbi:$out_driver:database=$out_database";
 
-my $in_dbh = DBI->connect( $in_dsn, $in_user, $in_password );
+my $in_dbh  = DBI->connect( $in_dsn, $in_user, $in_password );
 my $out_dbh = DBI->connect( $out_dsn, $out_user, $out_password );
+
+=head1 USAGE
+
+  migration [options]
+
+  Options:
+
+    --in-driver  # Choose a database driver for the import database
+    --out-driver # The same for the resulting database
+    --in-db      # Choose the database to import from
+    --out-db     # The database to export to
+    --in-user    # Choose the user to import from
+    --out-user   # The user to export to
+
+    --dry-run    # Read the database, but don't write to the export database.
+
+=cut
 
 $|++;
 
-my $AVATAR_PATH = '/avatars';
+my $AVATAR_PATH   = '/avatars';
 my $PER_USER_PATH = '/users';
-
-my %queries = (
-  insert_user => { mySQL => <<'EOS', Pg => <<'EOS' },
-INSERT INTO `user`(id,
-                   name,
-                   username,
-                   password,
-                   status,
-                   preferred_language,
-                   register_date,
-                   email,
-                   role,
-                   biography)
-            VALUES(?,?,?,?,?,?,?,?,?,?)
-EOS
-INSERT INTO "user"(id,
-                   name,
-                   username,
-                   password,
-                   status,
-                   preferred_language,
-                   register_date,
-                   email,
-                   role,
-                   biography)
-            VALUES(?,?,?,?,?,?,?,?,?,?)
-EOS
-  update_user => { mySQL => <<'EOS', Pg => <<'EOS' },
-UPDATE `user` SET avatar_path = ? WHERE id = ?
-EOS
-UPDATE "user" SET avatar_path = ? WHERE id = ?
-EOS
-  select_id => { mySQL => <<'EOS', Pg => <<'EOS' },
-SELECT id FROM `user` WHERE name = ?
-EOS
-SELECT id FROM "user" WHERE name = ?
-EOS
-);
 
 sub munge_asset_file_path {
   my $in_asset = shift;
@@ -81,56 +66,30 @@ sub munge_asset_file_path {
 
 ###############################################################################
 
-sub map_user {
-  my $user = shift;
-  return {
+sub map_user {          
+  my $user = shift;         
+  return {              
     id                 => $user->{author_id},
     name               => decode_utf8($user->{author_nickname}),
-    username           => $user->{author_name},
+    username           => $user->{author_basename},
     password           => $user->{author_password},
     preferred_language => $user->{author_preferred_language},
     register_date      => $user->{author_created_on},
     email              => decode_utf8($user->{author_email}),
-#    company   => # XXX not present in MT data
-#    telephone => # XXX not present in MT data
     role               => $user->{author_is_superuser} ? 'admin' : 'author',
-#    activation_key => undef, # XXX not present in MT data
     status             => $user->{author_status} == 1 ? 'active' : 'inactive',
     biography          => decode_utf8($user->{author_meta_vclob}),
   };
-}
-
-#$mt_author = {
-#          'author_can_view_log' => undef,
-#          'author_entry_prefs' => 'tag_delim=',
-#          'author_modified_by' => '8',
-#          'author_can_create_blog' => undef,
-#          'author_id' => '1',
-#          'author_auth_type' => 'MT',
-#          'author_status' => '1',
-#          'author_userpic_asset_id' => '0',
-#          'author_remote_auth_username' => undef,
-#          'author_basename' => 'mtadmin',
-#          'author_hint' => undef,
-#          'author_text_format' => '0',
-#          'author_created_by' => undef,
-#          'author_is_superuser' => undef,
-#          'author_type' => '1',
-#          'author_api_password' => '0dogx6wf',
-#          'author_modified_on' => '2009-11-18 16:43:57',
-#          'author_public_key' => undef,
-#          'author_external_id' => '',
-#          'author_url' => '',
-#          'author_nickname' => 'mtadmin',
-#          'author_remote_auth_token' => undef,
-#          'author_preferred_language' => 'en-us'
-#        };
+}              
+    
+my %users;
 
 sub migrate_users {
+  print "migrating users: ";
   my $in_sth = $in_dbh->prepare( <<'EOS' );
    SELECT a.author_id,
           a.author_nickname,
-          a.author_name,
+          a.author_basename,
           a.author_password,
           a.author_preferred_language,
           a.author_created_on,
@@ -141,34 +100,53 @@ sub migrate_users {
      FROM mt_author a
 LEFT JOIN mt_author_meta am
        ON a.author_id = am.author_meta_author_id
+    WHERE am.author_meta_type = 'field.about_blurb'
  GROUP BY a.author_id
  ORDER BY a.author_id
 EOS
 
-  my $out_sth = $out_dbh->prepare( $queries{insert_user}{$out_driver} );
+  my @fields = qw( id name username password status preferred_language register_date email role biography );
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO users(id,
+                  name,
+                  username,
+                  password,
+                  status,
+                  preferred_language,
+                  register_date,
+                  email,
+                  role,
+                  biography)
+           VALUES(?,?,?,?,?,?,?,?,?,?)
+EOS
 
   $in_sth->execute();
 
   my $count = 0;
   while ( my $in_user = $in_sth->fetchrow_hashref  ) {
     print '.' if $count++ % 100 == 0;
-#use Data::Dumper; print Dumper($in_user);
-#last;
+
     my $out_user = map_user($in_user);
-try {
-    $out_sth->execute(
-        @{$out_user}{qw( id name username password status preferred_language register_date email role biography )}
-    );
-}
-catch {
-  die "Failed to insert user '$in_user->{name}: $_ $!\n";
-};
+    if ( !$out_user->{username} and $out_user->{name} ) {
+      warn "### OpenID user ID $out_user->{id} found, defaulting username\n";
+      $out_user->{username} = $out_user->{name};
+    }
+
+    try {
+      $out_sth->execute( @{$out_user}{@fields} ) unless $dry_run;
+      $users{$out_user->{id}} = 1;
+    }
+    catch {
+      die "Failed to insert user '$in_user->{name}: $_ $!\n";
+    };
   }
+  print "\n";
 }
 
 ###############################################################################
 
 sub create_avatars {
+  print "creating user avatars: ";
   my $in_sth = $in_dbh->prepare( <<EOS );
 SELECT author_id,
        author_basename,
@@ -178,7 +156,10 @@ SELECT author_id,
     ON author_userpic_asset_id = asset_id
 EOS
 
-  my $out_sth = $out_dbh->prepare( $queries{update_user}{$out_driver} );
+  my @fields = qw( asset_file_path author_id );
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+UPDATE users SET avatar_path = ? WHERE id = ?
+EOS
 
   $in_sth->execute;
 
@@ -186,107 +167,59 @@ EOS
   while ( my $in_asset = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
     munge_asset_file_path( $in_asset );
-#use Data::Dumper; print Dumper($in_user);
-#last;
+
     try {
-      $out_sth->execute( $in_asset->{asset_file_path}, $in_asset->{author_id} );
+      $out_sth->execute( @{$in_asset}{@fields} ) unless $dry_run;
     }
     catch {
-      die "Failed to update user '$in_asset->{author_id}: $_ $!\n";
+      die "Failed to create avatar for '$in_asset->{author_id}: $_ $!\n";
     };
   }
+  print "\n";
 }
 
 ###############################################################################
 
 sub map_blog {
   my $blog = shift;
-  my $dirified = dirify( $blog->{blog_name} );
+  my $slug = string_to_slug( $blog->{blog_description} );
   return {
     id           => $blog->{blog_id},
-    name         => decode_utf8($blog->{blog_name}),
-    slug         => decode_utf8($dirified),
-    description  => decode_utf8($blog->{blog_description}),
+    user_id      => $blog->{association_author_id},
+    name         => decode_utf8( $blog->{blog_name} ),
+    slug         => decode_utf8( $slug ),
+    description  => decode_utf8( $blog->{blog_description} ),
     created_date => $blog->{blog_created_on},
     edited_date  => $blog->{blog_modified_on},
   };
 }
 
-#$mt_blog = {
-#          'blog_junk_folder_expiry' => '14',
-#          'blog_ping_others' => undef,
-#          'blog_allow_unreg_comments' => '0',
-#          'blog_ping_google' => '0',
-#          'blog_allow_pings_default' => '1',
-#          'blog_use_comment_confirmation' => '1',
-#          'blog_sort_order_posts' => 'descend',
-#          'blog_basename_limit' => '100',
-#          'blog_autodiscover_links' => undef,
-#          'blog_convert_paras' => 'shtransformlinebreaks',
-#          'blog_moderate_unreg_comments' => '2',
-#          'blog_archive_tmpl_weekly' => undef,
-#          'blog_description' => 'There\'s more than one way to blog it.',
-#          'blog_google_api_key' => undef,
-#          'blog_days_on_index' => '0',
-#          'blog_site_path' => '/var/www/',
-#          'blog_server_offset' => '-5',
-#          'blog_archive_tmpl_daily' => undef,
-#          'blog_custom_dynamic_templates' => 'none',
-#          'blog_words_in_excerpt' => '40',
-#          'blog_archive_path' => '',
-#          'blog_autolink_urls' => '1',
-#          'blog_language' => 'en',
-#          'blog_name' => 'blogs.perl.org',
-#          'blog_archive_tmpl_monthly' => undef,
-#          'blog_archive_tmpl_individual' => undef,
-#          'blog_is_dynamic' => undef,
-#          'blog_email_new_pings' => '1',
-#          'blog_archive_type_preferred' => undef,
-#          'blog_id' => '1',
-#          'blog_allow_anon_comments' => undef,
-#          'blog_children_modified_on' => '2013-10-12 05:01:44',
-#          'blog_status_default' => '2',
-#          'blog_welcome_msg' => undef,
-#          'blog_archive_url' => '',
-#          'blog_file_extension' => 'html',
-#          'blog_internal_autodiscovery' => '0',
-#          'blog_remote_auth_token' => undef,
-#          'blog_sort_order_comments' => 'ascend',
-#          'blog_allow_commenter_regist' => '1',
-#          'blog_created_by' => '1',
-#          'blog_moderate_pings' => '1',
-#          'blog_require_comment_emails' => '0',
-#          'blog_ping_weblogs' => '0',
-#          'blog_entries_on_index' => '10',
-#          'blog_archive_type' => '',
-#          'blog_sanitize_spec' => '0',
-#          'blog_allow_comments_default' => '1',
-#          'blog_site_url' => 'http://blogs.perl.org/',
-#          'blog_ping_technorati' => '0',
-#          'blog_manual_approve_commenters' => undef,
-#          'blog_allow_reg_comments' => '1',
-#          'blog_mt_update_key' => undef,
-#          'blog_old_style_archive_links' => undef,
-#          'blog_cc_license' => '',
-#          'blog_email_new_comments' => '1',
-#          'blog_modified_by' => '8',
-#          'blog_archive_tmpl_category' => undef,
-#          'blog_allow_comment_html' => '1',
-#          'blog_convert_paras_comments' => '__default__',
-#          'blog_allow_pings' => '1',
-#          'blog_ping_blogs' => '0',
-#          'blog_junk_score_threshold' => '0',
-#          'blog_modified_on' => '2013-07-10 08:21:01',
-#          'blog_created_on' => '2009-10-07 20:13:17'
-#        };
+my %blog_user; # key $blog_id, value $user_id
+my %blog;
 
 sub migrate_blogs {
-  my $in_sth = $in_dbh->prepare( 'SELECT * FROM mt_blog ORDER BY blog_id' );
-  my $in_user_sth = $out_dbh->prepare( $queries{select_id}{$out_driver} );
+  my ( $users ) = @_;
+  print "migrating blogs: ";
+  my $in_sth = $in_dbh->prepare( <<'EOS' );
+   SELECT b.blog_id,
+          a.association_author_id,
+          b.blog_name,
+          b.blog_description,
+          b.blog_created_on,
+          b.blog_modified_on
+     FROM mt_blog b
+LEFT JOIN mt_association a
+       ON b.blog_id = a.association_blog_id
+ORDER BY blog_id
+EOS
+
+  my @fields = qw( id name slug description created_date edited_date );
   my $out_sth = $out_dbh->prepare( <<'EOS' );
 INSERT INTO blog(id,name,slug,description,created_date,edited_date)
           VALUES(?,?,?,?,?,?)
 EOS
+
+  my @fields_owner = qw( id user_id );
   my $out_owner_sth = $out_dbh->prepare( <<'EOS' );
 INSERT INTO blog_owners(blog_id,user_id)
           VALUES(?,?)
@@ -298,89 +231,105 @@ EOS
   while ( my $in_blog = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
 
-#use Data::Dumper; print Dumper($in_blog);
-#last;
     my $out_blog = map_blog( $in_blog );
-    $out_sth->execute(
-        @{$out_blog}{qw( id name slug description created_date edited_date )}
-    );
-    my $in_sth = $in_user_sth->execute($out_blog->{name});
-    my $in_user = $in_user_sth->fetchrow_hashref;
-    if ( $out_blog->{name} eq 'blogs.perl.org' ) {
-      warn "Skipping the system 'user' as admins are now handled elsewhere.\n";
+    next if $out_blog->{name} eq 'blogs.perl.org'; # Skip admin "user"
+
+    unless ( $out_blog->{user_id} ) {
+      warn "*** Skipping blog ID $out_blog->{id}: no user ID\n";
+      next;
     }
-    elsif ( $in_user ) {
-      $out_owner_sth->execute($out_blog->{id},$in_user->{id});
+    unless ( $users{$out_blog->{user_id}} ) {
+      warn "*** Skipping blog ID $out_blog->{id}: invalid user ID $out_blog->{user_id}\n";
+      next;
     }
-    else {
-warn "Can't find a user with username '$out_blog->{name}' in the database, skipping\n";
-    }
+    $blog{$out_blog->{user_id}} = 1;
+
+    $out_sth->execute( @{$out_blog}{@fields} ) unless $dry_run;
+
+    $blog_user{$out_blog->{id}} = $out_blog->{user_id};
+    $out_owner_sth->execute( @{$out_blog}{@fields_owner} ) unless $dry_run;
   }
+  print "\n";
 }
 
 ###############################################################################
 
+my %post_type = (
+  '__default__'               => 'HTML',
+  '0'                         => 'HTML',
+  'richtext'                  => 'RichText',
+  'textile_2'                 => 'Textile2',
+  'markdown_with_smartypants' => 'Markdown_With_Smartypants',
+  'markdown'                  => 'Markdown'
+);
+
 sub map_post {
-  my $post = shift;
-  my $dirified = dirify( $post->{entry_title} );
+  my $post         = shift;
+  my $post_type    = 'HTML';
+  my $content      = $post->{entry_text};
+  my $content_more = $post->{entry_text_more};
+
+  $post_type = $post_type{$post->{entry_convert_break}} if
+    exists $post->{entry_convert_break};
+
   return {
     id           => $post->{entry_id},
     title        => decode_utf8($post->{entry_title}),
-    slug         => decode_utf8($dirified),
+    slug         => $post->{entry_basename},
     description  => $post->{entry_basename}, # XXX ?
     #cover varchar(300) NOT NULL,
-    content      => decode_utf8($post->{entry_text}),
+    content      => decode_utf8($content),
+    content_more => decode_utf8($content_more),
+    keywords     => decode_utf8($post->{entry_keywords}),
     created_date => $post->{entry_authored_on},
-    #type post_format DEFAULT 'HTML',
+    type         => $post_type,
     #status post_status DEFAULT 'draft',
     status       => 'published', # XXX Imported posts are already published
     user_id      => $post->{entry_author_id},
+    blog_id      => $post->{entry_blog_id},
   };
 }
 
-#$mt_post = {
-#  'entry_status' => '2',
-#  'entry_ping_count' => '0',
-#  'entry_class' => 'entry',
-#  'entry_excerpt' => '',
-#  'entry_tangent_cache' => undef,
-#  'entry_allow_pings' => '1',
-#  'entry_atom_id' => 'tag:blogs.perl.org,2009:/users/dave_cross//8.9',
-#  'entry_category_id' => undef,
-#  'entry_template_id' => undef,
-#  'entry_pinged_urls' => undef,
-#  'entry_created_on' => '2009-11-06 17:24:22',
-#  'entry_authored_on' => '2009-11-06 17:23:16',
-#  'entry_author_id' => '8',
-#  'entry_created_by' => '8',
-#  'entry_week_number' => '200945',
-#  'entry_title' => 'A Blog Post',
-#  'entry_keywords' => '',
-#  'entry_to_ping_urls' => '',
-#  'entry_basename' => 'a_blog_post',
-#  'entry_text_more' => '',
-#  'entry_id' => '9',
-#  'entry_convert_breaks' => 'richtext',
-#  'entry_blog_id' => '8',
-#  'entry_allow_comments' => '1',
-#  'entry_comment_count' => '0',
-#  'entry_modified_on' => '2009-11-06 17:24:22',
-#  'entry_modified_by' => undef,
-#  'entry_text' => 'Introducing <a href="http://blogs.perl.org/">blogs.perl.org</a>. I\'m so happy!<br />'
-#};
-
-my %post_user;
+my %user_post; #key $user_id, value @{ $post_id }
+my %blog_post; #key $blog_id, value @{ $post }
+my %tag; #key $tag_name, value ... will be tag ID eventually.
+my %tag_split;
+my %post_keyword; #key $post_id, value $tag_name
+my %page_keyword; #key $page_id, value $tag_name
 
 sub migrate_posts {
+  my ( $tag, $tag_split ) = @_;
+  print "migrating posts: ";
   my $in_sth = $in_dbh->prepare( <<'EOS' );
-  SELECT *
+  SELECT entry_title,
+         entry_text,
+         entry_text_more,
+         entry_id,
+         entry_title,
+         entry_basename,
+         entry_text,
+         entry_keywords,
+         entry_authored_on,
+         entry_author_id,
+         entry_blog_id
     FROM mt_entry
+   WHERE entry_class = 'entry'
 ORDER BY entry_id
 EOS
 
+  my @fields =
+    qw(id title slug description content content_more created_date status user_id);
   my $out_sth = $out_dbh->prepare( <<'EOS' );
-INSERT INTO post(id,title,slug,description,content,created_date,status,user_id)
-          VALUES(?,?,?,?,?,?,?,?)
+INSERT INTO post(id,
+                 title,
+                 slug,
+                 description,
+                 content,
+                 content_more,
+                 created_date,
+                 status,
+                 user_id)
+          VALUES(?,?,?,?,?,?,?,?,?)
 EOS
 
   $in_sth->execute();
@@ -388,61 +337,235 @@ EOS
   my $count  = 0;
   while ( my $in_post = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
-#use Data::Dumper; print Dumper($in_post);
-#last;
+
     my $out_post = map_post( $in_post );
-    $post_user{ $out_post->{id} } = $out_post->{user_id};
-    $out_sth->execute(
-        @{$out_post}{qw( id title slug description content created_date status user_id )}
-    );
+    push @{ $user_post{ $out_post->{user_id} } }, $out_post->{id};
+    push @{ $blog_post{ $out_post->{blog_id} } }, $out_post->{id};
+    if ( $out_post->{keywords} ) {
+      $tag_split->{$_} = 1 for split( /\s*,\s*/, $out_post->{keywords} );
+      $post_keyword{$out_post->{id}} = $out_post->{keywords};
+    }
+    $out_sth->execute( @{$out_post}{@fields} ) unless $dry_run;
   }
+  print "\n";
+}
+
+###############################################################################
+
+sub map_page {
+  my $page          = shift;
+  my $page_type     = 'HTML';
+  my $slug          = string_to_slug( $page->{entry_title} );
+  my $content       = $page->{entry_text};
+  my $extra_content = $page->{entry_text_more};
+
+  $page_type = $post_type{$page->{entry_convert_break}} if
+    exists $page->{entry_convert_break};
+
+  return {
+    id            => $page->{entry_id},
+    title         => decode_utf8($page->{entry_title}),
+    slug          => decode_utf8($slug),
+    description   => $page->{entry_basename}, # XXX ?
+    #cover varchar(300) NOT NULL,
+    content       => decode_utf8($content),
+    extra_content => decode_utf8($extra_content),
+    keywords      => decode_utf8($page->{entry_keywords}),
+    created_date  => $page->{entry_authored_on},
+    type          => $page_type,
+    #status post_status DEFAULT 'draft',
+    status        => 'published', # XXX Imported posts are already published
+    user_id       => $page->{entry_author_id},
+    blog_id       => $page->{entry_blog_id},
+  };
+}
+
+my %user_page; #key $user_id, value @{ $page_id }
+my %blog_page; #key $blog_id, value @{ $page }
+
+sub migrate_pages {
+  my ( $tag, $tag_split ) = @_;
+  print "migrating pages ";
+  my $in_sth = $in_dbh->prepare( <<'EOS' );
+  SELECT entry_title,
+         entry_text,
+         entry_text_more,
+         entry_id,
+         entry_title,
+         entry_basename,
+         entry_text,
+         entry_keywords,
+         entry_authored_on,
+         entry_author_id,
+         entry_blog_id
+    FROM mt_entry
+   WHERE entry_class = 'page'
+ORDER BY entry_id
+EOS
+
+  my @fields =
+    qw(id title slug description content content_more created_date status user_id);
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO page(id,
+                 title,
+                 slug,
+                 description,
+                 content,
+                 content_more,
+                 created_date,
+                 status,
+                 user_id)
+          VALUES(?,?,?,?,?,?,?,?,?)
+EOS
+
+  $in_sth->execute();
+
+  my $count  = 0;
+  while ( my $in_page = $in_sth->fetchrow_hashref ) {
+    print '.' if $count++ % 100 == 0;
+
+    my $out_page = map_page( $in_page );
+    push @{ $user_page{ $out_page->{user_id} } }, $out_page->{id};
+    push @{ $blog_page{ $out_page->{blog_id} } }, $out_page->{id};
+    if ( $out_page->{keywords} ) {
+      $tag_split->{$_} = 1 for split( /\s*,\s*/, $out_page->{keywords} );
+      $page_keyword{$out_page->{id}} = $out_page->{keywords};
+    }
+    $out_sth->execute( @{$out_page}{@fields} ) unless $dry_run;
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub migrate_some_tags {
+  my ( $tag ) = @_;
+  print "migrating some posts: ";
+  my $in_sth = $in_dbh->prepare( <<'EOS' );
+    SELECT ot.objecttag_id,
+           t.tag_name
+      FROM mt_objecttag ot
+      JOIN mt_tag t
+        ON t.tag_id = ot.objecttag_tag_id
+  ORDER BY objecttag_id
+EOS
+
+  $in_sth->execute;
+
+  my $count = 0;
+  while ( my $in_category = $in_sth->fetchrow_hashref ) {
+    print '.' if $count++ % 100 == 0;
+#    $tag->{$in_category->{tag_name}} = 1;
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub synthesize_tags {
+  my ( $tag, $tag_split ) = @_;
+  print "synthesizing tags ";
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO tag( id, name, slug )
+            VALUES( ?, ?, ? )
+EOS
+
+  my $count = 0;
+
+  my $index = 1;
+  for my $name ( sort keys %{ $tag_split } ) {
+    print '.' if $count++ % 100 == 0;
+
+    $tag_split->{$name} = $index++;
+    my $slug = string_to_slug( $name );
+    $out_sth->execute($tag_split->{$name}, $name, $slug) unless $dry_run;
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub synthesize_post_tags {
+  my ( $tag, $tag_split ) = @_;
+  print "synthesizing post tags ";
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO post_tag( post_id, tag_id ) VALUES( ?, ? )
+EOS
+
+  my $count = 0;
+  for my $post_id ( keys %post_keyword ) {
+
+    unless ( $post_keyword{$post_id} ) {
+      warn "*** Skipping post ID $post_id: no tags\n";
+      next;
+    }
+
+    my $keyword = $post_keyword{$post_id};
+    for my $word ( split /\s*,\s*/, $keyword ) {
+      unless ( $tag_split->{$word} ) {
+        warn "*** Couldn't find a tag for '$word'\n";
+      }
+      $out_sth->execute($post_id, $tag_split->{$word})
+        unless $dry_run;
+    }
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub synthesize_page_tags {
+  my ( $tag, $tag_split ) = @_;
+  print "synthesizing page tags ";
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO page_tag( page_id, tag_id ) VALUES( ?, ? )
+EOS
+
+  my $count = 0;
+  for my $page_id ( keys %page_keyword ) {
+
+    unless ( $page_keyword{$page_id} ) {
+      warn "*** Skipping page ID $page_id: no tags\n";
+      next;
+    }
+
+    my $keyword = $page_keyword{$page_id};
+    for my $word ( split /\s*,\s*/, $keyword ) {
+      unless ( $tag_split->{$word} ) {
+        warn "*** Couldn't find a tag for '$word'\n";
+      }
+      $out_sth->execute($page_id, $tag_split->{$word})
+        unless $dry_run;
+    }
+  }
+  print "\n";
 }
 
 ###############################################################################
 
 sub map_comment {
   my $comment = shift;
+  my $status  = $comment->{comment_visible} == 1 ? 'approved' : 'pending';
   return {
     id           => $comment->{comment_id},
     content      => decode_utf8($comment->{comment_text}),
-    fullname     => $comment->{comment_author},
+    fullname     => decode_utf8($comment->{comment_author}),
     email        => $comment->{comment_email},
     website      => $comment->{comment_url},
 #  avatar varchar(255) DEFAULT NULL,
     comment_date => $comment->{comment_created_on},
 #  type post_format DEFAULT 'HTML', # Remain default
-    status       => $comment->{comment_visible} == 1 ? 'approved' : 'pending',
+    status       => $status,
     post_id      => $comment->{comment_entry_id},
     uid          => $comment->{comment_commenter_id},
   };
 }
 
-#$mt_comment = {
-#          'comment_visible' => '1',
-#          'comment_email' => 'curtis_ovid_poe@yahoo.com',
-#          'comment_junk_score' => '1',
-#          'comment_commenter_id' => '13',
-#          'comment_junk_log' => 'SpamLookup - Link (1): No links are present in feedback
-#
-#---> Composite score: 1.00',
-#          'comment_author' => 'Ovid',
-#          'comment_modified_on' => '2009-11-07 08:55:42',
-#          'comment_entry_id' => '11',
-#          'comment_created_by' => '13',
-#          'comment_modified_by' => undef,
-#          'comment_url' => '',
-#          'comment_ip' => '82.45.209.59',
-#          'comment_junk_status' => '1',
-#          'comment_blog_id' => '11',
-#          'comment_last_moved_on' => '2000-01-01 00:00:00',
-#          'comment_id' => '9',
-#          'comment_text' => 'Obviously that was an ugly test post. Please ignore.',
-#          'comment_parent_id' => undef,
-#          'comment_created_on' => '2009-11-07 08:55:42'
-#};
-
 sub migrate_comments {
+  my ( $users ) = @_;
+  print "migrating comments: ";
   my $in_sth = $in_dbh->prepare('SELECT * FROM mt_comment ORDER BY comment_id');
+  my @fields = qw( id content fullname email website comment_date status post_id uid reply_to );
   my $out_sth = $out_dbh->prepare( <<'EOS' );
 INSERT INTO comment(id,
                     content,
@@ -462,134 +585,186 @@ EOS
   while ( my $in_comment = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
     next unless $in_comment->{comment_commenter_id}; # XXX Eliminate spam?
-#use Data::Dumper; print Dumper($in_comment);
-#last;
+
     my $out_comment = map_comment($in_comment);
-    $out_sth->execute(
-        @{$out_comment}{qw( id content fullname email website comment_date status post_id uid reply_to ) }
-    );
+
+    unless ( $users{$out_comment->{uid}} ) {
+      warn "*** Skipping comment ID $out_comment->{id}: invalid user ID $out_comment->{uid}\n";
+      next;
+    }
+
+    $out_sth->execute( @{$out_comment}{@fields} ) unless $dry_run;
   }
+  print "\n";
 }
 
 ###############################################################################
 
 sub map_category {
   my $category = shift;
-  my $dirified = dirify( $category->{category_label} );
+  my $slug     = string_to_slug( $category->{category_label} );
   return {
     id      => $category->{category_id},
     name    => decode_utf8($category->{category_label}),
-    slug    => decode_utf8($dirified),
-    user_id => $category->{category_created_by},
+    slug    => decode_utf8($slug),
+    user_id => $category->{category_author_id},
+    blog_id => $category->{category_blog_id},
   };
 }
-#$mt_category = {
-#};
+
+my %category;
 
 sub migrate_categories {
+  my ( $blog,$users ) = @_;
+  print "migrating categories: ";
   my $in_sth = $in_dbh->prepare('SELECT * FROM mt_category ORDER BY category_id');
   my $out_sth = $out_dbh->prepare(
     'INSERT INTO category(id,name,slug,user_id) VALUES(?,?,?,?)'
   );
-  $in_sth->execute();
-
-  my $count  = 0;
-  while ( my $in_category = $in_sth->fetchrow_hashref ) {
-    print '.' if $count++ % 100 == 0;
-#use Data::Dumper; print Dumper($in_category);
-#last;
-    my $out_category = map_category($in_category);
-    $out_sth->execute(
-        @{$out_category}{qw( id name slug user_id )}
-    );
-  }
-}
-
-###############################################################################
-
-sub synthesize_post_tags {
-  my $in_sth = $in_dbh->prepare(
-    'SELECT objecttag_id, objecttag_tag_id
-       FROM mt_objecttag
-   ORDER BY objecttag_id');
-  my %post_tag;
-  my $count = 0;
-
-  $in_sth->execute;
-  while ( my $in_category = $in_sth->fetchrow_hashref ) {
-    print '.' if $count++ % 100 == 0;
-#use Data::Dumper; print Dumper($in_category);
-#last;
-#objecttag_tag_id
-#objecttag_id
-    push @{ $post_tag{$in_category->{objecttag_id} } },
-      $in_category->{objecttag_tag_id};
-  }
-
-  my $out_sth = $out_dbh->prepare(
-    'insert into post_tag(tag_id,post_id) values(?,?)');
-
-  $count = 0;
-  for my $post_id ( keys %post_tag ) {
-    for my $tag_id ( @{ $post_tag{$post_id} } ) {
-      print '.' if $count++ % 100 == 0;
-      $out_sth->execute($post_id,$tag_id);
-    }
-  }
-}
-
-###############################################################################
-
-sub map_tag {
-  my $tag = shift;
-  my $dirified = dirify( $tag->{tag_name} );
-  return {
-    id   => $tag->{tag_id},
-    name => decode_utf8($tag->{tag_name}),
-    slug => decode_utf8($dirified),
-  };
-}
-#$mt_tag = {
-#};
-
-sub migrate_tags {
-  my $in_sth = $in_dbh->prepare('SELECT * FROM mt_tag ORDER BY tag_id');
-  my $out_sth = $out_dbh->prepare(
-    'INSERT INTO tag(id,name,slug) VALUES(?,?,?)'
+  my $out_blog_sth = $out_dbh->prepare(
+    'INSERT INTO blog_categories(blog_id,category_id) VALUES(?,?)'
   );
   $in_sth->execute();
 
   my $count  = 0;
-  while ( my $in_tag = $in_sth->fetchrow_hashref ) {
+  while ( my $in_category = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
-#use Data::Dumper; print Dumper($in_tag);
-#last;
-    my $out_tag = map_tag($in_tag);
-    $out_sth->execute(
-        @{$out_tag}{qw( id name slug )}
-    );
+
+    my $out_category = map_category($in_category);
+
+    unless ( $users->{$out_category->{user_id}} ) {
+      warn "*** Skipping category ID $out_category->{id}: invalid user ID\n";
+      next;
+    }
+    unless ( $blog->{$out_category->{blog_id}} ) {
+      warn "*** Skipping category ID $out_category->{blog_id}: invalid blog ID $out_category->{blog_id}\n";
+      next;
+    }
+
+    $category{$out_category->{id}} = 1;
+
+    unless ( $dry_run ) {
+      $out_sth->execute(
+          @{$out_category}{qw( id name slug user_id )}
+      );
+      $out_blog_sth->execute(
+          @{$out_category}{qw( blog_id id )}
+      );
+    }
   }
+  print "\n";
 }
 
+###############################################################################
+
+sub map_post_category {
+  my $post_category = shift;
+  return {
+    category_id => $post_category->{category_id},
+    blog_id     => $post_category->{blog_id},
+  };
+}
+
+sub synthesize_post_categories {
+  my ( $category, $blog ) = @_;
+  print "synthesizing post categories ";
+  my $in_sth = $in_dbh->prepare( <<'EOS' );
+SELECT c.category_id,
+       b.blog_id
+  FROM mt_category c
+  JOIN mt_blog b
+    ON c.category_id = b.blog_id
+EOS
+
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO post_category( post_id, category_id ) VALUES( ?, ? )
+EOS
+
+  my $count = 0;
+
+  $in_sth->execute;
+  while ( my $in_blog_category = $in_sth->fetchrow_hashref ) {
+    print '.' if $count++ % 100 == 0;
+    my $out_blog_category = map_post_category( $in_blog_category );
+
+    unless ( $blog->{$out_blog_category->{blog_id}} ) {
+      warn "*** Skipping post ID $out_blog_category->{category_id}: invalid blog ID $out_blog_category->{blog_id}\n";
+      next;
+    }
+    unless ( $category->{$out_blog_category->{category_id}} ) {
+      warn "*** Skipping post ID $out_blog_category->{category_id}: invalid category ID $out_blog_category->{category_id}\n";
+      next;
+    }
+
+    for my $post_id ( @{ $blog_post{$out_blog_category->{blog_id}} } ) {
+      print '.' if $count++ % 100 == 0;
+
+      $out_sth->execute($post_id, $out_blog_category->{category_id})
+        unless $dry_run;
+    }
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub map_page_category {
+  my $page_category = shift;
+  return {
+    category_id => $page_category->{category_id},
+    blog_id     => $page_category->{blog_id},
+  };
+}
+
+sub synthesize_page_categories {
+  print "synthesizing page categories ";
+  my $in_sth = $in_dbh->prepare( <<'EOS' );
+SELECT c.category_id,
+       b.blog_id
+  FROM mt_category c
+  JOIN mt_blog b
+    ON c.category_id = b.blog_id
+EOS
+
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO page_category( page_id, category_id ) VALUES( ?, ? )
+EOS
+
+  my $count = 0;
+
+  $in_sth->execute;
+  while ( my $in_blog_category = $in_sth->fetchrow_hashref ) {
+    print '.' if $count++ % 100 == 0;
+    my $out_blog_category = map_page_category( $in_blog_category );
+
+    for my $page_id ( @{ $blog_page{$out_blog_category->{blog_id}} } ) {
+      print '.' if $count++ % 100 == 0;
+
+      $out_sth->execute($page_id, $out_blog_category->{category_id})
+        unless $dry_run;
+    }
+  }
+  print "\n";
+}
 
 ###############################################################################
 
 sub map_asset {
   my $asset = shift;
   return {
-    id => $asset->{asset_id},
-    blog_id => $asset->{asset_blog_id},
-    user_id => $asset->{asset_created_by},
-    file_ext => $asset->{asset_file_ext},
+    id        => $asset->{asset_id},
+    blog_id   => $asset->{asset_blog_id},
+    user_id   => $asset->{asset_created_by},
+    file_ext  => $asset->{asset_file_ext},
     file_name => $asset->{asset_file_name},
     file_path => $asset->{asset_file_path},
   };
 }
-#$mt_asset = {
-#};
 
 sub migrate_assets {
+  print "migrating assets: ";
   my $in_sth = $in_dbh->prepare('SELECT * FROM mt_asset ORDER BY asset_id');
+  my @fields = qw( id blog_id user_id file_ext file_name file_path );
   my $out_sth = $out_dbh->prepare(
     'INSERT INTO asset(id,blog_id,user_id,file_ext,file_name,file_path) VALUES(?,?,?,?,?,?)'
   );
@@ -599,66 +774,43 @@ sub migrate_assets {
   while ( my $in_asset = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
     next if $in_asset->{asset_blog_id} == 0; # XXX Avatar assets are skipped.
-#use Data::Dumper; print Dumper($in_asset);
-#last;
-    my $out_asset = map_asset($in_asset);
-    $out_sth->execute(
-        @{$out_asset}{qw( id blog_id user_id file_ext file_name file_path )}
-    );
-  }
-}
 
+    my $out_asset = map_asset($in_asset);
+    $out_sth->execute( @{$out_asset}{@fields} ) unless $dry_run;
+  }
+  print "\n";
+}
 
 ###############################################################################
 
-print "migrating users: ";
+sub update_sequences {
+  print "Updating sequences: ";
+  my @tables = qw( users blog post comment category tag asset  );
+
+  for my $table_name ( @tables ) {
+    $out_dbh->do( <<"EOS" );
+select setval('${table_name}_id_seq',
+                ( select max( id ) from ${table_name} ) + 1, true )
+EOS
+  }
+
+  print "\n";
+}
+
+###############################################################################
+
 migrate_users;
-print "\n";
-
-#exit;
-
-print "creating user avatars: ";
 create_avatars;
-print "\n";
-
-#exit;
-
-print "migrating blogs: ";
-migrate_blogs;
-print "\n";
-
-#exit;
-
-print "migrating posts: ";
-migrate_posts;
-print "\n";
-
-#exit;
-
-print "migrating comments: ";
-migrate_comments;
-print "\n";
-
-#exit;
-
-print "migrating categories: ";
-migrate_categories;
-print "\n";
-
-#exit;
-
-print "migrating tags: ";
-migrate_tags;
-print "\n";
-
-#exit;
-
-print "synthesizing post tags ";
-synthesize_post_tags;
-print "\n";
-
-#exit;
-
-print "migrating assets: ";
+migrate_blogs( \%users );
+migrate_posts( \%tag, \%tag_split );
+migrate_pages( \%tag, \%tag_split );
+migrate_some_tags( \%tag );
+synthesize_tags( \%tag, \%tag_split );
+synthesize_post_tags( \%tag, \%tag_split );
+synthesize_page_tags( \%tag, \%tag_split );
+migrate_comments( \%users );
+migrate_categories( \%blog, \%users );
+synthesize_post_categories( \%category, \%blog );
+synthesize_page_categories;
 migrate_assets;
-print "\n";
+update_sequences;

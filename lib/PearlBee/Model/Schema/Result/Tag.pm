@@ -98,8 +98,14 @@ __PACKAGE__->many_to_many("posts", "post_tags", "post");
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
+=head2 as_hashref
+
+Return a non-blessed version of a blog database row
+
+=cut
+
 sub as_hashref {
-  my $self = shift;
+  my ($self)      = @_;
   my $tag_hashref = {
     id   => $self->id,
     name => $self->name,
@@ -107,14 +113,20 @@ sub as_hashref {
   };          
               
   return $tag_hashref;
-              
-}             
+}
+
+=head2 as_hashref_sanitized
+
+Remove ID from the blog database row
+
+=cut
 
 sub as_hashref_sanitized {
-  my $self = shift;
-  my $tag_href = $self->as_hashref;
-  delete $tag_href->{id};
-  return $tag_href;
+  my ($self) = @_;
+  my $href   = $self->as_hashref;
+
+  delete $href->{id};
+  return $href;
 }
 
 1;

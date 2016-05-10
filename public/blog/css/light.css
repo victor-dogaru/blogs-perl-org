@@ -5,6 +5,9 @@
 .posts.listings .post-heading h2 a {
     color: #333333;
 }
+.author-entries .post-heading a {
+    color: #000;
+}
 
 .posts.listings .post_preview {
     color: #333333;
@@ -40,20 +43,23 @@
 
 .text-listing-entries a.read-more,
 .blog .posts.listings .read-more {
-   color: #333333;
+   color: #16cbe6;
 }
 
 .people .properties ul li {
    color: #333333;
 }
+.people .info-entry .date{
+    color: #333333;
+}
 
 #tag-list .btn-tag {
-   background-color: #dadada;
+   background-color: #19132D;
    color: #ffffff;
 }
 
 .text-listing-entries::before, .loading-posts .view-more::before {
-  background: none;
+    background: #cccccc none repeat scroll 0 0;
 }
 
 .loading-posts .more-posts {
@@ -76,5 +82,56 @@
 
 .blog .page-heading {
    color: #333333;
+}
+
+/*profile/author between themes*/
+.author-description {
+	background-color: #ffffff;
+}
+.author-description .profile-description p{
+    color: #040404!important;
+}
+.author-description .rss-part a button{
+    background-color: #FF6600;
+}
+
+
+/*blogs/profile page*/
+.blog .blog-top-part .entry-name{
+    color: #000;
+}
+.blog .blog-top-part ul .information-blog{
+    color: #000;
+}
+
+/*pages*/
+
+.pages {
+  background-color: #ffffff;
+}
+
+.pages .page-heading h2 {
+  color: #333333;
+}
+
+.pages .post-content {
+color: #333333;
+}
+
+.pages .pager-post li a {
+   color: #999999;
+}
+
+#author-tab-content1 .info-entry{
+    border-bottom: 1px solid #eaeaea;
+}
+.author-pages .entry{
+    border-bottom: 1px solid #eaeaea;
+}
+
+.author-page .blog_author {
+   background: none;
+   background-color: #ffffff;
+   background-repeat: repeat;
 }
 

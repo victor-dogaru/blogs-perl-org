@@ -22,6 +22,7 @@ WriteMakefile(
         'Parse::CPAN::Meta'          => 0,
         'CPAN::Meta::Check'          => 0,
         'Test::Warnings'             => 0,
+        'Term::ANSIColor'            => 0,
         'Dancer2'                    => 0.136000,
         'Dancer2::Plugin::DBIC'      => 0,
         'DBIx::Class::TimeStamp'     => 0,
@@ -38,6 +39,7 @@ WriteMakefile(
         'String::Util'               => 0,
         'Data::Pageset'              => 0,
         'Text::Markdown'             => 0,
+        'Imager'                     => 0,
 
         'IO::All'                             => 0,
         'MIME::Lite'                          => 0,
@@ -53,11 +55,9 @@ WriteMakefile(
 
         # Dynamically loaded dependencies now
 
-        'Gravatar::URL'              => 0,
-        'HTML::Strip'                => 0,
-
-        'DBD::mysql'                 => 0,
-#        'DBD::Pg'                    => 0,
+        'Gravatar::URL'                => 0,
+        'HTML::Scrubber::StripScripts' => 0,
+        'DBD::Pg'                      => 0,
 
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

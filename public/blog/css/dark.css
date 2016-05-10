@@ -6,6 +6,9 @@
 .posts.listings .post-heading h2 a {
     color: #ffffff;
 }
+.author-entries .post-heading a {
+    color: #fff;
+}
 
 .posts.listings .post_preview {
     color: #ffffff;
@@ -42,11 +45,14 @@
 
 .text-listing-entries a.read-more,
 .blog .posts.listings .read-more {
-   color: #ffffff;
+   color: #16cbe6;
 }
 
 .people .properties ul li {
    color: #ffffff;
+}
+.people .info-entry .date{
+    color: #ffffff;
 }
 
 #tag-list .btn-tag {
@@ -69,7 +75,7 @@
 }
 
 .text-listing-entries {
-  border-bottom: 1px solid rgba(242, 245, 238, 0.1);
+  border-bottom: 1px solid rgba(242, 245, 238, 0.4);
 }
 
 .progressloader .spinner div {
@@ -77,5 +83,88 @@
 }
 
 .blog .page-heading {
-   color: rgba(255, 255, 255, 0.1);
+   color: rgba(255, 255, 255, 0.4);
 }
+
+/*profile/author between themes*/
+.author-description {
+	background: url('../img/backblog.jpg');
+    background-repeat: repeat;
+}
+.author-description .profile-description p{
+    color: #fff;
+}
+#author-tab-content1 .info-entry p.uppercase{
+    color: #fff;
+}
+#author-tab-content1 ul li{
+    color: #fff;
+}
+#author-tab-content2 p.no-posts, #author-tab-content3 p{
+    color: #fff !important;
+}
+.blog h2 a{
+    color: #fff!important;
+}
+.post_preview_wrapper{
+    color: #fff;
+}
+.author-page .background-bar{
+    background-color: #152e4a!important;
+}
+.tabs [id^="tab"]:checked + label, .tabs [id^="author-tab"]:checked + label{
+    color: #16cbe6;
+    border-bottom: 4px solid #16cbe6;
+}
+.tabs label:hover{
+    color: #16cbe6;
+    border-bottom: 4px solid #16cbe6;
+}
+.author-description .rss-part a button{
+    background-color: #FF6600;
+}
+
+/*pages*/
+
+.pages {
+  background-color: #07001b;
+}
+
+.pages .page-heading h2 {
+  color: #ffffff;
+}
+
+.pages .post-content {
+color: #ffffff;
+}
+
+.pages .pager-post li a {
+   color: #ffffff;
+}
+.author-pages .text-listing-pages .page{
+    color: #fff;
+}
+.author-pages .text-listing-pages .page-preview{
+    color: #fff;
+}
+#author-tab-content1 .info-entry{
+    border-bottom: 1px solid rgba(242, 245, 238, 0.4);
+}
+.author-pages .entry{
+    border-bottom: 1px solid rgba(242, 245, 238, 0.4);
+}
+
+
+/*blogs/profile page*/
+.blog .blog-top-part .entry-name{
+    color: #fff;
+}
+.blog .blog-top-part ul .information-blog{
+    color: #fff;
+}
+
+.author-page .blog_author {
+   background: url('../img/backblog.jpg');
+   background-repeat: repeat;
+}
+

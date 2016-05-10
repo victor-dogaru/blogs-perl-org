@@ -1,18 +1,24 @@
+[% SET global.template_name = 'register' %]
+<link href="/blog/css/register.css" rel="stylesheet">
+
  <div class="register ">
    <div class="container"> 
+      [% INCLUDE components/alerts.tt %]
      <div class="row"> 
        <div class="col-sm-6 col-sm-offset-3 text-center"> 
          <h3>Please enter the following:</h3> 
         <div class="register-wrapper"> 
           <form id="register_form" action="/register_success" method="post">
             <div class="form-group">              
-              <input type="text" class="form-control" id="emailRegister" placeholder="Email" name="email">
+              <input type="text" class="form-control" id="emailRegister" placeholder="Email" name="email" value="[% email ? email : ''%]">
             </div>
             <div class="form-group">              
-              <input type="text" class="form-control" id="usernameRegister" placeholder="Username" name="username">
+              <input type="text" class="form-control" id="usernameRegister" placeholder="Username" name="username" value="[% username ? username : ''%]">
+              <label class="error_ascii">Usernames must be composed entirely of ASCII characters.</label>
+              <label class="error_char">Usernames must be composed without special characters.</label>
             </div>
             <div class="form-group">              
-              <input type="text" class="form-control" id="displayNameRegister" placeholder="Display Name" name="name">
+              <input type="text" class="form-control" id="displayNameRegister" placeholder="Display Name" name="name" value="[% name ? name : ''%]">
             </div>
             <div class="form-group">              
               <input type="password" class="form-control" id="passwordRegister" placeholder="Password" name="password">
@@ -20,11 +26,10 @@
             <div class="form-group">              
               <input type="password" class="form-control" id="confirmPasswordRegister" placeholder="Password Confirmation" name="confirm_password">
             </div>
-            <div class="captcha">              
+            <div class="captcha">
                [% recaptcha %]
             </div>
             
-
             <!--             <div class="checkbox ">
               <label>
                 <input type="checkbox" id="confirmTerms">I agree to the terms and conditions
@@ -33,7 +38,7 @@
 
             <button type="submit" class="submitRegister" id="submitRegister">Submit</button>
           </form>          
-          <div class="social_register">
+         <!-- <div class="social_register">
             <p>You can register using the following accounts:</p>
             <div class="separator"></div>
           <div class="row">
@@ -47,7 +52,7 @@
               </div>                           
              </div>
             </div>
-          </div>          
+          </div>   -->       
         </div> 
        </div> 
      </div> 

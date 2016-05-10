@@ -24,7 +24,7 @@ __PACKAGE__->result_source_instance->view_definition(
           post AS P
           ON
             P.id = C.post_id
-        INNER JOIN user AS U
+        INNER JOIN "users" AS U
           ON
             P.user_id = U.id
       WHERE
@@ -45,11 +45,19 @@ __PACKAGE__->add_columns(
   { data_type => "integer", is_nullable => 0 },
 );
 
+=head2 get_all_status_counts
+
+=cut
+
 sub get_all_status_counts {
-  my $self = shift;
+  my ($self) = @_;
 
   return ( $self->total, $self->approved, $self->trash, $self->spam, $self->pending );
 }
+
+=head2 get_status_count
+
+=cut
 
 sub get_status_count {
   my ($self, $status) = @_;

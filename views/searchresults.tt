@@ -1,3 +1,5 @@
+[% SET global.template_name = 'search' %]
+<link href="/blog/css/search.css" rel="stylesheet">
 
 <div class="search-page">
 
@@ -5,6 +7,7 @@
         <div class="search-input">
             <div class="container">
                 <input type="text" name="search_term" placeholder="Search blogs.perl.org"/>
+                <p>Search in headline, people, keywords, content, tags</p>
             </div>
         </div>
 
@@ -59,21 +62,21 @@
                                 </div>
                             </div>
                             <div class="entry clearfix hidden">
-                                <div class="col-xs-2">
+                                <div class="col-md-2">
                                 </div>
-                                <div class="text-listing-entries col-xs-10">
+                                <div class="text-listing-entries col-md-10 col-xs-12">
                                     <div class="bubble">
                                         <img class="user-image">
                                     </div>
                                     <div class="info-entry">
                                         <div class="user">
-                                            <a href="/posts/user/[% post.user.username %]"></a>
+                                            <a href="/profile/author/[% post.user.username | uri %]"></a>
                                         </div>
                                         <div class="date">
                                         </div>
                                         [% FOREACH category in post.post_categories %]
                                         <div class="block_elements">
-                                            <i class="icon-list"></i> <a href="[% config.app_url %]/posts/category/[% category.category.slug %]"></a>
+                                            <i class="icon-list"></i> <a href="/posts/category/[% category.category.slug %]"></a>
                                         </div>
                                         [% END %]
                                     </div>
@@ -96,28 +99,28 @@
                                     <div class="block_elements comments-listings">
                                         <a href="/post/[% post.slug %]#comments"> </a>
                                     </div>
-                                    <a href="[% config.app_url %]/post/[% post.slug %]" class="read-more">Read More...</a>
+                                    <a href="/post/[% post.slug %]" class="read-more">Read More...</a>
                                 </div>
                             </div>
                             [% FOREACH post in posts %]
 
                             <div class="entry clearfix">
-                                <div class="col-xs-2">
+                                <div class="col-md-2">
                                 </div>
-                                <div class="text-listing-entries col-xs-10">
+                                <div class="text-listing-entries col-md-10 col-xs-12">
                                     <div class="bubble">
-					                    <img class="user-image" src="[% post.user.avatar %]">
+<img class="user-image" src="/avatar/[% post.user.username %]" />
                                     </div>
                                     <div class="info-entry">
                                         <div class="user">
-                                            <a href="/posts/user/[% post.user.username %]">[% post.user.username %]</a>
+                                            <a href="/profile/author/[% post.user.username | uri %]">[% post.user.name %]</a>
                                         </div>
                                         <div class="date">
                                             [% post.created_date_human %]
                                         </div>
                                         [% FOREACH category in post.post_categories %]
                                         <div class="block_elements">
-                                            <i class="icon-list"></i> <a href="[% config.app_url %]/posts/category/[% category.category.slug %]">[% category.category.name %]</a>
+                                            <i class="icon-list"></i> <a href="/posts/category/[% category.category.slug %]">[% category.category.name %]</a>
                                         </div>
                                         [% END %]
                                     </div>
@@ -133,6 +136,7 @@
                                         <div class="post_preview_wrapper">
                                             <p>
                                                 [% post.content %]
+                                                [% post.content_more %]
                                             </p>
                                         </div>
                                     </div>
@@ -142,11 +146,11 @@
                                     <div class="block_elements comments-listings">
                                         <a href="/post/[% post.slug %]#comments"> [% IF nr_of_comments == 1 %] Comment [% ELSE %] Comments [% END %] ([% nr_of_comments %])</a>
                                     </div>
-                                    <a href="[% config.app_url %]/post/[% post.slug %]" class="read-more">Read More...</a>
+                                    <a href="/post/[% post.slug %]" class="read-more">Read More...</a>
                                 </div>
                             </div>
                             [% END %]
-                            <div class="loading-posts">
+                            <div class="loading-posts no-posts-messages">
                                 <div class="col-xs-2">
                                 </div>
                                 <div class="view-more col-xs-10">
@@ -171,7 +175,7 @@
 
                             [% ELSE %]
                             <br />
-                            <h5 class="no-posts" hidden>We're sorry, no results were found for your <br />search criteria</h5>
+                            <h5 class="no-posts no-posts-found1" hidden>We're sorry, no results were found for your <br />search criteria</h5>
                             [% END %]
                         </div>
 
@@ -191,7 +195,7 @@
                                 </div>
                                 <div class="user-info-entry hidden row">
                                     <div class="bubble col-xs-1">
-					                    <img class="user-image" src="[% post.user.avatar %]">
+<img class="user-image" src="/avatar/[% post.user.username %]" />
                                     </div>
                                     <div class="info-entry col-xs-5">
                                         <div class="user">
@@ -208,7 +212,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <h5 class="no-posts2" hidden >We're sorry, no results were found for your <br />search criteria</h5>
+                                <h5 class="no-posts2 no-posts-found" hidden >We're sorry, no results were found for your <br />search criteria</h5>
                             </div>
                         </div>
 
@@ -227,7 +231,7 @@
                         <ul id="tag-list" class="cf">
                             <li class="hidden"><a class="btn btn-tag" href="/posts/tag/perlgithub">perlgithub</a></li>
                         </ul>
-                        <h5 class="no-posts3" hidden>We're sorry, no results were found for your <br />search criteria</h5>
+                        <h5 class="no-posts3 no-posts-found" hidden>We're sorry, no results were found for your <br />search criteria</h5>
                     </div>
 
 

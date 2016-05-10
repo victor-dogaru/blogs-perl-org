@@ -5,9 +5,8 @@ use warnings;
 
 use base 'DBIx::Class::ResultSet';
 use String::Util qw(trim);
-use PearlBee::Helpers::Util qw/string_to_slug/;
 
-=head
+=head2 connect_categories
 
 Associate categories with the new post
 
@@ -26,21 +25,17 @@ sub connect_categories {
     $_->delete foreach (@post_categories);
 
     foreach my $category (@categories_selected) {
-        my $slug = string_to_slug($category);
-
         my $db_category = $self->result_source->schema->resultset('Category')
-            ->find_or_create( {name => trim($category), slug => $slug, user_id => $user_id} );
+            ->find_or_create_with_slug({ name => trim($category), user_id => $user_id });
 
-        $self->create(
-            {   category_id => $db_category->id,
-                post_id     => $post_id
-            }
-        );
+        $self->create({
+	        category_id => $db_category->id,
+	        post_id     => $post_id
+	    });
     }
-
 }
 
-=head
+=head2 bind_categories
 
 Used in import
 
@@ -58,16 +53,13 @@ sub bind_categories {
     $_->delete foreach (@post_categories);
 
     foreach my $category (@categories_selected) {
-        my $slug = string_to_slug($category);
-
         my $db_category = $self->result_source->schema->resultset('Category')
-            ->find_or_create( {name => trim($category), slug => $slug, user_id => $user_id} );
+            ->find_or_create_with_slug({ name => trim($category), user_id => $user_id });
 
-        $self->create(
-            {   category_id => $db_category->id,
-                post_id     => $post_id
-            }
-        );
+        $self->create({
+	        category_id => $db_category->id,
+	        post_id     => $post_id
+	    });
     }
 }
 

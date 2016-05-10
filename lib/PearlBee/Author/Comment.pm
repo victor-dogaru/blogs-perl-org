@@ -1,26 +1,26 @@
 package PearlBee::Author::Comment;
 
+use Try::Tiny;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link generate_pagination_numbering);
 
-get '/author/comments' => sub { redirect session('app_url') . '/author/comments/page/1'; };
-
-=head
+=head2 /author/comments ; /author/comments/page/:page
 
 List all comments
 
 =cut
 
+get '/author/comments' => sub { redirect '/author/comments/page/1'; };
+
 get '/author/comments/page/:page' => sub {
 
-  my $nr_of_rows   = 5; # Number of posts per page
-  my $page         = params->{page} || 1;
-  my $user         = session('user');
-  $user            = resultset('User')->find( $user->{id} );
-  my @comments     = resultset('View::UserComments')->search({}, { bind => [ $user->id ], order_by => \"comment_date DESC", rows => $nr_of_rows, page => $page });
-  my $count        = resultset('View::Count::StatusCommentAuthor')->search({}, { bind => [ $user->id ] })->first;
+  my $nr_of_rows = 5; # Number of posts per page
+  my $page       = params->{page} || 1;
+  my $user       = resultset('Users')->find_by_session(session);
+  my @comments   = resultset('View::UserComments')->search({}, { bind => [ $user->id ], order_by => \"comment_date DESC", rows => $nr_of_rows, page => $page });
+  my $count      = resultset('View::Count::StatusCommentAuthor')->search({}, { bind => [ $user->id ] })->first;
 
   my ($all, $approved, $trash, $spam, $pending) = $count->get_all_status_counts;
 
@@ -29,13 +29,13 @@ get '/author/comments/page/:page' => sub {
   my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/comments');
 
   # Generating the pagination navigation
-  my $total_comments  = $all;
-  my $posts_per_page  = $nr_of_rows;
-  my $current_page    = $page;
-  my $pages_per_set   = 7;
-  my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
+  my $total_comments = $all;
+  my $posts_per_page = $nr_of_rows;
+  my $current_page   = $page;
+  my $pages_per_set  = 7;
+  my $pagination     = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
 
-  template '/admin/comments/list',
+  template 'admin/comments/list',
       {
         comments      => \@comments,
         all           => $all,
@@ -53,7 +53,7 @@ get '/author/comments/page/:page' => sub {
 
 };
 
-=head
+=head2 /author/comments/:status/page/:page
 
 List all comments grouped by status
 
@@ -61,12 +61,11 @@ List all comments grouped by status
 
 get '/author/comments/:status/page/:page' => sub {
 
-  my $nr_of_rows  = 5; # Number of posts per page
-  my $page        = params->{page} || 1;
-  my $status      = params->{status};
-  my $user        = session('user');
-  $user           = resultset('User')->find( $user->{id} );
-  my @comments    = resultset('View::UserComments')->search({ status => $status },  { bind => [ $user->id ], order_by => \"comment_date DESC", rows => $nr_of_rows, page => $page });
+  my $nr_of_rows = 5; # Number of posts per page
+  my $page       = params->{page} || 1;
+  my $status     = params->{status};
+  my $user       = resultset('Users')->find_by_session(session);
+  my @comments   = resultset('View::UserComments')->search({ status => $status },  { bind => [ $user->id ], order_by => \"comment_date DESC", rows => $nr_of_rows, page => $page });
   my $count       = resultset('View::Count::StatusCommentAuthor')->search({}, { bind => [ $user->id ] })->first;
 
   my ($all, $approved, $trash, $spam, $pending) = $count->get_all_status_counts;
@@ -83,7 +82,7 @@ get '/author/comments/:status/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
 
-  template '/admin/comments/list',
+  template 'admin/comments/list',
       {
         comments      => \@comments,
         all           => $all,
@@ -101,7 +100,7 @@ get '/author/comments/:status/page/:page' => sub {
 
 };
 
-=head
+=head2 /author/comments/approve/:id
 
 Accept comment
 
@@ -113,12 +112,18 @@ get '/author/comments/approve/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->approve($user); };
+  try {
+    $comment->approve($user);
+  }
+  catch {
+    info $_;
+    error "Could not approve comment for $user->{username}";
+  };
 
-  redirect session('app_url') . '/author/comments';
+  redirect '/author/comments';
 };
 
-=haed
+=head2 /author/comments/trash/:id
 
 Trash a comment
 
@@ -126,16 +131,22 @@ Trash a comment
 
 get '/author/comments/trash/:id' => sub {
 
- my $comment_id  = params->{id};
+  my $comment_id = params->{id};
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->trash($user); };
+  try {
+    $comment->trash($user);
+  }
+  catch {
+    info $_;
+    error "Could not mark comment as trash for $user->{username}";
+  };
 
-  redirect session('app_url') . '/author/comments';
+  redirect '/author/comments';
 };
 
-=haed
+=head2 /author/comments/spam/:id
 
 Spam a comment
 
@@ -147,12 +158,18 @@ get '/author/comments/spam/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->spam($user); };
+  try {
+    $comment->spam($user);
+  }
+  catch {
+    info $_;
+    error "Could not mark comment as spam for $user->{username}";
+  };
 
-  redirect session('app_url') . '/author/comments';
+  redirect '/author/comments';
 };
 
-=haed
+=head2 /author/comments/pending/:id
 
 Pending a comment
 
@@ -164,10 +181,15 @@ get '/author/comments/pending/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->pending($user); };
+  try {
+    $comment->pending($user);
+  }
+  catch {
+    info $_;
+    error "Could not mark comment as pending for $user->{username}";
+  };
 
-  redirect session('app_url') . '/author/comments';
+  redirect '/author/comments';
 };
-
 
 1;

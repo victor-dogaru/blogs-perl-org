@@ -1,4 +1,4 @@
-=head
+=head1
 
 Author: Andrei Cacio
 Email: andrei.cacio@evozon.com
@@ -7,6 +7,7 @@ Email: andrei.cacio@evozon.com
 
 package PearlBee::Admin::Category;
 
+use Try::Tiny;
 use Dancer2;
 
 use Dancer2::Plugin::DBIC;
@@ -14,7 +15,7 @@ use PearlBee::Dancer2::Plugin::Admin;
 
 use PearlBee::Helpers::Util qw(string_to_slug);
 
-=head
+=head2 /admin/categories
 
 list all categories
 
@@ -23,10 +24,10 @@ list all categories
 get '/admin/categories' => sub {
   my @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
 
-  template '/admin/categories/list', { categories => \@categories }, { layout => 'admin' };
+  template 'admin/categories/list', { categories => \@categories }, { layout => 'admin' };
 };
 
-=head
+=head2 /admin/categories/add
 
 create method
 
@@ -49,13 +50,16 @@ post '/admin/categories/add' => sub {
     $params->{warning} = "The category name or slug already exists";
   }
   else {
-    eval {
-      my $user = session('user');
+    try {
+      my $user     = session('user');
       my $category = resultset('Category')->create({
-          name   => $name,
-          slug   => $slug,
+          name    => $name,
+          slug    => $slug,
           user_id => $user->{id}
-        });
+      });
+    }
+    catch {
+      error "Could not create category '$name'";
     };
 
     $params->{success} = "The cateogry was successfully added.";
@@ -64,11 +68,11 @@ post '/admin/categories/add' => sub {
   @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
   $params->{categories} = \@categories;
 
-  template '/admin/categories/list', $params, { layout => 'admin' };
+  template 'admin/categories/list', $params, { layout => 'admin' };
 
 };
 
-=head
+=head2 /admin/categories/delete/:id
 
 delete method
 
@@ -78,25 +82,23 @@ get '/admin/categories/delete/:id' => sub {
 
   my $id = params->{id};
 
-  eval {
+  try {
     my $category = resultset('Category')->find( $id );
 
     $category->safe_cascade_delete();
+  }
+  catch {
+    error $_;
+    my @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
+
+    template 'admin/categories/list', { categories => \@categories, warning => "Something went wrong." }, { layout => 'admin' };
   };
 
-  if ( $@ ) {
-    error $@;
-    my @categories   = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
-
-    template '/admin/categories/list', { categories => \@categories, warning => "Something went wrong." }, { layout => 'admin' };
-  }
-  else {
-    redirect session('app_url') . "/admin/categories";
-  }
+  redirect "/admin/categories";
 
 };
 
-=head
+=head2 /admin/categories/edit/:id
 
 edit method
 
@@ -149,7 +151,7 @@ any '/admin/categories/edit/:id' => sub {
   $params->{categories} = \@categories;
   
   # If the form wasn't submited just list the categories
-  template '/admin/categories/list', $params, { layout => 'admin' };
+  template 'admin/categories/list', $params, { layout => 'admin' };
 
 
 };

@@ -55,6 +55,12 @@ __PACKAGE__->table("blog");
   is_nullable: 0
   size: 255
 
+=head2 slug
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 255
+
 =head2 created_date
 
   data_type: 'timestamp'
@@ -91,6 +97,8 @@ __PACKAGE__->add_columns(
   "name",
   { data_type => "varchar", is_nullable => 0, size => 255 },
   "description",
+  { data_type => "varchar", is_nullable => 0, size => 255 },
+  "slug",
   { data_type => "varchar", is_nullable => 0, size => 255 },
   "created_date",
   {
@@ -150,12 +158,19 @@ __PACKAGE__->add_unique_constraint("name", ["name"]);
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 
+=head2 as_hashref
+
+Return a non-blessed version of a blog database row
+
+=cut
+
 sub as_hashref {
-  my $self = shift;
+  my ($self)       = @_;
   my $blog_as_href = {
     id           => $self->id,
     name         => $self->name,
     description  => $self->description,
+    slug         => $self->slug,
     created_date => $self->created_date,
     edited_date  => $self->edited_date,
     status       => $self->status,
@@ -164,11 +179,18 @@ sub as_hashref {
   return $blog_as_href;
 }             
 
+=head2 as_hashref_sanitized
+
+Remove ID from the blog database row
+
+=cut
+
 sub as_hashref_sanitized {
-  my $self = shift;
-  my $blog_href = $self->as_hashref;
-  delete $blog_href->{id};
-  return $blog_href;
+  my ($self) = @_;
+  my $href   = $self->as_hashref;
+
+  delete $href->{id};
+  return $href;
 }
 
 1;

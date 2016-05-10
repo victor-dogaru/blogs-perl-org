@@ -1,4 +1,4 @@
-=head
+=head1
 
 Author: Andrei Cacio
 Email: andrei.cacio@evozon.com
@@ -7,6 +7,7 @@ Email: andrei.cacio@evozon.com
 
 package PearlBee::Admin::Comment;
 
+use Try::Tiny;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 
@@ -14,20 +15,20 @@ use PearlBee::Dancer2::Plugin::Admin;
 
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link generate_pagination_numbering);
 
-get '/admin/comments' => sub { redirect session('app_url') . '/admin/comments/page/1' };
-
-=head
+=head2 /admin/comments ; /admin/comments/page/:page route
 
 List all comments
 
 =cut
 
+get '/admin/comments' => sub { redirect '/admin/comments/page/1' };
+
 get '/admin/comments/page/:page' => sub {
 
-  my $nr_of_rows   = 5; # Number of posts per page
-  my $page         = params->{page} || 1;
-  my @comments     = resultset('Comment')->search({}, { order_by => { -desc => "comment_date" }, rows => $nr_of_rows, page => $page });
-  my $count        = resultset('View::Count::StatusComment')->first;
+  my $nr_of_rows = 5; # Number of posts per page
+  my $page       = params->{page} || 1;
+  my @comments   = resultset('Comment')->search({}, { order_by => { -desc => "comment_date" }, rows => $nr_of_rows, page => $page });
+  my $count      = resultset('View::Count::StatusComment')->first;
 
   my ($all, $approved, $trash, $spam, $pending) = $count->get_all_status_counts;
 
@@ -42,7 +43,7 @@ get '/admin/comments/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
 
-  template '/admin/comments/list',
+  template 'admin/comments/list',
       {
         comments      => \@comments,
         all           => $all,
@@ -60,7 +61,7 @@ get '/admin/comments/page/:page' => sub {
 
 };
 
-=head
+=head2 /admin/comments/:status/page/:page
 
 List all spam comments
 
@@ -68,11 +69,11 @@ List all spam comments
 
 get '/admin/comments/:status/page/:page' => sub {
 
-  my $nr_of_rows   = 5; # Number of posts per page
-  my $page         = params->{page} || 1;
-  my $status       = params->{status};
-  my @comments     = resultset('Comment')->search({ status => $status  }, { order_by => { -desc => "comment_date" }, rows => $nr_of_rows, page => $page });
-  my $count        = resultset('View::Count::StatusComment')->first;
+  my $nr_of_rows = 5; # Number of posts per page
+  my $page       = params->{page} || 1;
+  my $status     = params->{status};
+  my @comments   = resultset('Comment')->search({ status => $status  }, { order_by => { -desc => "comment_date" }, rows => $nr_of_rows, page => $page });
+  my $count      = resultset('View::Count::StatusComment')->first;
 
   my ($all, $approved, $trash, $spam, $pending) = $count->get_all_status_counts;
   my $status_count                              = $count->get_status_count($status);
@@ -89,7 +90,7 @@ get '/admin/comments/:status/page/:page' => sub {
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
 
 
-  template '/admin/comments/list',
+  template 'admin/comments/list',
       {
         comments      => \@comments,
         all           => $all,
@@ -107,7 +108,7 @@ get '/admin/comments/:status/page/:page' => sub {
 
 };
 
-=head
+=head2 /admin/comments/approve/:id
 
 Accept comment
 
@@ -119,12 +120,18 @@ get '/admin/comments/approve/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->approve($user); };
+  try {
+    $comment->approve($user);
+  }
+  catch {
+    info $_;
+    error "Could not approve comment for $user->{username}";
+  };
 
   redirect request()->{headers}->{referer};
 };
 
-=haed
+=head2 /admin/comments/trash/:id
 
 Trash a comment
 
@@ -136,12 +143,18 @@ get '/admin/comments/trash/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->trash($user); };
+  try {
+    $comment->trash($user);
+  }
+  catch {
+    info $_;
+    error "Could not trash comment for $user->{username}";
+  };
 
   redirect request()->{headers}->{referer};
 };
 
-=haed
+=head2 /admin/comments/spam/:id
 
 Spam a comment
 
@@ -153,12 +166,18 @@ get '/admin/comments/spam/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->spam($user); };
+  try {
+    $comment->spam($user);
+  }
+  catch {
+    info $_;
+    error "Could not spam-bin comment for $user->{username}";
+  }
 
   redirect request()->{headers}->{referer};
 };
 
-=haed
+=head2 /admin/comments/pending/:id
 
 Pending a comment
 
@@ -170,7 +189,13 @@ get '/admin/comments/pending/:id' => sub {
   my $comment    = resultset('Comment')->find( $comment_id );
   my $user       = session('user');
 
-  eval { $comment->pending($user); };
+  try {
+    $comment->pending($user);
+  }
+  catch {
+    info $_;
+    error "Could not spam-bin comment for $user->{username}";
+  }
 
   redirect request()->{headers}->{referer};
 };

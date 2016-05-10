@@ -31,7 +31,7 @@ CREATE TABLE theme (
 --
 -- Users now are assigned to a class when they're created.
 --
-CREATE TABLE "user" (
+CREATE TABLE users (
   id serial UNIQUE,
   name varchar(255) NULL,
   username varchar(200) NOT NULL UNIQUE,
@@ -63,7 +63,7 @@ CREATE TABLE oauth (
 -- Users can authenticate themselves via LinkedIn, Facebook &c.
 --
 CREATE TABLE user_oauth (
-  user_id integer NOT NULL REFERENCES "user" (id),
+  user_id integer NOT NULL REFERENCES users (id),
   name varchar(255) NOT NULL REFERENCES oauth (name),
   service_id varchar(255) NOT NULL,
   PRIMARY KEY (user_id, name, service_id)
@@ -106,7 +106,7 @@ CREATE TABLE blog (
 
 
 CREATE TABLE blog_owners (
-  user_id integer NOT NULL REFERENCES "user" (id),
+  user_id integer NOT NULL REFERENCES users (id),
   blog_id integer NOT NULL REFERENCES blog (id),
   created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status active_state NOT NULL DEFAULT 'inactive',
@@ -118,12 +118,19 @@ CREATE TABLE category (
   id serial UNIQUE,
   name varchar(100) NOT NULL,
   slug varchar(100) NOT NULL,
-  user_id integer NOT NULL REFERENCES "user" (id)
+  user_id integer NOT NULL REFERENCES users (id)
 );
 
-CREATE TYPE post_format AS ENUM (
-  'HTML',
-  'Markdown'
+
+CREATE TABLE blog_categories (
+  blog_id integer NOT NULL REFERENCES "blog" (id),
+  category_id integer NOT NULL REFERENCES "category" (id)
+);
+
+
+CREATE TABLE post_format (
+  name varchar(255) NOT NULL UNIQUE,
+  PRIMARY KEY (name)
 );
 
 CREATE TYPE post_status AS ENUM (
@@ -140,10 +147,27 @@ CREATE TABLE post (
   description varchar(255),
   cover varchar(300),
   content text NOT NULL,
+  content_more text,
   created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  type post_format DEFAULT 'HTML',
+  type varchar(255) NOT NULL DEFAULT 'HTML' REFERENCES post_format (name),
   status post_status DEFAULT 'draft',
-  user_id integer NOT NULL REFERENCES "user" (id),
+  user_id integer NOT NULL REFERENCES users (id),
+  PRIMARY KEY (id)
+);
+
+
+CREATE TABLE page (
+  id serial UNIQUE,
+  title varchar(255) NOT NULL,
+  slug varchar(255),
+  description varchar(255),
+  cover varchar(300),
+  content text NOT NULL,
+  content_more text,
+  created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  type varchar(255) NOT NULL DEFAULT 'HTML' REFERENCES post_format (name),
+  status post_status DEFAULT 'draft',
+  user_id integer NOT NULL REFERENCES users (id),
   PRIMARY KEY (id)
 );
 
@@ -151,7 +175,7 @@ CREATE TABLE post (
 CREATE TABLE asset (
   id serial NOT NULL,
   blog_id integer NOT NULL REFERENCES blog (id),
-  user_id integer NOT NULL REFERENCES "user" (id),
+  user_id integer NOT NULL REFERENCES users (id),
   file_ext varchar(20) NOT NULL,
   file_name varchar(255) NOT NULL,
   file_path varchar(255) NOT NULL
@@ -162,6 +186,13 @@ CREATE TABLE post_category (
   category_id integer NOT NULL REFERENCES category (id),
   post_id integer NOT NULL REFERENCES post (id),
   PRIMARY KEY (category_id,post_id)
+);
+
+
+CREATE TABLE page_category (
+  category_id integer NOT NULL REFERENCES category (id),
+  page_id integer NOT NULL REFERENCES page (id),
+  PRIMARY KEY (category_id,page_id)
 );
 
 
@@ -176,6 +207,13 @@ CREATE TABLE post_tag (
   tag_id integer NOT NULL REFERENCES tag (id),
   post_id integer NOT NULL REFERENCES post (id),
   PRIMARY KEY (tag_id,post_id)
+);
+
+
+CREATE TABLE page_tag (
+  tag_id integer NOT NULL REFERENCES tag (id),
+  page_id integer NOT NULL REFERENCES page (id),
+  PRIMARY KEY (tag_id,page_id)
 );
 
 
@@ -195,10 +233,10 @@ CREATE TABLE comment (
   website varchar(255) DEFAULT NULL,
   avatar varchar(255) DEFAULT NULL,
   comment_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  type post_format DEFAULT 'HTML',
+  type varchar(255) NOT NULL DEFAULT 'HTML' REFERENCES post_format (name),
   status comment_status DEFAULT 'pending',
   post_id integer NOT NULL REFERENCES post (id),
-  uid integer NOT NULL REFERENCES "user" (id),
+  uid integer NOT NULL REFERENCES users (id),
   reply_to integer DEFAULT NULL REFERENCES comment (id)
 );
 

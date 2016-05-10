@@ -44,9 +44,12 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("id");
 
+=head2 as_hashref
+
+=cut
 
 sub as_hashref {
-  my $self = shift;
+  my ($self)   = @_;
   my $post_obj = {
     id          => $self->id,
     comments    => $self->comments,
@@ -58,9 +61,14 @@ sub as_hashref {
   return $post_obj;
 }             
 
+=head2 as_hashref_sanitized
+
+=cut
+
 sub as_hashref_sanitized {
-  my $self = shift;
+  my ($self)    = @_;
   my $post_href = $self->as_hashref;
+
   delete $post_href->{id};
   return $post_href;
 }
