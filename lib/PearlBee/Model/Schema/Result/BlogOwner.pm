@@ -42,6 +42,11 @@ __PACKAGE__->table("blog_owners");
   data_type: 'integer'
   is_nullable: 0
 
+=head2 is_admin
+
+  data_type: 'boolean'
+  is_nullable: 0
+
 =head2 blog_id
 
   data_type: 'integer'
