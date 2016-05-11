@@ -89,6 +89,36 @@ __PACKAGE__->table("blog");
   extra: {list => ["inactive","active","suspended","pending"]}
   is_nullable: 0
 
+=head2 social_media
+
+  data_type: 'boolean'
+  is_nullable: 0
+  default_value: false
+
+=head2 multiuser
+
+  data_type: 'boolean'
+  is_nullable: 0
+  default_value: false
+
+=head2 accept_comments
+
+  data_type: 'boolean'
+  is_nullable: 0
+  default_value: false
+
+=head2 timezone
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 255
+
+=head2 avatar_path
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 255
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -123,6 +153,16 @@ __PACKAGE__->add_columns(
   },
   "email_notification",
   { data_type => "integer", is_auto_increment => 0, is_nullable => 0 },
+  "social_media",
+  { data_type => "boolean", is_auto_increment => 0, is_nullable => 0 },
+  "multiuser",
+  { data_type => "boolean", is_auto_increment => 0, is_nullable => 0 },
+  "accept_comments",
+  { data_type => "boolean", is_auto_increment => 0, is_nullable => 0 },
+  "timezone",
+  { data_type => "varchar", is_nullable => 0, size => 255 },
+  "avatar_path",
+  { data_type => "varchar", is_nullable => 0, size => 255 },
 );
 
 =head1 PRIMARY KEY
@@ -167,13 +207,19 @@ Return a non-blessed version of a blog database row
 sub as_hashref {
   my ($self)       = @_;
   my $blog_as_href = {
-    id           => $self->id,
-    name         => $self->name,
-    description  => $self->description,
-    slug         => $self->slug,
-    created_date => $self->created_date,
-    edited_date  => $self->edited_date,
-    status       => $self->status,
+    id                 => $self->id,
+    name               => $self->name,
+    description        => $self->description,
+    slug               => $self->slug,
+    created_date       => $self->created_date,
+    edited_date        => $self->edited_date,
+    status             => $self->status,
+    email_notification => $self->email_notification,
+    social_media       => $self->social_media,
+    multiuser          => $self->multiuser,
+    accept_comments    => $self->accept_comments,
+    timezone           => $self->timezone,
+    avatar_path        => $self->avatar_path,
   };          
               
   return $blog_as_href;
