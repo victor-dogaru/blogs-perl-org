@@ -90,8 +90,9 @@ sub create_hashed_with_blog {
   my $schema = $self->result_source->schema;
   my $user   = $schema->resultset('Users')->create_hashed( $args );
   my $blog   = $schema->resultset('Blog')->create_with_slug({
-    name        => config->{blogs}{default_name},
-    description => config->{blogs}{default_description},
+    name        => $args->{name},
+    description => $args->{description},
+    timezone    => $args->{timezone},
   });
 
   $schema->resultset('BlogOwner')->create({
