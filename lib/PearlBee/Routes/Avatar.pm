@@ -22,11 +22,11 @@ Per-blog avatar
 
 get '/avatar/blog/:username/slug/:slug' => sub {
 
-  my $username = route_parameters->get('username');
-  my $slug     = route_parameters->get('slug');
-  my $theme    = session( 'theme' ) || 'dark';
-  my $user     = resultset('Users')->find({ username => $username });
-
+  my $username      = route_parameters->get('username');
+  my $slug          = route_parameters->get('slug');
+  my $theme         = session( 'theme' ) || 'dark';
+  my $user          = resultset('Users')->find({ username => $username });
+  my $avatar_config = config->{'avatar'};
   my $avatar_path   = $avatar_config->{'default'}{'dark'};
 
   if ( $user ) {
