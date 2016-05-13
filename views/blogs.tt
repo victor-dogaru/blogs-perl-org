@@ -57,7 +57,7 @@
 
                     <div class="text-listing-entries col-xs-12">
                         <div class="bubble">
-<img class="user-image" src="/avatar/[% post.user.username %]" />
+                            <img class="user-image" src="/avatar/[% post.user.username %]" />
                          </div>
                           <div class="info-entry">
                             <div class="user">
