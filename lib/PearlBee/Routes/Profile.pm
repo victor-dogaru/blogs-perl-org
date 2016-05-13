@@ -234,6 +234,75 @@ post '/profile-image' => sub {
     };
 };
 
+=head2 /blog-image/:slug route
+
+Create/update/delete a blog
+
+=cut
+
+post '/blog-image/:slug' => sub {
+
+  my $slug        = route_parameters->{'slug'};
+  my $params      = params;
+  my $file        = $params->{file};
+  my $user        = session('user');
+  my $res_user    = resultset('Users')->find_by_session(session);
+  my $upload_dir  = "/" . config->{'avatar'}{'path'};
+  my $folder_path = config->{user_pics};
+  my $blog        = resultset('Blog')->find({ slug => $slug });
+  my $message;
+
+  if ( $blog ) {
+    my $filename = sprintf( config->{'avatar'}{'blog-format'},
+                            $blog->id, $res_user->id );
+
+    if ( $params->{action_form} eq 'crop' ) {
+      if ( $params->{width} > 0 ) {
+        if ( $params->{file} ) {
+          my $logo = PearlBee::Helpers::ProcessImage->new(
+            request->uploads->{file}->tempname
+          );
+          try {
+            $logo->resize( $params, $folder_path, $filename );
+          } 
+          catch {
+            info 'There was an error resizing your avatar: ' . Dumper $_;
+          };
+        }
+        else {
+          my $logo = PearlBee::Helpers::ProcessImage->new(
+            $folder_path . '/' . $filename
+          );
+#        try {
+          $logo->resize( $params, $folder_path, $filename );
+#        } 
+#        catch {
+#          info 'There was an error resizing your avatar: ' . Dumper $_;
+#        };
+        }
+      }
+    
+      $blog->update({ avatar_path => $upload_dir . $filename });
+      $message = "Your profile picture has been changed.";
+    }
+    elsif ( $params->{action_form} eq 'delete' ) {
+      $blog->update({ avatar_path => '' });
+    
+      $message = "Your picture has been deleted";
+    }
+    else {
+    }
+  }
+  else {
+  }
+
+  session( 'user', $res_user->as_hashref_sanitized );
+  template 'blog-profile',
+    {
+      success => $message
+    };
+};
+
 =head2 /profile_password route
 
 =cut
