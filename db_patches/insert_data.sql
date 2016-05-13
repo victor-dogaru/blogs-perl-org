@@ -242,6 +242,7 @@ INSERT INTO acl VALUES
 
 INSERT INTO notification_type VALUES('comment'),
                                     ('invitation'),
+                                    ('response'),
                                     ('changed role')
 ;
 
