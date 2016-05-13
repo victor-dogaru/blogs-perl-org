@@ -257,6 +257,28 @@ CREATE TABLE comment (
 );
 
 
+CREATE TABLE notification_type (
+  name varchar(255) NOT NULL UNIQUE,
+  PRIMARY KEY (name)
+);
+
+
+--
+-- The old_status field is used for changing roles.
+--
+-- There will likely be more than (admin, author) roles in the near future.
+-- so just assuming that roles toggle between admin and author is wrong.
+--
+CREATE TABLE notification (
+  id serial UNIQUE,
+  name varchar(255) NOT NULL REFERENCES notification_type (name),
+  old_status varchar(255) NULL,
+  viewed boolean NOT NULL DEFAULT false,
+  created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  user_id integer NOT NULL REFERENCES users (id),
+);
+
+
 CREATE TABLE settings (
   timezone varchar(255) NOT NULL,
   social_media integer NOT NULL DEFAULT '1',

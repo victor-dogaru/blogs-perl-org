@@ -87,15 +87,15 @@ user_pics:        '/home/jgoff/userpics/userpics'
 
 # number of items to display per page
 blogs:
-  user_posts: 10
-  default_name: 'I Blog about Perl'
+  user_posts:          10
+  default_name:        'I Blog about Perl'
   default_description: 'A blog about the Perl programming language'
 
 # Specifics
-email_signature:          'The Blogs.Perl.Org Team'
-default_email_sender:     'no-reply@pearlbee.com'
-welcome_email_subject:    'Welcome to Blogs.Perl.Org!'
-posts_on_page:            5
-blogs_on_page:            5
+email_signature:       'The Blogs.Perl.Org Team'
+default_email_sender:  'no-reply@pearlbee.com'
+welcome_email_subject: 'Welcome to Blogs.Perl.Org!'
+posts_on_page:         5
+blogs_on_page:         5
 search:
   user_posts: 10

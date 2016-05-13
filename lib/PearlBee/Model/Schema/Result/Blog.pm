@@ -248,7 +248,7 @@ Return a list of associated posts
 sub posts {
   my ($self) = @_;
   my $schema = $self->result_source->schema;
-  my @blog_posts = $schema->resultset('BlogPost')->create({
+  my @blog_posts = $schema->resultset('BlogPost')->search({
     blog_id => $self->id
   });
 
@@ -264,11 +264,29 @@ Return a list of associated pages
 sub pages {
   my ($self) = @_;
   my $schema = $self->result_source->schema;
-  my @blog_pages = $schema->resultset('BlogPage')->create({
+  my @blog_pages = $schema->resultset('BlogPage')->search({
     blog_id => $self->id
   });
 
   return map { $self->resultset('Page')->find({ id => $_->id }) } @blog_pages;
+}
+
+=head2 users
+
+Return a list of associated users
+
+=cut
+
+sub users {
+  my ($self) = @_;
+  my $schema = $self->result_source->schema;
+  my @blog_owners = $schema->resultset('BlogOwner')->search({
+    blog_id => $self->id
+  });
+
+  return map {
+    $self->resultset('Users')->find({ id => $_->id })
+  } @blog_owners;
 }
 
 1;
