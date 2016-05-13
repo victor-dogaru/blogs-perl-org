@@ -110,6 +110,7 @@ CREATE TABLE blog_owners (
   blog_id integer NOT NULL REFERENCES blog (id),
   created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   status active_state NOT NULL DEFAULT 'inactive',
+  activation_key varchar(100) DEFAULT NULL,
   PRIMARY KEY (user_id,blog_id)
 );
 

@@ -24,6 +24,7 @@ sub create_with_slug {
   $schema->resultset('Blog')->create({
     name        => $args->{name},
     description => $args->{description},
+    timezone    => $args->{timezone},
     slug        => $slug,
   });
 }
