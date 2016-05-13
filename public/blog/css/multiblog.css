@@ -1,6 +1,10 @@
-.posts.listings .info-entry .user span{
+
+/*blog is displayed on the index, author profile [tab entries]*/
+.posts.listings .info-entry .user span,
+.blog_author .info-entry .user span{
     color: #8c8c8c;
 }
-.posts.listings .info-entry .date{
+.posts.listings .info-entry .date,
+.blog_author .info-entry .date{
     font-size: 15px;
 }
