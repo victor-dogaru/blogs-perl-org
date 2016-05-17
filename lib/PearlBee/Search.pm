@@ -126,4 +126,14 @@ get '/search/users/:query' => sub {
     return $json->encode({ posts => \@results });
 };
 
+get '/search/blogs/:query' => sub {
+    my $search_query = route_parameters->{'query'};
+    my @blogs         = resultset('Blog')->search_lc($search_query);
+    @blogs = map { $_->as_hashref } @blogs;    
+    my $json = JSON->new;
+    $json->allow_blessed(1);
+    $json->convert_blessed(1);
+    return $json->encode({ blogs => \@blogs });
+};
+
 true;
