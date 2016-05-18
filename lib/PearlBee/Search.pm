@@ -8,7 +8,7 @@ use Dancer2;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Model::Schema;
 use PearlBee::Helpers::Util qw(map_posts);
-use PearlBee::Helpers::ElasticSearch qw(search_posts search_comments);
+use PearlBee::Helpers::ElasticSearch qw(search_posts search_comments search_blogs);
 use Data::Dumper;
 
 =head2 map_user
@@ -134,6 +134,18 @@ get '/search/blogs/:query' => sub {
     $json->allow_blessed(1);
     $json->convert_blessed(1);
     return $json->encode({ blogs => \@blogs });
+};
+
+get '/search/blogs/:query/:page' => sub {
+    my $search_query = route_parameters->{'query'};
+    my $page = route_parameters->{'page'};
+    my @results =
+        PearlBee::Helpers::ElasticSearch::search_blogs($search_query,$page);
+           
+    my $json = JSON->new;
+    $json->allow_blessed(1);
+    $json->convert_blessed(1);
+    return $json->encode({ blogs => \@results });
 };
 
 true;

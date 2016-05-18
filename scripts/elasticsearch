@@ -121,6 +121,31 @@ EOF
   }
 }
 
+sub index_blogs {
+  my $in_sth = $in_dbh->prepare(<<'EOF');
+  SELECT  b.id, b.name, b.slug, b.timezone, b.avatar_path
+    FROM blog b
+ORDER BY b.id
+EOF
+  $in_sth->execute();
+
+  my $count  = 0;
+  while ( my $blog = $in_sth->fetchrow_hashref ) {
+    print '.' if $count++ % 100 == 0;
+    $e->index(
+      index   => 'blogs',
+      type    => 'blogs',
+      id      => $blog->{id},
+      body    => {
+          id          => $blog->{id},
+          slug        => $blog->{slug},
+          name        => $blog->{name},
+          timezone    => $blog->{timezone},
+          avatar_path => $blog->{avatar_path}
+      }
+    );
+  }
+}
 ###############################################################################
 #
 
@@ -134,4 +159,8 @@ print "\n";
 
 print "indexing comments: ";
 index_comments;
+print "\n";
+
+print "indexing blogs: ";
+index_blogs;
 print "\n";
