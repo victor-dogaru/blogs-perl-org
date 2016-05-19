@@ -11,7 +11,7 @@ use Getopt::Long;
 $|++;
 
 my ( $in_driver   ) = ( 'Pg'             );
-my ( $in_database ) = ( 'blogs_perl_org' );
+my ( $in_database ) = ( 'blogs_perl_org_multiblog' );
 my ( $in_user     ) = ( 'jgoff'          );
 my ( $in_password ) = ( ''               );
 
