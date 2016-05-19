@@ -36,6 +36,7 @@ sub map_user {
 
 =head2 map_blogs
 
+Add informations for every blog.
 
 =cut
 
