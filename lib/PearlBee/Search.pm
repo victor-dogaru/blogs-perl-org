@@ -34,6 +34,24 @@ sub map_user {
     return $user_href;
 }
 
+=head2 map_blogs
+
+
+=cut
+
+sub map_blog {
+    my ($blog) = @_;
+    my $contributors  = resultset('BlogOwner')->count({ blog_id => $blog->{id} });
+    my $entries       = resultset('BlogPost')->count({ blog_id => $blog->{id} });
+
+    $blog->{counts} = {
+      contributors    => $contributors,
+      entries         => $entries,
+    };
+
+    return $blog;
+}
+
 =head2 /search/user-info/:query route
 
 Search for user info, return JSON
@@ -145,7 +163,10 @@ get '/search/blogs/:query/:page' => sub {
     my $json = JSON->new;
     $json->allow_blessed(1);
     $json->convert_blessed(1);
-    return $json->encode({ blogs => \@results });
+    #return $json->encode({ blogs => \@results });
+    return $json->encode(
+        { blogs => [ map { map_blog($_) } @results ] } 
+        );
 };
 
 true;

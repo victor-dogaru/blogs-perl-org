@@ -123,8 +123,10 @@ EOF
 
 sub index_blogs {
   my $in_sth = $in_dbh->prepare(<<'EOF');
-  SELECT  b.id, b.name, b.slug, b.timezone, b.avatar_path
+  SELECT  b.id, b.name, b.slug, b.timezone, b.avatar_path, u.id as userid, u.username
     FROM blog b
+    JOIN blog_owners bo on b.id = bo.blog_id
+    JOIN users u on bo.user_id = u.id
 ORDER BY b.id
 EOF
   $in_sth->execute();
@@ -141,7 +143,9 @@ EOF
           slug        => $blog->{slug},
           name        => $blog->{name},
           timezone    => $blog->{timezone},
-          avatar_path => $blog->{avatar_path}
+          avatar_path => $blog->{avatar_path},
+          user_id     => $blog->{userid},
+          username    => $blog->{username}
       }
     );
   }
