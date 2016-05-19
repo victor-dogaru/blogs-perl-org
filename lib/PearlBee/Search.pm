@@ -43,13 +43,17 @@ Add informations for every blog.
 sub map_blog {
     my ($blog) = @_;
     my $contributors  = resultset('BlogOwner')->count({ blog_id => $blog->{id} });
-    my $entries       = resultset('BlogPost')->count({ blog_id => $blog->{id} });
+    my $entries       = resultset('BlogPost') ->count({ blog_id => $blog->{id} });
+    my $owner         = resultset('BlogOwner')->find({ blog_id => $blog->{id} });
+    my $user          = resultset('Users')    ->find({ id => $owner->user_id }); 
 
     $blog->{counts} = {
       contributors    => $contributors,
       entries         => $entries,
     };
-
+    $blog->{user_info}={
+       username        => $user->username, 
+    };
     return $blog;
 }
 
