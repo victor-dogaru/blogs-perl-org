@@ -185,7 +185,15 @@ post '/author/posts/add' => sub {
   my ($slug, $changed) = resultset('Post')->check_slug( params->{slug} );
   my $post;
   my $cover_filename;
+  my @blogs;
+  my $blog;
+  
+  for my $blog_owner ( @blog_owners ) {
+  push @blogs, map { $_->as_hashref }
+                   resultset('Blog')->search({ id => $blog_owner->blog_id });
+                 }
 
+  $blog = $blogs[0];  
   session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
 
   # Upload the cover image first so we'll have the generated filename
@@ -209,6 +217,7 @@ post '/author/posts/add' => sub {
     status  => params->{status},
     cover   => ( $cover_filename ) ? $cover_filename : '',
     type    => params->{type} || 'HTML',
+    blog_id => $blog->{id},
   };
   my $count = () = $params->{content} =~ m{ <p> }gx;
   if ( $count == 1 ) {
