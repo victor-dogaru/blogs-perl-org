@@ -187,6 +187,7 @@ post '/author/posts/add' => sub {
   my $cover_filename;
   my @blogs;
   my $blog;
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user_obj->id });
   
   for my $blog_owner ( @blog_owners ) {
   push @blogs, map { $_->as_hashref }
