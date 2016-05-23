@@ -1,4 +1,5 @@
 <link href="/blog/css/blogs.css" rel="stylesheet">
+<link href="/blog/css/multiblog.css" rel="stylesheet">
 
 <div class="blog blogs">
 
@@ -118,7 +119,7 @@
                     </div>
                </div>
                [% END %]
-               <div class="col-xs-12 no-more-posts" [% IF posts.size < 10 %] style="display: block;" [% END %]>
+               <div class="col-xs-12 no-more-posts no-more-listing" [% IF posts.size < 10 %] style="display: block;" [% END %]>
                     <h4>No more posts</h4>
                </div>
 

@@ -135,3 +135,7 @@ color: #333333;
    background-repeat: repeat;
 }
 
+/*multiblog - search blogs[tab4]*/
+#tab-content4 .entry{
+    border-bottom: 1px solid #eaeaea;
+}
