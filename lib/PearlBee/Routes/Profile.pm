@@ -305,7 +305,7 @@ post '/blog-image/:slug' => sub {
   }
 
   session( 'user', $res_user->as_hashref_sanitized );
-  if ($errorflag == 1){
+  if ($errorflag == 0){
   template 'blog-profile',
     {
       success => $message
