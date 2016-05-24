@@ -202,7 +202,6 @@ any '/admin/posts/add' => sub {
           session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
 
           # Upload the cover image first so we'll have the generated filename ( if exists )
-          my $cover_filename;
           if ( upload('cover') ) {
               my $cover        = upload('cover');
               $cover_filename  = generate_crypted_filename();
