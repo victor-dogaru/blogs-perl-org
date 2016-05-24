@@ -10,6 +10,7 @@ use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Helpers::Util qw(map_posts);
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link);
+use Try::Tiny;
 
 our $VERSION = '0.1';
 
@@ -130,6 +131,27 @@ get '/blogs/user/:username/slug/:slug/page/:page' => sub {
   else {
     template 'blogs', $template_data;
   }
+};
+
+=head2 /create-blog
+
+  Create a new blog by making the user a blog owner
+
+=cut
+
+post '/create-blog' => sub{
+  my $params   = body_parameters;
+  my $user     = resultset('Users')->find_by_session(session);
+  my $blog     = resultset('Blog')->create_with_slug({
+  name         => $params->{name},
+  description  => $params->{description},
+  timezone     => $params->{timezone},
+  });
+    resultset('BlogOwner')->create({
+    blog_id   => $blog->id,
+    user_id   => $user->id,
+    is_admin  =>"true",
+  });
 };
 
 1;
