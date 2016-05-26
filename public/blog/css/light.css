@@ -97,6 +97,9 @@
 
 
 /*blogs/profile page*/
+.blog .blog-top-part{
+    border: 1px solid #eaeaea;
+}
 .blog .blog-top-part .entry-name{
     color: #000;
 }

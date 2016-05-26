@@ -156,6 +156,9 @@ color: #ffffff;
 
 
 /*blogs/profile page*/
+.blog .blog-top-part{
+    border: 1px solid #152E4A;
+}
 .blog .blog-top-part .entry-name{
     color: #fff;
 }

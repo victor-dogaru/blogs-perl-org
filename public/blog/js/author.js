@@ -36,7 +36,7 @@ $(document).ready(function(){
 
     });
 
-    function getAuthorEntries (button) {
+    function getAuthorEntries(button) {
         var authorURL =
             $('.author-description .author-name>a').attr('href').split('/');
         var author = authorURL[3];
