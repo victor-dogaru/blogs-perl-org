@@ -135,6 +135,52 @@ get '/blogs/user/:username/slug/:slug/page/:page' => sub {
   }
 };
 
+=head2 /blogs/slug/:slug/page/:page route
+
+ View authors for a specific blog
+
+=cut
+
+get '/blogs/authors/slug/:slug/page/:page' => sub {
+
+  my $num_authors = config->{blogs}{nr_of_authors} || 5;
+  my $page        = route_parameters->{'page'};
+  my $slug        = route_parameters->{'slug'};
+  my @authors; my $owner;
+
+  my $blog          = resultset('Blog')->find({ slug => $slug });
+  my @blog_owners   = resultset('BlogOwner')->search ({ blog_id => $blog->id });
+  my $nr_of_authors = resultset('BlogOwner')->search ({ blog_id => $blog->id })->count;
+
+  for my $blog_owner (@blog_owners){
+    push @authors, map { $_->as_hashref_sanitized } 
+           resultset('Users')->search({ id => $blog_owner->get_column('user_id') });
+   }
+
+  # Calculate the next and previous page link
+  my $total_pages                 = get_total_pages($nr_of_authors, $num_authors);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/blogs/authors/slug/' . $slug);
+  
+  my $template_data =
+    { 
+      authors        => \@authors,
+      page           => $page,
+      total_pages    => $total_pages,
+      next_link      => $next_link,
+      previous_link  => $previous_link,
+    };
+  
+  if ( param('format') ) {
+    my $json = JSON->new;
+    $json->allow_blessed(1);
+    $json->convert_blessed(1);
+    $json->encode( $template_data );
+  }
+  else {
+    template 'blogs', $template_data;
+  }
+};
+
 =head2 /create-blog
 
   Create a new blog by making the user a blog owner
