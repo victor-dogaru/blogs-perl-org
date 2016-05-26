@@ -32,17 +32,19 @@
                            <div class="info-blog">
                                <p class="entry-name">[% blog.name %]</p>
                                <ul class="info-blog">
-                                   <li><a data-toggle="modal" class="number-authors" href="#HoastedModal">[% %] authors<a></li>
+                                   <li><a data-toggle="modal" class="number-authors" href="#HoastedModal">[% nr_of_authors %] author[% IF nr_of_authors > 1 %]s[% END %]<a></li>
                                    <div class="author-show">
                                        <!--<a data-toggle="modal" href="#HoastedModal" class="btn btn-info">Hoasted Modal</a>-->
                                        <div id="HoastedModal" class="modal fade">
                                            <div class="modal-dialog">
                                                <div class="modal-content">
                                                    <div class="modal-header">
-                                                       <h4 id="modal-label">Header</h4>
+                                                       <h4 id="modal-label">Author List</h4>
                                                    </div>
                                                    <div class="modal-body">
-                                                       <p>Content.</p>
+                                                       <ul class="list-of-authors">
+                                                           <li>[% user %]</li>
+                                                       </ul>
                                                    </div>
                                                </div> <!--modal-content-->
                                            </div> <!--modal-dialog-->
