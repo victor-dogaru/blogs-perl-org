@@ -86,7 +86,7 @@ get '/blogs/user/:username/slug/:slug' => sub {
         blogs          => \@blogs,
         user           => $user,
         nr_of_authors  => $nr_of_authors,
-        authors        => \authors
+        authors        => \@authors
     };
 };
 
