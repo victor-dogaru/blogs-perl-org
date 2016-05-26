@@ -38,6 +38,7 @@ get '/blogs/user/:username/slug/:slug' => sub {
   unless ($user) {
     error "No such user '$username'";
   }
+  my @authors;
   my @posts       = resultset('Post')->search_published({ 'user_id' => $user->id }, { order_by => { -desc => "created_date" }, rows => $num_user_posts });
   my $nr_of_posts = resultset('Post')->search_published({ 'user_id' => $user->id })->count;
   my @tags        = resultset('View::PublishedTags')->all();
@@ -65,6 +66,12 @@ get '/blogs/user/:username/slug/:slug' => sub {
   
   my $blog = resultset('Blog')->find ({slug =>$slug});
   my $nr_of_authors = resultset('BlogOwner')->search ({blog_id => $blog->id})->count;
+  my @blog_owners   = resultset('BlogOwner')->search ({ blog_id => $blog->id });
+
+  for my $blog_owner (@blog_owners){
+    push @authors, map { $_->as_hashref_sanitized } 
+           resultset('Users')->search({ id => $blog_owner->get_column('user_id') });
+   }
   # Extract all posts with the wanted category
   template 'blogs',
       {
@@ -78,7 +85,8 @@ get '/blogs/user/:username/slug/:slug' => sub {
         posts_for_user => $username,
         blogs          => \@blogs,
         user           => $user,
-        nr_of_authors  => $nr_of_authors
+        nr_of_authors  => $nr_of_authors,
+        authors        => \authors
     };
 };
 
