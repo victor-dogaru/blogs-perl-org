@@ -32,7 +32,7 @@ get '/users/:username' => sub {
 get '/blogs/user/:username/slug/:slug' => sub {
 
   my $num_user_posts = config->{blogs}{user_posts} || 10;
-
+  my $slug = route_parameters->{slug};
   my $username    = route_parameters->{'username'};
   my ( $user )    = resultset('Users')->match_lc( $username );
   unless ($user) {
@@ -56,13 +56,15 @@ get '/blogs/user/:username/slug/:slug' => sub {
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
   my ($previous_link, $next_link) = get_previous_next_link(1, $total_pages, '/posts/user/' . $username);
 
- my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
     my @blogs;
     for my $blog_owner ( @blog_owners ) {
       push @blogs, map { $_->as_hashref_sanitized }
                    resultset('Blog')->find({ id => $blog_owner->blog_id });
     }
-
+  
+  my $blog = resultset('Blog')->find ({slug =>$slug});
+  my $nr_of_authors = resultset('BlogOwner')->search ({blog_id => $blog->id})->count;
   # Extract all posts with the wanted category
   template 'blogs',
       {
@@ -75,7 +77,8 @@ get '/blogs/user/:username/slug/:slug' => sub {
         previous_link  => $previous_link,
         posts_for_user => $username,
         blogs          => \@blogs,
-        user           => $user
+        user           => $user,
+        nr_of_authors  => $nr_of_authors
     };
 };
 
