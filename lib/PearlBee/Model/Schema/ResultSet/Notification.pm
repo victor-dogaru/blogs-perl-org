@@ -1,4 +1,4 @@
-package  PearlBee::Model::Schema::ResultSet::Notification;
+package PearlBee::Model::Schema::ResultSet::Notification;
 
 use strict;
 use warnings;
