@@ -270,17 +270,19 @@ get '/admin/posts/edit/:slug' => sub {
     my $joined_tags = join( ', ', @tag_names );
 
     # Prepare the categories
-    my @categories;
-    push( @categories, $_->category ) foreach (@post_categories);
+    my @category_names;
+    push( @category_names, $_->category->name ) foreach (@post_categories);
+    my $joined_categories = join( ', ', @category_names );
+
 
     # Array of post categories id for populating the checkboxes
     my @categories_ids;
-    push( @categories_ids, $_->id ) foreach (@categories);
+    # push( @categories_ids, $_->id ) foreach (@categories);
 
     my $params = {
         post           => $post,
         tags           => $joined_tags,
-        categories     => \@categories,
+        categories     => $joined_categories,
         all_categories => \@all_categories,
         ids            => \@categories_ids,
         all_tags       => \@all_tags
