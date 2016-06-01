@@ -26,7 +26,8 @@ sub can_create {
   my $cover   = $params->{cover};
   my $type    = $params->{type};
   my $blog    = $params->{blog};
-
+  my $blog_id = $params->{blog_id};
+  
   my $post = $self->create_with_slug({
     title   => $title,
     content => $content,
@@ -37,9 +38,10 @@ sub can_create {
     slug    => $slug,
   });
 
-  my $blog_post = $self->create({
-    blog_id => $blog,
-    post_id => $post->id
+  my $schema = $self->result_source->schema;
+  $schema->resultset('BlogPost')->create({
+  blog_id => $blog_id,
+  post_id => $post->id,
   });
 
   return $post;

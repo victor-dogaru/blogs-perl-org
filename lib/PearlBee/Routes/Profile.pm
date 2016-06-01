@@ -249,7 +249,13 @@ post '/blog-image/:slug' => sub {
   my $res_user    = resultset('Users')->find_by_session(session);
   my $upload_dir  = "/" . config->{'avatar'}{'path'};
   my $folder_path = config->{user_pics};
-  my $blog        = resultset('Blog')->find({ slug => $slug });
+  #my $blog        = resultset('Blog')->find({ slug => $slug });
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $res_user->id, is_admin => '1' });
+  my $blog;
+  my $errorflag = 0;
+  for my $blog_owner ( @blog_owners ) {
+  $blog = resultset('Blog')->search({ id => $blog_owner->blog_id, slug => $slug });
+  }
   my $message;
 
   if ( $blog ) {
@@ -294,13 +300,23 @@ post '/blog-image/:slug' => sub {
     }
   }
   else {
+    $message="You do not have the rights to change the blog's picture";
+    $errorflag = 1;
   }
 
   session( 'user', $res_user->as_hashref_sanitized );
+  if ($errorflag == 0){
   template 'blog-profile',
     {
       success => $message
     };
+  }
+  else {
+    template 'blog-profile',
+    {
+      warning => $message
+    };
+  }
 };
 
 =head2 /profile_password route

@@ -29,4 +29,12 @@ sub create_with_slug {
   });
 }
 
+sub search_lc {
+  my ($self, $tag) = @_;
+  my $schema = $self->result_source->schema;
+  my $lc_tag = lc $tag; 
+  return $schema->resultset('Blog')->
+                  search( \[ "lower(name) like '\%$lc_tag\%'" ] );
+}
+
 1;
