@@ -139,7 +139,7 @@ get '/author/comments/blog/:blog/page/:page' => sub {
         page          => $page,
         next_link     => $next_link,
         previous_link => $previous_link,
-        action_url    => 'author/comments/blog' . $blog . '/page',
+        action_url    => 'author/comments/blog/' . $blog . '/page',
         pages         => $pagination->pages_in_set
       },
       { layout => 'admin' };

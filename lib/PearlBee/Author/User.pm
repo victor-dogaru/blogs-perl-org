@@ -153,13 +153,13 @@ get '/author/users/:status/page/:page' => sub {
 
 };
 
-=head2 /author/users/:role/page/:page
+=head2 /author/users/role/:role/page/:page
 
 List all users grouped by role
 
 =cut
 
-get '/author/users/:role/page/:page' => sub {
+get '/author/users/role/:role/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
@@ -196,7 +196,7 @@ get '/author/users/:role/page/:page' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/' . $role);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/role/' . $role);
 
   # Generating the pagination navigation
   my $total_users     = $all;
@@ -212,7 +212,7 @@ get '/author/users/:role/page/:page' => sub {
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'author/users/' . $role . '/page',
+      action_url    => 'author/users/role/' . $role . '/page',
       pages         => $pagination->pages_in_set,
       role          => $role
     },
@@ -220,13 +220,13 @@ get '/author/users/:role/page/:page' => sub {
 
 };
 
-=head2 /author/users/:blog/page/:page
+=head2 /author/users/blog/:blog/page/:page
 
 List all users grouped by blog's name.
 
 =cut
 
-get '/author/users/:blog/page/:page' => sub {
+get '/author/users/blog/:blog/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
@@ -257,7 +257,7 @@ get '/author/users/:blog/page/:page' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/' . $blog);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/blog/' . $blog);
 
   # Generating the pagination navigation
   my $total_users     = $all;
@@ -273,7 +273,7 @@ get '/author/users/:blog/page/:page' => sub {
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'author/users/' . $blog . '/page',
+      action_url    => 'author/users/blog/' . $blog . '/page',
       pages         => $pagination->pages_in_set,
       blog          => $blog->name
     },
