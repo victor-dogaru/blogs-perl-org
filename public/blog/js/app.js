@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    //  Blog start overlay
+    //  Blog start overlay-
     if (document.cookie.indexOf("visited") >= 0) {
         //	if they have been visited this site before
         $(".blog-start").removeClass("show");
