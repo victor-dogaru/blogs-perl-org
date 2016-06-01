@@ -73,6 +73,8 @@ get '/blogs/user/:username/slug/:slug' => sub {
            resultset('Users')->search({ id => $blog_owner->get_column('user_id') });
    }
   # Extract all posts with the wanted category
+
+
   template 'blogs',
       {
         posts          => \@mapped_posts,
