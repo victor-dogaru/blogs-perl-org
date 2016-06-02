@@ -90,6 +90,7 @@ blogs:
   user_posts:          10
   default_name:        'I Blog about Perl'
   default_description: 'A blog about the Perl programming language'
+  default_timezone   : 'Europe/Bucharest'
 
 
 # Specifics
