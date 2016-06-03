@@ -39,7 +39,7 @@ mail_server:
 plugins:
       DBIC:
         default:
-          dsn: dbi:Pg:database=blogs_perl_org
+          dsn: dbi:Pg:database=blogs_perl_org_multiblog
           schema_class: PearlBee::Model::Schema
           user: jgoff
           password: 
@@ -90,6 +90,7 @@ blogs:
   user_posts:          10
   default_name:        'I Blog about Perl'
   default_description: 'A blog about the Perl programming language'
+  default_timezone   : 'Europe/Bucharest'
 
 
 # Specifics

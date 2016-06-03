@@ -3,6 +3,7 @@ package PearlBee::Admin::Blog;
 use Try::Tiny;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
+use PearlBee::Dancer2::Plugin::Admin;
 
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link generate_pagination_numbering);
 
@@ -35,6 +36,7 @@ get '/admin/blogs/page/:page' => sub {
   my $pages_per_set  = 7;
   my $pagination     = generate_pagination_numbering($total_blogs, $posts_per_page, $current_page, $pages_per_set);
 
+  map { $_->as_hashref } @blogs ;
   template 'admin/blogs/list',
       {
         blogs         => \@blogs,

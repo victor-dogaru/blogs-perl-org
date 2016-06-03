@@ -34,7 +34,7 @@ get '/author/blogs/page/:page' => sub {
   my $current_page   = $page;
   my $pages_per_set  = 7;
   my $pagination     = generate_pagination_numbering($total_blogs, $posts_per_page, $current_page, $pages_per_set);
-
+  map { $_->as_hashref } @blogs ;
   template 'admin/blogs/list',
       {
         blogs         => \@blogs,
