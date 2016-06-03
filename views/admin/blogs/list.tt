@@ -42,55 +42,25 @@
 
                   <tr>
                     <td width="20%">
-                      <b> <i class="icon-th"></i> <a href="/profile/author/[% post.user.username | uri %]">[% post.user.username %]</a></b>
-                      <br />
-                      <b> [% post.user.name %] </b>
-                      <br />
-                      <i> [% post.created_date_human %] </i>
+                      <b><a href="/profile/author/[% post.user.username | uri %]">[% blog.name %]</a></b>
                     </td>
 
                     <td width="25%"> 
-                      <b> <a href="/post/[% post.slug %]"> [% post.title %] </a> </b>
-                      <br />
-                      <br />
-
-                      [% IF (post.status == 'published') %]
-                        <span class="label label-success"> Published </span>
-                      [% ELSE %]
-                        <a href="/[% role %]/posts/publish/[% post.id %]"> Publish </a>
-                      [% END %]
-
-                      |
-
-                      [% IF (post.status == 'draft') %]
-                        <span class="label label-warning"> Draft </span>
-                      [% ELSE %]
-                        <a href="/[% role %]/posts/draft/[% post.id %]"> Draft </a>
-                      [% END %]
-
-                      |
-
-                      [% IF (post.status == 'trash') %]
-                        <span class="label label-danger"> Trash </span>
-                      [% ELSE %]
-                        <a href="/[% role %]/posts/trash/[% post.id %]"> Trash </a>
-                      [% END %]
+                      [% blog.nr_of_posts %]
                     </td>
 
                     <td>
-                          <a href="/blogs/user/[% post.user.username %]/slug/[%post.blog.slug%]"> [% post.blog.name %] </a>
+                    	[% blog.nr_of_contributors %]
                     </td>
 
                     <td>
-                        [% FOREACH post_category IN post.post_categories %]
-                          <a href="/posts/category/[% post_category.category.slug %]"> [% post_category.category.name %] </a>
-                        [% END %]
+                    	[% blog.nr_of_comments %]
                     </td>
 
                     <td> 
-                      <a href="/post/[% post.slug %]#comments"> [% blog.nr_of_comments %] </a>
+                    	Super Admin
                     </td>
-                    
+                                        
                     <td width="10%">
                        <a href="/post/[% post.slug %]"> <button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button> </a>
                        <a href="/[% role %]/posts/edit/[% post.slug %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
