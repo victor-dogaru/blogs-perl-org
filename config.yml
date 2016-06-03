@@ -77,7 +77,6 @@ email_templates:  'views/emails/'
 
 # Images from MovableType
 movable_type_url: 'http://blogs.perl.org'
-<<<<<<< Updated upstream
 user_assets:      '/home/jgoff/'
 user_avatars:     '/home/jgoff/'
 user_pics:        '/home/jgoff/userpics/userpics'
@@ -88,10 +87,6 @@ blogs:
   default_name:        'I Blog about Perl'
   default_description: 'A blog about the Perl programming language'
   default_timezone   : 'Europe/Bucharest'
-
-=======
-user_assets:      '/home/paulm'
->>>>>>> Stashed changes
 
 # Specifics
 email_signature:       'The Blogs.Perl.Org Team'
