@@ -1,0 +1,117 @@
+<div class="mainy">
+ <!-- Page title -->
+ <div class="page-title">
+    <h2><i class="icon-file color"></i> Posts <small>Manage blog posts</small></h2>
+    <hr />
+ </div>
+ <!-- Page title -->
+ 
+    <div class="row">
+       <div class="col-md-12">
+
+        <div class="awidget">
+           <div class="awidget-head">
+               [% IF status %]
+                <h3>All [% status %] posts</h3>
+               [% ELSE %]
+                <h3>All posts</h3>
+                [% END %]
+           </div>
+           <div class="awidget-body">
+              
+              [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+              <a href="/admin/blogs"> All </a>([% all %]) | 
+              <a href="/admin/blogs/published/page/1"> Published </a>([% publish %]) | 
+              <a href="/admin/blogs/draft/page/1"> Draft </a>([% draft %]) | 
+              <a href="/admin/blogs/trash/page/1"> Trash </a>([% trash %])
+
+              <table class="table table-hover table-bordered ">
+               <thead>
+                 <tr>
+                   <th> Blog Name    </th>
+                   <th> Posts        </th>
+                   <th> Contributors </th>
+                   <th> Comments     </th>
+                   <th> Role         </th>
+                   <th> Actions      </th>
+                 </tr>
+               </thead>
+               <tbody>
+
+                [% FOREACH blog in blogs %]
+
+                  <tr>
+                    <td width="20%">
+                      <b> <i class="icon-th"></i> <a href="/profile/author/[% post.user.username | uri %]">[% post.user.username %]</a></b>
+                      <br />
+                      <b> [% post.user.name %] </b>
+                      <br />
+                      <i> [% post.created_date_human %] </i>
+                    </td>
+
+                    <td width="25%"> 
+                      <b> <a href="/post/[% post.slug %]"> [% post.title %] </a> </b>
+                      <br />
+                      <br />
+
+                      [% IF (post.status == 'published') %]
+                        <span class="label label-success"> Published </span>
+                      [% ELSE %]
+                        <a href="/[% role %]/posts/publish/[% post.id %]"> Publish </a>
+                      [% END %]
+
+                      |
+
+                      [% IF (post.status == 'draft') %]
+                        <span class="label label-warning"> Draft </span>
+                      [% ELSE %]
+                        <a href="/[% role %]/posts/draft/[% post.id %]"> Draft </a>
+                      [% END %]
+
+                      |
+
+                      [% IF (post.status == 'trash') %]
+                        <span class="label label-danger"> Trash </span>
+                      [% ELSE %]
+                        <a href="/[% role %]/posts/trash/[% post.id %]"> Trash </a>
+                      [% END %]
+                    </td>
+
+                    <td>
+                          <a href="/blogs/user/[% post.user.username %]/slug/[%post.blog.slug%]"> [% post.blog.name %] </a>
+                    </td>
+
+                    <td>
+                        [% FOREACH post_category IN post.post_categories %]
+                          <a href="/posts/category/[% post_category.category.slug %]"> [% post_category.category.name %] </a>
+                        [% END %]
+                    </td>
+
+                    <td> 
+                      <a href="/post/[% post.slug %]#comments"> [% blog.nr_of_comments %] </a>
+                    </td>
+                    
+                    <td width="10%">
+                       <a href="/post/[% post.slug %]"> <button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button> </a>
+                       <a href="/[% role %]/posts/edit/[% post.slug %]"> <button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button> </a>
+                   </td>
+                  </tr>
+
+                [% END %]                                                             
+
+               </tbody>
+             </table>
+             
+              <ul class="pagination pull-right">
+                [% INCLUDE components/pagination.tt %]
+              </ul>
+               
+               <div class="clearfix"></div>
+              
+           </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
