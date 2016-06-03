@@ -1,4 +1,4 @@
- # This is the main configuration file of your Dancer2 app
+# This is the main configuration file of your Dancer2 app
 # env-related settings should go to environments/$env.yml
 # all the settings in this file will be loaded at Dancer's startup.
 
@@ -19,20 +19,25 @@ charset: "UTF-8"
 # simple: default and very basic template engine
 # template_toolkit: TT
 
-session: YAML
+session: "YAML"
 
 #Logging
 #logger: "file"
 #log: "error"
 template: "template_toolkit"
 engines:
+  template:
+    template_toolkit:
+      encoding: 'utf8'
+      start_tag: '[%'
+      end_tag:   '%]'
   session:
     YAML:
       session_dir: "sessions"
 
 mail_server:
     user: 'jobs@builtinperl.com'
-    password:
+    password: '4guFG0s8mDl@z'
     host: 'mail.evozon.com'
     port: 587
 
@@ -41,46 +46,38 @@ plugins:
         default:
           dsn: dbi:Pg:database=blogs_perl_org_multiblog
           schema_class: PearlBee::Model::Schema
-          user: jgoff
+          user: paulm
           password: 
           options:
-            RaiseError:     1
-            PrintError:     1
+            RaiseError:        1
+            PrintError:        1
             pg_enable_utf8: 1
       feed:
         title:     'blogs.perl.org'
         format:    'Atom'
         max_posts: 10
       reCAPTCHA:
-        site_key:
-        secret:
+        site_key: '6LdQmhITAAAAAP7enD0cWGnmfVkzTTcV1d6r6vkp'
+        secret: '6LdQmhITAAAAANf8ueWfMzWmhWBfaJlQuEMNjc83'
         options:
           theme: 'light'
           type:  'image'
           size:  'normal'
-
-# Avatars
-avatar:
-  path:    'userpics/userpics/'
-  format:  'userpic-%d-100x100.png'
-  bounds:
-    height: 140
-    width:  140
-  default:
-    dark:  'blog/img/male-user.png'
-    light: 'blog/img/male-user-light.png'
 
 # Constants
 covers_folder:    'public/uploads/covers/'
 import_folder:    'public/uploads/import/'
 images_folder:    'public/uploads/images/'
 images_path:      '/uploads/images' 
+default_avatar:   '/blog/img/male-user.png'
+theme:            'light'
 
-app_url:         'http://localhost:5000'
-email_templates: 'views/emails/'
+app_url:          'http://localhost:5014'
+email_templates:  'views/emails/'
 
 # Images from MovableType
 movable_type_url: 'http://blogs.perl.org'
+<<<<<<< Updated upstream
 user_assets:      '/home/jgoff/'
 user_avatars:     '/home/jgoff/'
 user_pics:        '/home/jgoff/userpics/userpics'
@@ -92,6 +89,9 @@ blogs:
   default_description: 'A blog about the Perl programming language'
   default_timezone   : 'Europe/Bucharest'
 
+=======
+user_assets:      '/home/paulm'
+>>>>>>> Stashed changes
 
 # Specifics
 email_signature:       'The Blogs.Perl.Org Team'
