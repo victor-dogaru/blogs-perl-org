@@ -220,6 +220,9 @@ sub as_hashref {
     accept_comments    => $self->accept_comments,
     timezone           => $self->timezone,
     avatar_path        => $self->avatar_path,
+    nr_of_posts        => $self->nr_of_posts,
+    nr_of_contributors => $self->nr_of_contributors,
+    nr_of_comments     => $self->nr_of_comments,
   };          
               
   return $blog_as_href;
@@ -237,6 +240,64 @@ sub as_hashref_sanitized {
 
   delete $href->{id};
   return $href;
+}
+
+=head2
+  
+  Return the number of posts for each blog.
+
+=cut
+
+sub nr_of_posts {
+  my ($self)    = @_;
+  my $schema    = $self->result_source->schema;
+  
+  my $nr_of_posts = $schema->resultset('BlogPost')->
+                    search({ blog_id => $self->id })->count;
+ 
+  return $nr_of_posts;
+}
+
+=head2
+  
+  Return the number of contributors for each blog.
+
+=cut
+
+sub nr_of_contributors {
+  my ($self)    = @_;
+  my $schema    = $self->result_source->schema;
+  
+  my $nr_of_contributors = $schema->resultset('BlogOwner')->
+                    search({ blog_id => $self->id })->count;
+ 
+  return $nr_of_contributors;
+}
+
+=head2
+  
+  Return the number of comments from all the posts for each blog.
+
+=cut
+
+sub nr_of_comments {
+  my ($self)    = @_;
+  my $schema    = $self->result_source->schema;
+
+  my $nr_of_comments;
+  my @posts = $schema->resultset('BlogPost')->
+                    search({ blog_id => $self->id });
+  
+  if (scalar @posts == 0){
+    $nr_of_comments = 0;
+  }
+
+  for my $iterator (@posts){
+    my $total =  $schema -> resultset('Comment')->search({post_id => $iterator->post_id})->count;
+    $nr_of_comments += $total;
+  }
+
+  return $nr_of_comments;
 }
 
 1;
