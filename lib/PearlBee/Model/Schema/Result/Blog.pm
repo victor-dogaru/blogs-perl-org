@@ -223,6 +223,7 @@ sub as_hashref {
     nr_of_posts        => $self->nr_of_posts,
     nr_of_contributors => $self->nr_of_contributors,
     nr_of_comments     => $self->nr_of_comments,
+    blog_creator       => $self->blog_creator->as_hashref_sanitized,
   };          
               
   return $blog_as_href;
@@ -298,6 +299,25 @@ sub nr_of_comments {
   }
 
   return $nr_of_comments;
+}
+
+sub blog_creator {
+  my ($self)    = @_;
+  my $schema    = $self->result_source->schema;
+  my $id = $self->id;
+  my $blog_owner;
+   $blog_owner   = resultset('BlogOwner')->
+                    find({ 
+                      blog_id => $id
+                      } ,
+                      {
+                        order_by  => { -asc => "created_date" }
+                      }
+                    );
+
+   my $blog_creator = $schema->resultset('Users')->find({id => $blog_owner->user_id});
+   
+   return $blog_creator; 
 }
 
 1;
