@@ -306,7 +306,7 @@ sub blog_creator {
   my $schema    = $self->result_source->schema;
   my $id = $self->id;
   my $blog_owner;
-   $blog_owner   = resultset('BlogOwner')->
+   $blog_owner   = $schema->resultset('BlogOwner')->
                     find({ 
                       blog_id => $id
                       } ,
