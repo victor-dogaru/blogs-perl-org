@@ -37,7 +37,7 @@ engines:
 
 mail_server:
     user: 'jobs@builtinperl.com'
-    password: '4guFG0s8mDl@z'
+    password: 
     host: 'mail.evozon.com'
     port: 587
 
@@ -57,8 +57,8 @@ plugins:
         format:    'Atom'
         max_posts: 10
       reCAPTCHA:
-        site_key: '6LdQmhITAAAAAP7enD0cWGnmfVkzTTcV1d6r6vkp'
-        secret: '6LdQmhITAAAAANf8ueWfMzWmhWBfaJlQuEMNjc83'
+        site_key: 
+        secret: 
         options:
           theme: 'light'
           type:  'image'
@@ -72,7 +72,7 @@ images_path:      '/uploads/images'
 default_avatar:   '/blog/img/male-user.png'
 theme:            'light'
 
-app_url:          'http://localhost:5014'
+app_url:          'http://localhost:5000'
 email_templates:  'views/emails/'
 
 # Images from MovableType
