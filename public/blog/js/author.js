@@ -77,7 +77,8 @@ $(document).ready(function(){
                             commentsText = "Comments (" + posts[i].nr_of_comments + ")";
                         }
 
-                        newItem.find(".post_preview_wrapper").html(posts[i].content.replace(/<img[^>]+>(<\/img>)?|<iframe.+?<\/iframe>|<video[^>]+>(<\/video>)?/g, ''));
+                        //newItem.find(".post_preview_wrapper").html(posts[i].content.replace(/<img[^>]+>(<\/img>)?|<iframe.+?<\/iframe>|<video[^>]+>(<\/video>)?/g, ''));
+                        newItem.find(".post_preview_wrapper").html(posts[i].content.replace(/(<([^>]+)>)/ig, ''));
                         newItem.find(".post-heading h2 a").attr("href", "/post/" + posts[i].title);
                         newItem.find(".user a.user-name").html(posts[i].user.name);
                         newItem.find(".user a.user-name").attr("href", "/profile/author/" + posts[i].user.username);
