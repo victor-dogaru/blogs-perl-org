@@ -212,6 +212,35 @@ post '/create-blog' => sub{
   });
 };
 
+=head2 admin/create-blog
+
+  Getter for blog-creation for admins;
+
+=cut
+
+get 'admin/create-blog' => sub{
+      my @blogs    = resultset('Blog')->all();
+      template 'admin/blogs/add',{blogs => \@blogs}, { layout => 'admin' };
+};
+
+=head2 author/create-blog
+
+  Getter for blog-creation for authors;
+
+=cut
+
+get 'author/create-blog' => sub{
+
+      my $user       = resultset('Users')->find_by_session(session);
+      my @blogs;
+      my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+      for my $blog_owner ( @blog_owners ) {
+      push @blogs, map { $_->as_hashref }
+                   resultset('Blog')->search({ id => $blog_owner->blog_id });
+      }
+      template 'admin/blogs/add',{blogs => \@blogs}, { layout => 'admin' };
+};
+
 =head2 /add-contributor
  
   Add a contributor, making her/him an admin or a simple author.
