@@ -92,3 +92,4 @@ Getter method so as to retrieve only those blogs in which you are an owner.
     { layout => 'admin' };
   }
 };
+1;
