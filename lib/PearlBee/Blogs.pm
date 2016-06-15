@@ -61,18 +61,25 @@ get '/blogs/user/:username/slug/:slug' => sub {
   my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
   my @blogs;
   for my $blog_owner ( @blog_owners ) {
-    push @blogs, map { $_->as_hashref_sanitized }
+    push @blogs, 
                  resultset('Blog')->find({ id => $blog_owner->blog_id });
   }
   
+  for my $iterator (@blogs){
+  $blog = resultset('Blog')->find({slug => $slug, id=> $iterator->id});
+  }
+  my $searched_blog = resultset('BlogOwner')->find ({blog_id => $blog->id});
+  my @aux_authors = resultset('BlogOwner')->search({ blog_id => $searched_blog->get_column('blog_id') });
+
 
   my $blog = resultset('Blog')->find ({slug =>$slug});
   my $nr_of_authors = resultset('BlogOwner')->search ({blog_id => $blog->id})->count;
 
-  for my $blog_owner (@blog_owners){
+  foreach my $iterator (@aux_authors){
     push @authors, map { $_->as_hashref_sanitized } 
-                   resultset('Users')->search({ id => $blog_owner->get_column('user_id') });
-   }
+                   resultset('Users')->search({ id => $iterator->get_column('user_id') });
+  }
+  map { $_->as_hashref_sanitized } @blogs;
   # Extract all posts with the wanted category
 
 
