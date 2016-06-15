@@ -26,11 +26,6 @@ session: "YAML"
 #log: "error"
 template: "template_toolkit"
 engines:
-  template:
-    template_toolkit:
-      encoding: 'utf8'
-      start_tag: '[%'
-      end_tag:   '%]'
   session:
     YAML:
       session_dir: "sessions"
@@ -64,6 +59,17 @@ plugins:
           type:  'image'
           size:  'normal'
 
+# Avatars
+avatar:
+  path:    'userpics/userpics/'
+  format:  'userpic-%d-100x100.png'
+  bounds:
+    height: 140
+    width:  140
+  default:
+    dark:  'blog/img/male-user.png'
+    light: 'blog/img/male-user-light.png'
+
 # Constants
 covers_folder:    'public/uploads/covers/'
 import_folder:    'public/uploads/import/'
@@ -86,7 +92,7 @@ blogs:
   user_posts:          10
   default_name:        'I Blog about Perl'
   default_description: 'A blog about the Perl programming language'
-  default_timezone   : 'Europe/Bucharest'
+  default_timezone:    'Europe/Bucharest'
 
 # Specifics
 email_signature:       'The Blogs.Perl.Org Team'
