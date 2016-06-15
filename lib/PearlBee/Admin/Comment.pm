@@ -76,6 +76,7 @@ get '/admin/comments/:status/page/:page' => sub {
   my $status     = params->{status};
   my @comments   = resultset('Comment')->search({ status => $status  }, { order_by => { -desc => "comment_date" }, rows => $nr_of_rows, page => $page });
   my $count      = resultset('View::Count::StatusComment')->first;
+  my @blogs      = resultset('Blog')->all(); 
 
   my ($all, $approved, $trash, $spam, $pending) = $count->get_all_status_counts;
   my $status_count                              = $count->get_status_count($status);
@@ -95,6 +96,7 @@ get '/admin/comments/:status/page/:page' => sub {
   template 'admin/comments/list',
       {
         comments      => \@comments,
+        blogs         => \@blogs,
         all           => $all,
         approved      => $approved,
         spam          => $spam,
@@ -217,6 +219,7 @@ get '/admin/comments/blog/:blog/page/:page' => sub {
   my $user       = resultset('Users')->find_by_session(session);
   my @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
   my @comments;
+  my @blogs      = resultset('Blog')->all(); 
   foreach my $blog_post (@blog_posts){
     push @comments, map { $_->as_hashref }
               resultset('Comment')->search({post_id => $blog_post->post_id});
@@ -237,6 +240,7 @@ get '/admin/comments/blog/:blog/page/:page' => sub {
   template 'admin/comments/list',
       {
         comments      => \@comments,
+        blogs         => \@blogs,
         all           => $all,
         page          => $page,
         next_link     => $next_link,
