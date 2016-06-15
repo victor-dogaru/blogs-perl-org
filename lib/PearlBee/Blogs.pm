@@ -65,15 +65,13 @@ get '/blogs/user/:username/slug/:slug' => sub {
                  resultset('Blog')->find({ id => $blog_owner->blog_id });
   }
   
+  my $blog;
   for my $iterator (@blogs){
   $blog = resultset('Blog')->find({slug => $slug, id=> $iterator->id});
   }
   my $searched_blog = resultset('BlogOwner')->find ({blog_id => $blog->id});
   my @aux_authors = resultset('BlogOwner')->search({ blog_id => $searched_blog->get_column('blog_id') });
 
-
-  my $blog = resultset('Blog')->find ({slug =>$slug});
-  my $nr_of_authors = resultset('BlogOwner')->search ({blog_id => $blog->id})->count;
 
   foreach my $iterator (@aux_authors){
     push @authors, map { $_->as_hashref_sanitized } 
@@ -95,7 +93,6 @@ get '/blogs/user/:username/slug/:slug' => sub {
         posts_for_user => $username,
         blogs          => \@blogs,
         user           => $user,
-        nr_of_authors  => $nr_of_authors,
         authors        => \@authors
     };
 };
