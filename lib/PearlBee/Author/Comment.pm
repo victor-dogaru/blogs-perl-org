@@ -87,10 +87,16 @@ get '/author/comments/:status/page/:page' => sub {
   my $current_page    = $page;
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
-
+  my @blogs;
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+  for my $blog_owner ( @blog_owners ) {
+      push @blogs, map { $_->as_hashref }
+                   resultset('Blog')->search({ id => $blog_owner->blog_id });
+  }
   template 'admin/comments/list',
       {
         comments      => \@comments,
+        blogs         => \@blogs,
         all           => $all,
         approved      => $approved,
         spam          => $spam,
@@ -139,9 +145,16 @@ get '/author/comments/blog/:blog/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
 
+  my @blogs;
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+  for my $blog_owner ( @blog_owners ) {
+      push @blogs, map { $_->as_hashref }
+                   resultset('Blog')->search({ id => $blog_owner->blog_id });
+  }
   template 'admin/comments/list',
       {
         comments      => \@actual_comments,
+        blogs         => \@blogs,
         all           => $all,
         page          => $page,
         next_link     => $next_link,
