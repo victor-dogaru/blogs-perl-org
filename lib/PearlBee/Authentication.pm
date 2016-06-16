@@ -254,6 +254,9 @@ post '/oauth/:username/service/:service/service_id/:service_id' => sub {
   my $service_id = route_parameters->{'service_id'};
   my $user       = resultset('Users')->find(
     \[ 'lower(username) = ?' => $username ] );
+  unless ( $user and $user->can_do( 'create user_oauth' ) ) {
+    error "You are not allowed to add OpenAuth to this user";
+  }
   error "No username specified to attach a service to"
     unless $username;
   error "No service name specified to attach a service to"
