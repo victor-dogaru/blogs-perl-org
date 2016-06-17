@@ -1,11 +1,4 @@
-=head1
-
-Author: Andrei Cacio
-Email: andrei.cacio@evozon.com
-
-=cut
-
-package PearlBee::Admin::User;
+package PearlBee::Author::User;
 
 use Dancer2;
 use Dancer2::Plugin::DBIC;
@@ -16,40 +9,49 @@ use PearlBee::Helpers::Util qw(create_password);
 
 use Email::Template;
 use DateTime;
+use Data::Dumper;
 
-get '/admin/users' => sub { redirect '/admin/users/page/1'; };
+get '/author/users' => sub { redirect '/author/users/page/1'; };
 
-=head2 /admin/users/page/:page
+=head2 /author/users/page/:page
 
-List all users
+List all users contributing or owning the blogs in which the user is involved.
 
 =cut
 
-get '/admin/users/page/:page' => sub {
+get '/author/users/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my @users;
-  my @blogs      = resultset('Blog')->all();
-  if (session('multiuser')) {
-    @users = resultset('Users')->search({}, { order_by => { -desc => "register_date" }, rows => $nr_of_rows, page => $page });
-  } else {
-    @users = resultset('Users')->search({ status => { '!=' => 'pending' } }, { order_by => { -desc => "register_date" }, rows => $nr_of_rows, page => $page });
+  my @blogs;
+  my @blogs2;
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  for my $blog_owner (@blog_owners){
+    push @blogs, 
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
   }
-  
-  my $count = resultset('View::Count::StatusUser')->first;
-  
+
+  for my $blog (@blogs){
+    push @blogs2,
+    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+  }
+
+  for my $blog (@blogs2){
+    my @tmp_users = map {$_->as_hashref_sanitized}
+              resultset('Users')->search({ id => $blog->get_column('user_id') });      
+    $_->{role_in_blog} = $blog->is_admin for @tmp_users;
+    push @users, @tmp_users;
+  }
+
+  my $count      = resultset('View::Count::StatusUserNonAdmin')->find({}, { bind => [ $user_obj->id ] });
   my ($all, $active, $inactive, $suspended, $pending) = $count->get_all_status_counts;
-  
-  if (! session('multiuser')) {
-    # do not count 'pending' users
-    my $count_pending = resultset('Users')->search({ status => 'pending' })->count;
-    $all -= $count_pending;
-  }
+
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/admin/users');
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users');
 
   # Generation of the pagination navigation
   my $total_users    = $all;
@@ -70,33 +72,52 @@ get '/admin/users/page/:page' => sub {
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'admin/users/page',
+      action_url    => 'author/users/page',
       pages         => $pagination->pages_in_set
     },
     { layout => 'admin' };
 
 };
 
-=head2 /admin/users/:status/page/:page
+=head2 /author/users/:status/page/:page
 
-List all users grouped by status
+Users  grouped by status
 
 =cut
 
-get '/admin/users/:status/page/:page' => sub {
+get '/author/users/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $status     = params->{status};
-  my @users      = resultset('Users')->search({ status => $status }, { order_by => { -desc => "register_date" }, rows => $nr_of_rows, page => $page });
-  my $count      = resultset('View::Count::StatusUser')->first;
-  my @blogs      = resultset('Blog')->all();
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @blogs;
+  my @blogs2;
+  my @users;
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  for my $blog_owner (@blog_owners){
+    push @blogs, 
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
+  }
+
+  for my $blog (@blogs){
+    push @blogs2,
+    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+  }
+
+  for my $blog (@blogs2){
+    my @tmp_users = map {$_->as_hashref_sanitized}
+              resultset('Users')->search({ id => $blog->get_column('user_id') });      
+    $_->{role_in_blog} = $blog->is_admin for @tmp_users;
+    push @users, @tmp_users;
+  }
+
+  my $count      = resultset('View::Count::StatusUserNonAdmin')->find({}, { bind => [ $user_obj->id ] });
 
   my ($all, $active, $inactive, $suspended, $pending) =
     $count->get_all_status_counts;
   my $status_count =
     $count->get_status_count($status);
-  
   if (! session('multiuser')) {
     # do not count 'pending' users
     my $count_pending = resultset('Users')->search({ status => 'pending' })->count;
@@ -105,7 +126,7 @@ get '/admin/users/:status/page/:page' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/admin/users/' . $status);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/' . $status);
 
   # Generating the pagination navigation
   my $total_users     = $status_count;
@@ -126,7 +147,7 @@ get '/admin/users/:status/page/:page' => sub {
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'admin/users/' . $status . '/page',
+      action_url    => 'author/users/' . $status . '/page',
       pages         => $pagination->pages_in_set,
       status        => $status
     },
@@ -134,13 +155,13 @@ get '/admin/users/:status/page/:page' => sub {
 
 };
 
-=head2 /admin/users/role/:role/page/:page
+=head2 /author/users/role/:role/page/:page
 
 List all users grouped by role
 
 =cut
 
-get '/admin/users/role/:role/page/:page' => sub {
+get '/author/users/role/:role/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
@@ -150,19 +171,24 @@ get '/admin/users/role/:role/page/:page' => sub {
     $flag = 1;
   }
     else {
-     $flag = 0; 
-  }
-
-  my @blogs = resultset ('Blog')->all();
-  my @blog_owners;
+      $flag=0; 
+    }
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @blogs;
+  my @blogs2;
   my @users;
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  for my $blog_owner (@blog_owners){
+    push @blogs, 
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
+  }
 
   for my $blog (@blogs){
-    push @blog_owners,
-    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id'), is_admin => $flag  });
+    push @blogs2,
+    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id'), is_admin =>$flag  });
   }
 
-  for my $blog (@blog_owners){
+  for my $blog (@blogs2){
     my @tmp_users = map {$_->as_hashref_sanitized}
               resultset('Users')->search({ id => $blog->get_column('user_id') });      
     $_->{role_in_blog} = $blog->is_admin for @tmp_users;
@@ -180,16 +206,16 @@ get '/admin/users/role/:role/page/:page' => sub {
   my $current_page    = $page;
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
-  my @actual_users    = splice(@users,($page-1)*$nr_of_rows,$nr_of_rows);
-  
+
   template 'admin/users/list',
     {
-      users         => \@actual_users,
+      users         => \@users,
+      blogs         => \@blogs,
       all           => $all, 
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'admin/users/role/' . $role . '/page',
+      action_url    => 'author/users/role/' . $role . '/page',
       pages         => $pagination->pages_in_set,
       role          => $role
     },
@@ -197,13 +223,74 @@ get '/admin/users/role/:role/page/:page' => sub {
 
 };
 
-=head2 /admin/users/activate/:id
+=head2 /author/users/blog/:blog/page/:page
+
+List all users grouped by blog's name.
+
+=cut
+
+get '/author/users/blog/:blog/page/:page' => sub {
+
+  my $nr_of_rows = 5; # Number of posts per page
+  my $page       = params->{page} || 1;
+  my $blog       = params->{blog};
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @blogs;
+  my @blogs2;
+  my @users;
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  for my $blog_owner (@blog_owners){
+    push @blogs, 
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => $blog});
+  }
+
+  for my $blog (@blogs){
+    push @blogs2,
+    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+  }
+
+  for my $blog (@blogs2){
+    my @tmp_users = map {$_->as_hashref_sanitized}
+              resultset('Users')->search({ id => $blog->get_column('user_id') });      
+    $_->{role_in_blog} = $blog->is_admin for @tmp_users;
+    push @users, @tmp_users;
+  }
+
+  my $all = scalar @users;
+
+  # Calculate the next and previous page link
+  my $total_pages                 = get_total_pages($all, $nr_of_rows);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/blog/' . $blog);
+
+  # Generating the pagination navigation
+  my $total_users     = $all;
+  my $posts_per_page  = $nr_of_rows;
+  my $current_page    = $page;
+  my $pages_per_set   = 7;
+  my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
+
+  template 'admin/users/list',
+    {
+      users         => \@users,
+      all           => $all, 
+      page          => $page,
+      next_link     => $next_link,
+      previous_link => $previous_link,
+      action_url    => 'author/users/blog/' . $blog . '/page',
+      pages         => $pagination->pages_in_set,
+      blog          => $blog->name
+    },
+    { layout => 'admin' };
+
+};
+
+=head2 /author/users/activate/:id
 
 Activate user
 
 =cut
 
-any '/admin/users/activate/:id' => sub {
+any '/author/users/activate/:id' => sub {
 
   my $user_id = params->{id};
   my $user    = resultset('Users')->find( $user_id );
@@ -216,16 +303,16 @@ any '/admin/users/activate/:id' => sub {
     error "Could not activate user";
   };
 
-  redirect '/admin/users';
+  redirect '/author/users';
 };
 
-=head2 /admin/users/deactivate/:id
+=head2 /author/users/deactivate/:id
 
 Deactivate user
 
 =cut
 
-any '/admin/users/deactivate/:id' => sub {
+any '/author/users/deactivate/:id' => sub {
 
   my $user_id          = params->{id};
   my $user             = resultset('Users')->find( $user_id );
@@ -245,16 +332,16 @@ any '/admin/users/deactivate/:id' => sub {
     };
   }
 
-  redirect '/admin/users';
+  redirect '/author/users';
 };
 
-=head2 /admin/users/suspend/:id
+=head2 /author/users/suspend/:id
 
 Suspend user
 
 =cut
 
-any '/admin/users/suspend/:id' => sub {
+any '/author/users/suspend/:id' => sub {
 
   my $user_id          = params->{id};
   my $user             = resultset('Users')->find( $user_id );
@@ -274,16 +361,16 @@ any '/admin/users/suspend/:id' => sub {
     };
   }
 
-  redirect '/admin/users';
+  redirect '/author/users';
 };
 
-=head2 /admin/users/allow/:id
+=head2 /author/users/allow/:id
 
 Allow pending user
 
 =cut
 
-any '/admin/users/allow/:id' => sub {
+any '/author/users/allow/:id' => sub {
 
   my $user_id = params->{id};
   my $user    = resultset('Users')->find( $user_id );
@@ -320,16 +407,16 @@ any '/admin/users/allow/:id' => sub {
     };
   }
 
-  redirect '/admin/users';
+  redirect '/author/users';
 };
 
-=head2 /admin/users/add
+=head2 /author/users/add
 
 Add a new user
 
 =cut
 
-any '/admin/users/add' => sub {
+any '/author/users/add' => sub {
 
   if ( params->{username} ) {
 

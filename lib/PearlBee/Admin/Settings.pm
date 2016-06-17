@@ -29,11 +29,13 @@ get '/admin/settings' => sub {
 
 	my $settings  = resultset('Setting')->first;
 	my @timezones = DateTime::TimeZone->all_names;
+	my @blogs 	  = resultset('Blog')->all();
 
 	template 'admin/settings/index.tt', 
 		{ 
 			setting   => $settings,
-			timezones => \@timezones
+			timezones => \@timezones,
+			blogs     => \@blogs
 		}, 
 		{ layout => 'admin' };
 };
