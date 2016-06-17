@@ -1,4 +1,4 @@
- # This is the main configuration file of your Dancer2 app
+# This is the main configuration file of your Dancer2 app
 # env-related settings should go to environments/$env.yml
 # all the settings in this file will be loaded at Dancer's startup.
 
@@ -19,7 +19,7 @@ charset: "UTF-8"
 # simple: default and very basic template engine
 # template_toolkit: TT
 
-session: YAML
+session: "YAML"
 
 #Logging
 #logger: "file"
@@ -32,28 +32,28 @@ engines:
 
 mail_server:
     user: 'jobs@builtinperl.com'
-    password:
+    password: 
     host: 'mail.evozon.com'
     port: 587
 
 plugins:
       DBIC:
         default:
-          dsn: dbi:Pg:database=blogs_perl_org;host=139.162.204.109
+          dsn: dbi:Pg:database=blogs_perl_org_multiblog
           schema_class: PearlBee::Model::Schema
-          user: jgoff
+          user: paulm
           password: 
           options:
-            RaiseError:     1
-            PrintError:     1
+            RaiseError:        1
+            PrintError:        1
             pg_enable_utf8: 1
       feed:
         title:     'blogs.perl.org'
         format:    'Atom'
         max_posts: 10
       reCAPTCHA:
-        site_key:
-        secret:
+        site_key: 
+        secret: 
         options:
           theme: 'light'
           type:  'image'
@@ -75,9 +75,11 @@ covers_folder:    'public/uploads/covers/'
 import_folder:    'public/uploads/import/'
 images_folder:    'public/uploads/images/'
 images_path:      '/uploads/images' 
+default_avatar:   '/blog/img/male-user.png'
+theme:            'light'
 
-app_url:         'http://localhost:5000'
-email_templates: 'views/emails/'
+app_url:          'http://localhost:5000'
+email_templates:  'views/emails/'
 
 # Images from MovableType
 movable_type_url: 'http://blogs.perl.org'
@@ -87,16 +89,16 @@ user_pics:        '/home/jgoff/userpics/userpics'
 
 # number of items to display per page
 blogs:
-  user_posts: 10
-  default_name: 'I Blog about Perl'
+  user_posts:          10
+  default_name:        'I Blog about Perl'
   default_description: 'A blog about the Perl programming language'
-
+  default_timezone:    'Europe/Bucharest'
 
 # Specifics
-email_signature:          'The Blogs.Perl.Org Team'
-default_email_sender:     'no-reply@pearlbee.com'
-welcome_email_subject:    'Welcome to Blogs.Perl.Org!'
-posts_on_page:            5
-blogs_on_page:            5
+email_signature:       'The Blogs.Perl.Org Team'
+default_email_sender:  'no-reply@pearlbee.com'
+welcome_email_subject: 'Welcome to Blogs.Perl.Org!'
+posts_on_page:         5
+blogs_on_page:         5
 search:
   user_posts: 10
