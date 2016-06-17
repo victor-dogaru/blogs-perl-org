@@ -265,9 +265,13 @@ post '/admin/posts/add' => sub {
 get '/admin/posts/add' => sub {
 
   my @categories = resultset('Category')->all();
+  my @blogs = resultset('Blog')->all();
 
   template 'admin/posts/add',
-           { categories => \@categories },
+           {
+               categories => \@categories,
+               blogs      => \@blogs
+           },
            { layout => 'admin' };
 };
 =head2 edit method
