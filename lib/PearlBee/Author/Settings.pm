@@ -125,6 +125,7 @@ get '/author/settings' => sub {
   template 'admin/settings/index.tt', 
     { 
       setting   => $settings,
+      blogs     => \@blogs,
       timezones => \@timezones,
       blogs     => \@blogs
     }, 
