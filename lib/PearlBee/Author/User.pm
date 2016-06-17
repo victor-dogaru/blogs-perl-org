@@ -233,17 +233,17 @@ get '/author/users/blog/:blog/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
-  my $blog       = params->{blog};
-  my $user_obj    = resultset('Users')->find_by_session(session);
+  my $blog       = resultset('Blog')->find({ name => params->{blog} });
+  my $user_obj   = resultset('Users')->find_by_session(session);
   my @blogs;
   my @blogs2;
   my @users;
   my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
   for my $blog_owner (@blog_owners){
     push @blogs, 
-                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => $blog});
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => params->{blog}});
   }
-
+   map { $_->as_hashref } @blogs;
   for my $blog (@blogs){
     push @blogs2,
     resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
@@ -268,16 +268,17 @@ get '/author/users/blog/:blog/page/:page' => sub {
   my $current_page    = $page;
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
+  my @actual_users    = splice(@users,($page-1)*$nr_of_rows,$nr_of_rows);
 
   template 'admin/users/list',
     {
-      users         => \@users,
+      users         => \@actual_users,
       blogs         => \@blogs,
       all           => $all, 
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'author/users/blog/' . $blog . '/page',
+      action_url    => 'author/users/blog/' . params->{blog} . '/page',
       pages         => $pagination->pages_in_set,
       blog          => $blog->name
     },

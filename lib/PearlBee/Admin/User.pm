@@ -197,6 +197,64 @@ get '/admin/users/role/:role/page/:page' => sub {
 
 };
 
+=head2 /admin/users/blog/:blog/page/:page
+
+List all users grouped by blogs name.
+
+=cut
+
+get '/admin/users/blog/:blog/page/:page' => sub {
+
+  my $nr_of_rows = 5; # Number of posts per page
+  my $page       = params->{page} || 1;
+  my $blog       = resultset('Blog')->find({ name => params->{blog} });
+  my $user_obj   = resultset('Users')->find_by_session(session);
+  my @blogs      = resultset('Blog')->all();
+  my @blogs2;
+  my @users;
+
+  for my $blog (@blogs){
+    push @blogs2,
+    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+  }
+
+  for my $blog (@blogs2){
+    my @tmp_users = map {$_->as_hashref_sanitized}
+              resultset('Users')->search({ id => $blog->get_column('user_id') });      
+    $_->{role_in_blog} = $blog->is_admin for @tmp_users;
+    push @users, @tmp_users;
+  }
+  map { $_->as_hashref } @blogs;
+  my $all = scalar @users;
+
+  # Calculate the next and previous page link
+  my $total_pages                 = get_total_pages($all, $nr_of_rows);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/admin/users/blog/' . $blog);
+
+  # Generating the pagination navigation
+  my $total_users     = $all;
+  my $posts_per_page  = $nr_of_rows;
+  my $current_page    = $page;
+  my $pages_per_set   = 7;
+  my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
+  my @actual_users    = splice(@users,($page-1)*$nr_of_rows,$nr_of_rows);
+ 
+  template 'admin/users/list',
+    {
+      users         => \@actual_users,
+      blogs         => \@blogs,
+      all           => $all, 
+      page          => $page,
+      next_link     => $next_link,
+      previous_link => $previous_link,
+      action_url    => 'admin/users/blog/' . params->{blog}. '/page',
+      pages         => $pagination->pages_in_set,
+      blog          => $blog->name
+    },
+    { layout => 'admin' };
+
+};
+
 =head2 /admin/users/activate/:id
 
 Activate user
