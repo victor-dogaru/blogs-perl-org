@@ -63,6 +63,7 @@ get '/author/users/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
+      blogs         => \@blogs,
       all           => $all, 
       active        => $active,
       inactive      => $inactive,
@@ -90,7 +91,7 @@ get '/author/users/:status/page/:page' => sub {
   my $page       = params->{page} || 1;
   my $status     = params->{status};
   my $user_obj    = resultset('Users')->find_by_session(session);
-    my @blogs;
+  my @blogs;
   my @blogs2;
   my @users;
   my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
@@ -137,6 +138,7 @@ get '/author/users/:status/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
+      blogs         => \@blogs,
       all           => $all, 
       active        => $active,
       inactive      => $inactive,
@@ -208,6 +210,7 @@ get '/author/users/role/:role/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
+      blogs         => \@blogs,
       all           => $all, 
       page          => $page,
       next_link     => $next_link,

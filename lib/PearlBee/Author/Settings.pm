@@ -98,4 +98,35 @@ Getter method so as to retrieve only those blogs in which you are an owner.
   }
 };
 
+
+=head2 /author/settings route
+
+Index of settings page
+
+=cut
+
+get '/author/settings' => sub {
+
+  my $settings  = resultset('Setting')->first;
+  my @timezones = DateTime::TimeZone->all_names;
+  my $user_obj    = resultset('Users')->find_by_session(session);
+
+  my @blogs;
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  for my $blog_owner (@blog_owners){
+    push @blogs, 
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
+  }
+  map { $_->as_hashref } @blogs;
+  
+  template 'admin/settings/index.tt', 
+    { 
+      setting   => $settings,
+      timezones => \@timezones,
+      blogs     => \@blogs
+    }, 
+    { layout => 'admin' };
+};
+
 1;
+
