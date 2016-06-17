@@ -63,14 +63,7 @@ get '/author/users/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
-<<<<<<< HEAD
-<<<<<<< HEAD
       blogs         => \@blogs,
-=======
->>>>>>> ebca9aec29ad4cb5df415a508a8c8deceaa808d1
-=======
-      blogs         => \@blogs,
->>>>>>> 25623e5a416c42c4b6ab8f4ca8119759bef593ee
       all           => $all, 
       active        => $active,
       inactive      => $inactive,
@@ -98,15 +91,7 @@ get '/author/users/:status/page/:page' => sub {
   my $page       = params->{page} || 1;
   my $status     = params->{status};
   my $user_obj    = resultset('Users')->find_by_session(session);
-<<<<<<< HEAD
-<<<<<<< HEAD
   my @blogs;
-=======
-    my @blogs;
->>>>>>> ebca9aec29ad4cb5df415a508a8c8deceaa808d1
-=======
-  my @blogs;
->>>>>>> 25623e5a416c42c4b6ab8f4ca8119759bef593ee
   my @blogs2;
   my @users;
   my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
@@ -153,14 +138,7 @@ get '/author/users/:status/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
-<<<<<<< HEAD
-<<<<<<< HEAD
       blogs         => \@blogs,
-=======
->>>>>>> ebca9aec29ad4cb5df415a508a8c8deceaa808d1
-=======
-      blogs         => \@blogs,
->>>>>>> 25623e5a416c42c4b6ab8f4ca8119759bef593ee
       all           => $all, 
       active        => $active,
       inactive      => $inactive,
@@ -232,14 +210,7 @@ get '/author/users/role/:role/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
-<<<<<<< HEAD
-<<<<<<< HEAD
       blogs         => \@blogs,
-=======
->>>>>>> ebca9aec29ad4cb5df415a508a8c8deceaa808d1
-=======
-      blogs         => \@blogs,
->>>>>>> 25623e5a416c42c4b6ab8f4ca8119759bef593ee
       all           => $all, 
       page          => $page,
       next_link     => $next_link,
@@ -301,6 +272,7 @@ get '/author/users/blog/:blog/page/:page' => sub {
   template 'admin/users/list',
     {
       users         => \@users,
+      blogs         => \@blogs,
       all           => $all, 
       page          => $page,
       next_link     => $next_link,

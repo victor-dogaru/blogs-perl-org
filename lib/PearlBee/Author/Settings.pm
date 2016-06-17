@@ -12,9 +12,6 @@ use Dancer2::Plugin::DBIC;
 
 post '/blog/profile' => sub {
 
-
-
-
   my $params   = body_parameters;
   my $res_user = resultset('Users')->find_by_session(session);
   unless ( $res_user and $res_user->can_do( 'update blog' ) ) {
