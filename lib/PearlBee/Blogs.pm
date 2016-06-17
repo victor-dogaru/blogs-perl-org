@@ -205,12 +205,18 @@ get '/blogs/authors/slug/:slug/page/:page' => sub {
 post '/create-blog' => sub{
   my $params   = body_parameters;
   my $user     = resultset('Users')->find_by_session(session);
+  unless ( $user and $user->can_do( 'create blog' ) ) {
+    my $id = $user->id;
+    log "User ID $user tried to create a blog";
+    return;
+  }
   my $blog     = resultset('Blog')->create_with_slug({
-  name         => $params->{name},
-  description  => $params->{description},
-  timezone     => $params->{timezone},
+    name         => $params->{name},
+    description  => $params->{description},
+    timezone     => $params->{timezone},
   });
-    resultset('BlogOwner')->create({
+
+  resultset('BlogOwner')->create({
     blog_id   => $blog->id,
     user_id   => $user->id,
     is_admin  =>"true",
@@ -254,6 +260,11 @@ get 'author/create-blog' => sub{
 
 post '/add-contributor/blog/:slug/email/:email/role/:role' => sub {
     my $user    = resultset('Users')->find_by_session(session);
+    unless ( $user and $user->can_do('create blog_owner') ) {
+      return template 'blog-profile', {
+        warning => "You are not allowed to add a contributor to this blog",
+      }, { layout => 'admin' };
+    }
     my $slug    = route_parameters->{'slug'};
     my $email   = route_parameters->{'email'};
     my $role    = route_parameters->{'role'};

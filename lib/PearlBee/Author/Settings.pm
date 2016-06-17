@@ -13,6 +13,8 @@ use Dancer2::Plugin::DBIC;
 post '/blog/profile' => sub {
 
 
+
+
   my $params   = body_parameters;
   my $res_user = resultset('Users')->find_by_session(session);
   unless ( $res_user and $res_user->can_do( 'update blog' ) ) {
@@ -21,7 +23,6 @@ post '/blog/profile' => sub {
     }, { layout => 'admin' };
   }
   my $blog     = resultset('Blog')->search({ name => $params->{'blog'} });
-
 
   my $new_columns = { };
   my @message;
@@ -99,6 +100,8 @@ Getter method so as to retrieve only those blogs in which you are an owner.
     { layout => 'admin' };
   }
 };
+
+
 
 
 
