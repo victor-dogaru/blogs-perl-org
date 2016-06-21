@@ -112,25 +112,34 @@ get '/author/comments/:status/page/:page' => sub {
 
 };
 
-=head2 /author/comments/blog/:blog/page/:page
+=head2 /author/comments/blog/:blog/:status/page/:page
 
 List all comments grouped by blog.
 
 =cut
 
-get '/author/comments/blog/:blog/page/:page' => sub {
+get '/author/comments/blog/:blog/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $blog       = params->{blog};
+  my $status     = params->{status};
   my $blog_ref   =resultset('Blog')->find({name => params->{blog}});
   my $user       = resultset('Users')->find_by_session(session);
   my @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
   my @comments;
   my @actual_comments;
-  foreach my $blog_post (@blog_posts){
-    push @comments, map { $_->as_hashref }
+  if ($status eq ('all') ){
+    foreach my $blog_post (@blog_posts){
+      push @comments, map { $_->as_hashref }
               resultset('Comment')->search({post_id => $blog_post->post_id});
+    }
+  }
+  else{
+    foreach my $blog_post (@blog_posts){
+      push @comments, map { $_->as_hashref }
+              resultset('Comment')->search({post_id => $blog_post->post_id, status => $status});
+    }
   }
   my $all          = scalar @comments;
   @actual_comments = splice(@comments,($page-1)*$nr_of_rows,$nr_of_rows);
@@ -151,6 +160,8 @@ get '/author/comments/blog/:blog/page/:page' => sub {
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });
   }
+  my @actual_comments = splice(@comments,($page-1)*$nr_of_rows,$nr_of_rows);
+
   template 'admin/comments/list',
       {
         comments      => \@actual_comments,
