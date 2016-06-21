@@ -204,25 +204,34 @@ get '/admin/comments/pending/:id' => sub {
   redirect request()->{headers}->{referer};
 };
 
-=head2 /admin/comments/blog/:blog/page/:page
+=head2 /admin/comments/blog/:blog/:status/page/:page
 
-List all comments grouped by blog.
+List all comments grouped by blog and status.
 
 =cut
 
-get '/admin/comments/blog/:blog/page/:page' => sub {
+get '/admin/comments/blog/:blog/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $blog       = params->{blog};
+  my $status     = params->{status};
   my $blog_ref   =resultset('Blog')->find({name => params->{blog}});
   my $user       = resultset('Users')->find_by_session(session);
   my @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
   my @comments;
   my @blogs      = resultset('Blog')->all(); 
-  foreach my $blog_post (@blog_posts){
-    push @comments, map { $_->as_hashref }
+  if ($status eq ('all') ){
+    foreach my $blog_post (@blog_posts){
+      push @comments, map { $_->as_hashref }
               resultset('Comment')->search({post_id => $blog_post->post_id});
+    }
+  }
+  else{
+    foreach my $blog_post (@blog_posts){
+      push @comments, map { $_->as_hashref }
+              resultset('Comment')->search({post_id => $blog_post->post_id, status => $status});
+    }
   }
   my $all        = scalar @comments;
 
@@ -236,16 +245,16 @@ get '/admin/comments/blog/:blog/page/:page' => sub {
   my $current_page    = $page;
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
-
+  my @actual_comments = splice(@comments,($page-1)*$nr_of_rows,$nr_of_rows);
   template 'admin/comments/list',
       {
-        comments      => \@comments,
+        comments      => \@actual_comments,
         blogs         => \@blogs,
         all           => $all,
         page          => $page,
         next_link     => $next_link,
         previous_link => $previous_link,
-        action_url    => 'admin/comments/blog/' . $blog . '/page',
+        action_url    => 'admin/comments/blog/' . $blog . '/'. $status .'/page',
         pages         => $pagination->pages_in_set
       },
       { layout => 'admin' };

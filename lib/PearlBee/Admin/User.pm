@@ -197,26 +197,55 @@ get '/admin/users/role/:role/page/:page' => sub {
 
 };
 
-=head2 /admin/users/blog/:blog/page/:page
+=head2 /admin/users/blog/:blog/:status/:role/page/:page
 
-List all users grouped by blogs name.
+List all users grouped by blogs name, role and status.
 
 =cut
 
-get '/admin/users/blog/:blog/page/:page' => sub {
-
+get '/admin/users/blog/:blog/:status/:role/:page/:page' => sub {
+  
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
+  my $status     = params->{status};
+  my $role       = params->{role};
+  my $flag;
+  if ($role eq 'admin') {
+    $flag = 1;
+  }
+    else {
+     $flag = 0; 
+  }
+
   my $blog       = resultset('Blog')->find({ name => params->{blog} });
-  my $user_obj   = resultset('Users')->find_by_session(session);
-  my @blogs      = resultset('Blog')->all();
+  #my $user_obj   = resultset('Users')->find_by_session(session);
+  my @blogs;
   my @blogs2;
   my @users;
-
-  for my $blog (@blogs){
-    push @blogs2,
-    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+  my @blog_owners = resultset('BlogOwner')->all();
+  for my $blog_owner (@blog_owners){
+    push @blogs, 
+                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => params->{blog}});
   }
+   map { $_->as_hashref } @blogs;
+
+  if ($role ne 'all' && $status ne 'all'){
+  push @blogs2,
+  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), status=>$status, is_admin=>$flag });
+  }
+  elsif ($role eq 'all' && $status ne 'all'){
+       push @blogs2,
+  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), status=>$status });
+  }
+  elsif ($role ne 'all' && $status eq 'all'){
+       push @blogs2,
+  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), is_admin=>$flag });
+  }
+  else {
+       push @blogs2,
+  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id') });
+  }
+
 
   for my $blog (@blogs2){
     my @tmp_users = map {$_->as_hashref_sanitized}
@@ -224,7 +253,7 @@ get '/admin/users/blog/:blog/page/:page' => sub {
     $_->{role_in_blog} = $blog->is_admin for @tmp_users;
     push @users, @tmp_users;
   }
-  map { $_->as_hashref } @blogs;
+
   my $all = scalar @users;
 
   # Calculate the next and previous page link
