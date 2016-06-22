@@ -176,7 +176,7 @@ get '/admin/comments/spam/:id' => sub {
   catch {
     info $_;
     error "Could not spam-bin comment for $user->{username}";
-  }
+  };
 
   redirect request()->{headers}->{referer};
 };
@@ -199,7 +199,7 @@ get '/admin/comments/pending/:id' => sub {
   catch {
     info $_;
     error "Could not spam-bin comment for $user->{username}";
-  }
+  };
 
   redirect request()->{headers}->{referer};
 };
@@ -245,12 +245,36 @@ get '/admin/comments/blog/:blog/:status/page/:page' => sub {
   my $current_page    = $page;
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
+  
+  my $pending  = 0;
+  my $trash    = 0; 
+  my $spam     = 0;
+  my $approved = 0;
+  foreach my $comment (@comments){
+    if ($comment->{status} eq 'approved'){
+      $approved +=1;
+    }
+    elsif ($comment->{status} eq 'pending'){
+      $pending +=1;
+    }
+    elsif ($comment->{status} eq 'spam'){
+      $spam +=1;
+    }
+    else{
+      $trash +=1;
+    }
+  }
+
   my @actual_comments = splice(@comments,($page-1)*$nr_of_rows,$nr_of_rows);
   template 'admin/comments/list',
       {
         comments      => \@actual_comments,
         blogs         => \@blogs,
         all           => $all,
+        approved      => $approved,
+        spam          => $spam,
+        pending       => $pending,
+        trash         => $trash,
         page          => $page,
         next_link     => $next_link,
         previous_link => $previous_link,
