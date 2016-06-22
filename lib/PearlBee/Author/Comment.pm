@@ -142,7 +142,7 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
     }
   }
   my $all          = scalar @comments;
-  @actual_comments = splice(@comments,($page-1)*$nr_of_rows,$nr_of_rows);
+
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
   my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/comments/' . $blog);
@@ -170,7 +170,7 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
         page          => $page,
         next_link     => $next_link,
         previous_link => $previous_link,
-        action_url    => 'author/comments/blog/' . $blog . '/page',
+        action_url    => 'author/comments/blog/' . $blog . '/' . $status . '/page',
         pages         => $pagination->pages_in_set
       },
       { layout => 'admin' };
