@@ -11,6 +11,7 @@ use Dancer2::Plugin::DBIC;
 use PearlBee::Helpers::Util qw(map_posts);
 use PearlBee::Helpers::Notification_Email;
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link);
+use DateTime::TimeZone;
 
 our $VERSION = '0.1';
 
@@ -231,7 +232,13 @@ post '/create-blog' => sub{
 
 get 'admin/create-blog' => sub{
       my @blogs    = resultset('Blog')->all();
-      template 'admin/blogs/add',{blogs => \@blogs}, { layout => 'admin' };
+      my @timezones = DateTime::TimeZone->all_names;
+      template 'admin/blogs/add',
+      {
+        blogs => \@blogs,
+        timezones => \@timezones
+      },
+      { layout => 'admin' };
 };
 
 =head2 author/create-blog
