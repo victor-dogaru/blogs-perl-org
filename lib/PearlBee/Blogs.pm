@@ -94,6 +94,7 @@ get '/blogs/user/:username/slug/:slug' => sub {
         posts_for_user => $username,
         blogs          => \@blogs,
         user           => $user,
+        searched_blog  => $blog,
         authors        => \@authors
     };
 };
@@ -292,7 +293,7 @@ post '/add-contributor/blog/:slug/email/:email/role/:role' => sub {
             # created_date defaults cleanly
             activation_key => $token,
         });
-	my $notification = resultset('Notification')->create_invitation({
+  my $notification = resultset('Notification')->create_invitation({
             blog_id => $blog_id,
             user_id => $user_id
         });
