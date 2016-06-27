@@ -34,17 +34,22 @@ get '/users/:username' => sub {
 get '/blogs/user/:username/slug/:slug' => sub {
 
   my $num_user_posts = config->{blogs}{user_posts} || 10;
-  my $slug = route_parameters->{slug};
+  my $slug        = route_parameters->{'slug'};
   my $username    = route_parameters->{'username'};
   my ( $user )    = resultset('Users')->match_lc( $username );
   unless ($user) {
-    error "No such user '$username'";
+    return error "No such user '$username'";
   }
-  my @authors;
-  my @posts       = resultset('Post')->search_published({ 'user_id' => $user->id }, { order_by => { -desc => "created_date" }, rows => $num_user_posts });
-  my $nr_of_posts = resultset('Post')->search_published({ 'user_id' => $user->id })->count;
-  my @tags        = resultset('View::PublishedTags')->all();
-  my @categories  = resultset('View::PublishedCategories')->search({ name => { '!=' => 'Uncategorized'} });
+  my ( $searched_blog ) = resultset('Blog')->find_by_slug_uid({
+    slug => $slug, user_id => $user->id
+  });
+  my @posts       = resultset('Post')->search_published(
+    { 'user_id' => $user->id },
+    { order_by => { -desc => "created_date" }, rows => $num_user_posts }
+  );
+  my $nr_of_posts = resultset('Post')->search_published({
+    'user_id' => $user->id
+  })->count;
 
   # extract demo posts info
   my @mapped_posts = map_posts(@posts);
@@ -59,32 +64,21 @@ get '/blogs/user/:username/slug/:slug' => sub {
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
   my ($previous_link, $next_link) = get_previous_next_link(1, $total_pages, '/posts/user/' . $username);
 
-  my $searched_blog = resultset('Blog')->search_by_slug_uid({ slug => $slug, user_id => $user->id })->as_hashref_sanitized;
-
   my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
   my @blogs;
   for my $blog_owner ( @blog_owners ) {
-    push @blogs, 
-                 resultset('Blog')->find({ id => $blog_owner->blog_id });
+    push @blogs, resultset('Blog')->find({ id => $blog_owner->blog_id });
   }
   
-  my @aux_authors = resultset('BlogOwner')->search({ blog_id => $blog->get_column('blog_id') });
+  my @aux_authors = $searched_blog->contributors;
 
-
-  foreach my $iterator (@aux_authors){
-    push @authors, map { $_->as_hashref_sanitized } 
-                   resultset('Users')->search({ id => $iterator->get_column('user_id') });
-  }
-  map { $_->as_hashref_sanitized } @blogs;
-  # Extract all posts with the wanted category
-
+  $searched_blog = $searched_blog->as_hashref_sanitized if $searched_blog;
+  my @authors = map { $_->as_hashref_sanitized } @aux_authors;
 
   template 'blogs',
       {
         posts          => \@mapped_posts,
-        tags           => \@tags,
         page           => 1,
-        categories     => \@categories,
         total_pages    => $total_pages,
         next_link      => $next_link,
         previous_link  => $previous_link,
