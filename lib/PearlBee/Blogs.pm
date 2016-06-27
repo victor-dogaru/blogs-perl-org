@@ -59,6 +59,8 @@ get '/blogs/user/:username/slug/:slug' => sub {
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
   my ($previous_link, $next_link) = get_previous_next_link(1, $total_pages, '/posts/user/' . $username);
 
+  my $searched_blog = resultset('Blog')->search_by_slug_uid({ slug => $slug, user_id => $user->id })->as_hashref_sanitized;
+
   my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
   my @blogs;
   for my $blog_owner ( @blog_owners ) {
@@ -66,12 +68,7 @@ get '/blogs/user/:username/slug/:slug' => sub {
                  resultset('Blog')->find({ id => $blog_owner->blog_id });
   }
   
-  my $blog;
-  for my $iterator (@blogs){
-  $blog = resultset('Blog')->find({slug => $slug, id=> $iterator->id});
-  }
-  my $searched_blog = resultset('BlogOwner')->find ({blog_id => $blog->id});
-  my @aux_authors = resultset('BlogOwner')->search({ blog_id => $searched_blog->get_column('blog_id') });
+  my @aux_authors = resultset('BlogOwner')->search({ blog_id => $blog->get_column('blog_id') });
 
 
   foreach my $iterator (@aux_authors){
@@ -94,8 +91,8 @@ get '/blogs/user/:username/slug/:slug' => sub {
         posts_for_user => $username,
         blogs          => \@blogs,
         user           => $user,
-        searched_blog  => $blog,
-        authors        => \@authors
+        authors        => \@authors,
+        searched_blog  => $searched_blog
     };
 };
 
