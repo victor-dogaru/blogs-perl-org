@@ -78,3 +78,15 @@ $(document).ready(function() {
 	});
 	
 });
+
+
+$(document).ready(function() {
+	$("#comments_blogs option").click(function(e){
+		e.preventDefault();
+		var currentVal = $("#comments_blogs option:selected").text();
+		alert(currentVal);
+		console.log(currentVal);
+//		sessionStorage.setItem(currentVal, "12");
+//		alert(currentVal);
+	});
+});
