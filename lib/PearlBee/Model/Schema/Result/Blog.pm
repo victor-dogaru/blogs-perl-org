@@ -277,7 +277,7 @@ sub nr_of_contributors {
 
 =head2
   
-  Return the number of contributors for each blog.
+  Return the contributors for each blog.
 
 =cut
 
@@ -288,7 +288,7 @@ sub contributors {
     blog_id => $self->id
   });
   my @contributor_objects = map {
-    $schema->resultset('Blog')->find({ id => $_->blog_id })
+    $schema->resultset('Users')->find({ id => $_->user_id })
   } @contributors;
  
   return @contributor_objects;

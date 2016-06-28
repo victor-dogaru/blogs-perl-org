@@ -47,15 +47,16 @@ search on.
 
 sub find_by_slug_uid {
   my ($self, $args) = @_;
-  my $slug = $args->{slug};
-  my $user_id = $args->{user_id};
+  my $slug          = $args->{slug};
+  my $user_id       = $args->{user_id};
 
   my $schema = $self->result_source->schema;
-  my @blog_ids = $schema->resultset('BlogOwner')->search({
-    user_id => $user_id
-  });
-  my @blogs = map { $schema->resultset('Blog')->find({ id => $_->blog_id }) }
-                  @blog_ids;
+  my %blog_ids = map {
+    $_->blog_id => 1
+  } $schema->resultset('BlogOwner')->search({ user_id => $user_id });
+
+  my @blogs = map { $schema->resultset('Blog')->find({ id => $_ }) }
+                  keys %blog_ids;
   my @found_blogs = grep {
     $_->slug eq $slug
   } @blogs;
