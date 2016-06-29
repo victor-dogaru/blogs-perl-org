@@ -46,6 +46,11 @@ use PearlBee::Helpers::Util qw(generate_crypted_filename map_posts create_passwo
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link);
 use PearlBee::Password;
 
+# Instead of putting API references in the main package, just use this
+# API collection.
+#
+use PearlBee::API;
+
 our $VERSION = '0.1';
 use Data::Dumper;
 

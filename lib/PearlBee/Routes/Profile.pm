@@ -250,7 +250,7 @@ Create/update/delete a blog
 
 =cut
 
-post '/blog-image/:slug' => sub {
+post '/blog-image/slug/:slug/user/:username' => sub {
 
   my $slug        = route_parameters->{'slug'};
   my $params      = params;
