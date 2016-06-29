@@ -22,23 +22,9 @@ View all notifications
 get '/notification' => sub {
 
   my $res_user              = resultset('Users')->find_by_session(session);
-  my @comment_notifications =
-    resultset('Notification')->search(
-      { user_id => $res_user->id,
-        name    => 'comment' },
-      { order_by => { -desc => 'created_date' } }
-    );
-  my @invitation_notifications =
-    resultset('Notification')->search(
-      { user_id => $res_user->id,
-        name     => 'invitation' },
-      { order_by => { -desc => 'created_date' } }
-    );
 
   template 'notification',
     {
-      comments   => \@comment_notifications,
-      invitation => \@invitation_notifications,
     };
 
 };

@@ -73,6 +73,11 @@ __PACKAGE__->table("notification");
   data_type: 'integer'
   is_nullable: 0
 
+=head2 generic_id
+
+  data_type: 'integer'
+  is_nullable: 1
+
 =cut
 
 __PACKAGE__->add_columns(
@@ -93,6 +98,8 @@ __PACKAGE__->add_columns(
   },
   "user_id",
   { data_type => "integer", is_auto_increment => 0, is_nullable => 0 },
+  "generic_id",
+  { data_type => "integer", is_auto_increment => 0, is_nullable => 1 },
 );
 
 =head1 PRIMARY KEY
@@ -128,6 +135,7 @@ sub as_hashref {
     viewed       => $self->viewed,
     created_date => $self->created_date,
     user_id      => $self->user_id,
+    generic_id   => $self->generic_id,
   };          
               
   return $blog_as_href;
