@@ -10,10 +10,10 @@ our $VERSION = '0.1';
 # all over h*ll.
 
 get '/blog-avatar-light' => sub {
-  config->{'avatar'}{'blog'}{'default'}{'light'}
+  config->{'blog-avatar'}{'default'}{'light'}
 };
 get '/blog-avatar-dark'  => sub {
-  config->{'avatar'}{'blog'}{'default'}{'dark'}
+  config->{'blog-avatar'}{'default'}{'dark'}
 };
 
 =head2 /blog-avatar/ route
@@ -23,11 +23,11 @@ Avatar route that just returns the theme-based image
 =cut
 
 get '/blog-avatar/' => sub {
-  my $avatar_path = config->{'avatar'}{'blog'}{'default'}{'dark'};
+  my $avatar_path = config->{'blog-avatar'}{'default'}{'dark'};
   my $theme       = session( 'theme' ) || 'dark';
 
   if ( $theme eq 'light' ) {
-    $avatar_path = config->{'avatar'}{'blog'}{'default'}{'light'}
+    $avatar_path = config->{'blog-avatar'}{'default'}{'light'}
   }
 
   send_file $avatar_path;
@@ -47,7 +47,7 @@ get '/blog-avatar/slug/:slug/user/:username' => sub {
   my $user     = resultset('Users')->find({ username => $username });
   my $theme    = session( 'theme' ) || 'dark';
 
-  my $avatar_config = config->{'avatar'}{'blog'};
+  my $avatar_config = config->{'blog-avatar'};
   my $avatar_path   = $avatar_config->{'default'}{'dark'};
 
   my $blog = resultset('Blog')->search_by_user_id_and_slug({

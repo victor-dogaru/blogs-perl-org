@@ -254,7 +254,7 @@ post '/blog-image/slug/:slug/user/:username' => sub {
   my $slug        = route_parameters->{'slug'};
   my $username    = route_parameters->{'username'};
   my $file        = params->{'file'};
-  my $upload_dir  = "/" . config->{'avatar'}{'blog'}{'path'};
+  my $upload_dir  = "/" . config->{'blog-avatar'}{'path'};
   my $folder_path = config->{'blog_pics'};
   my $user        = resultset('Users')->find_by_session(session);
   my $params      = params;
@@ -273,10 +273,10 @@ post '/blog-image/slug/:slug/user/:username' => sub {
 
   if ( $blog ) {
     my $message  = "Your profile picture has been changed.";
-    my $filename = sprintf( config->{'avatar'}{'blog'}{'format'}, $blog->id );
+    my $filename = sprintf( config->{'blog-avatar'}{'format'}, $blog->id );
     my $scale    = {
-      xpixels => config->{'avatar'}{'blog'}{'bounds'}{'width'},
-      ypixels => config->{'avatar'}{'blog'}{'bounds'}{'height'},
+      xpixels => config->{'blog-avatar'}{'bounds'}{'width'},
+      ypixels => config->{'blog-avatar'}{'bounds'}{'height'},
     };
 
     if ( $params->{action_form} eq 'crop' ) {
