@@ -15,21 +15,21 @@
 			<div class="awidget-body">
 				<div class="comments-filter clearfix">
 
-					<div class="form-group pull-left">
+					<div class="form-group pull-left choose-blog">
 						<label class="control-label">Blog</label>
 						<div class="options-drop">
-							<select id="comments_blogs" name="comments_blog_name" class="chosen-select" onChange="window.location.href=this.value;">
-								<option value="All"> All </option>
+							<select id="comments_blogs" name="comments_blog_name" class="chosen-select" onChange="getBlog(this.value); window.location.href=this.value;">
+								<option value="" id="selected"> </option>
 								[% FOREACH blog IN blogs %] [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-								<option name="[% blog.name %]" value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> [% blog.name %] </option>
+								<option [% selected %] name="[% blog.name %]" value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> [% blog.name %] </option>
 								[% END %]
 							</select>
 						</div>
 					</div>
-					<div class="form-group pull-left">
+					<div class="form-group pull-left comm-status">
 						<label class="control-label">Status</label>
 						<div class="options-drop">
-							<select name="comments_status" class="chosen-select" onChange="window.location.href=this.value">
+							<select name="comments_status" class="chosen-select" onChange="getStatus(this.value); window.location.href=this.value">
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 								<option value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> All </option>
 								<option value="/[% role %]/comments/blog/[% blog.name %]/approved/page/1"> Approved </option>
