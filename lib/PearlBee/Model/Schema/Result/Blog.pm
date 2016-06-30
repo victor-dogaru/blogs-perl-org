@@ -277,6 +277,25 @@ sub nr_of_contributors {
 
 =head2
   
+  Return the contributors for each blog.
+
+=cut
+
+sub contributors {
+  my ($self)       = @_;
+  my $schema       = $self->result_source->schema;
+  my @contributors = $schema->resultset('BlogOwner')->search({
+    blog_id => $self->id
+  });
+  my @contributor_objects = map {
+    $schema->resultset('Users')->find({ id => $_->user_id })
+  } @contributors;
+ 
+  return @contributor_objects;
+}
+
+=head2
+  
   Return the number of comments from all the posts for each blog.
 
 =cut
@@ -302,20 +321,16 @@ sub nr_of_comments {
 }
 
 sub blog_creator {
-  my ($self)    = @_;
-  my $schema    = $self->result_source->schema;
-  my $id = $self->id;
-  my $blog_owner;
-   $blog_owner   = $schema->resultset('BlogOwner')->
-                    find({ 
-                      blog_id => $id
-                      } ,
-                      {
-                        order_by  => { -asc => "created_date" }
-                      }
-                    );
-
-   my $blog_creator = $schema->resultset('Users')->find({id => $blog_owner->user_id});
+  my ($self)     = @_;
+  my $schema     = $self->result_source->schema;
+  my $id         = $self->id;
+  my $blog_owner = $schema->resultset('BlogOwner')->find(
+                      { blog_id => $id, is_admin => 1 },
+                      { order_by  => { -asc => "created_date" } }
+                   );
+   my $blog_creator = $schema->resultset('Users')->find({
+     id => $blog_owner->user_id
+   });
    
    return $blog_creator; 
 }

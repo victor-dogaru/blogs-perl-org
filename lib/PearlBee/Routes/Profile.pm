@@ -113,6 +113,7 @@ post '/profile' => sub {
   my $params      = body_parameters;
   my $user        = session('user');
   unless ( $user and $user->can_do( 'update user' ) ) {
+    warn "***** Redirecting guest away from /profile";
     return template 'profile', {
       warning => "You are not allowed to update this user"
     }, { layout => 'admin' };
@@ -188,6 +189,7 @@ post '/profile-image' => sub {
   my $file     = $params->{file};
   my $user     = session('user');
   unless ( $user and $user->can_do( 'update user' ) ) {
+    warn "***** Redirecting guest away from /profile-image";
     return template 'profile', {
       warning => "You are not allowed to update this user"
     }, { layout => 'admin' };
@@ -216,12 +218,7 @@ post '/profile-image' => sub {
         my $logo = PearlBee::Helpers::ProcessImage->new(
           $folder_path . '/' . $filename
         );
-#      try {
         $logo->resize( $params, $folder_path, $filename );
-#      } 
-#      catch {
-#        info 'There was an error resizing your avatar: ' . Dumper $_;
-#      };
       }
     }
 
@@ -250,13 +247,14 @@ Create/update/delete a blog
 
 =cut
 
-post '/blog-image/:slug' => sub {
+post '/blog-image/slug/:slug/user/:username' => sub {
 
   my $slug        = route_parameters->{'slug'};
   my $params      = params;
   my $file        = $params->{file};
   my $user        = session('user');
   unless ( $user and $user->can_do( 'update blog' ) ) {
+    warn "***** Redirecting guest away from /blog-image/slug/:slug/user/:username";
     return template 'blog-profile', {
       warning => "You are not allowed to update this blog image",
     }, { layout => 'admin' };
@@ -264,12 +262,11 @@ post '/blog-image/:slug' => sub {
   my $res_user    = resultset('Users')->find_by_session(session);
   my $upload_dir  = "/" . config->{'avatar'}{'path'};
   my $folder_path = config->{user_pics};
-  #my $blog        = resultset('Blog')->find({ slug => $slug });
   my @blog_owners = resultset('BlogOwner')->search({ user_id => $res_user->id, is_admin => '1' });
   my $blog;
   my $errorflag = 0;
   for my $blog_owner ( @blog_owners ) {
-  $blog = resultset('Blog')->search({ id => $blog_owner->blog_id, slug => $slug });
+    $blog = resultset('Blog')->search({ id => $blog_owner->blog_id, slug => $slug });
   }
   my $message;
 
@@ -294,12 +291,7 @@ post '/blog-image/:slug' => sub {
           my $logo = PearlBee::Helpers::ProcessImage->new(
             $folder_path . '/' . $filename
           );
-#        try {
           $logo->resize( $params, $folder_path, $filename );
-#        } 
-#        catch {
-#          info 'There was an error resizing your avatar: ' . Dumper $_;
-#        };
         }
       }
     
@@ -310,8 +302,6 @@ post '/blog-image/:slug' => sub {
       $blog->update({ avatar_path => '' });
     
       $message = "Your picture has been deleted";
-    }
-    else {
     }
   }
   else {
@@ -342,6 +332,7 @@ post '/profile_password' => sub {
   my $params   = body_parameters;
   my $user     = session('user');
   unless ( $user and $user->can_do( 'update user' ) ) {
+    warn "***** Redirecting guest away from /profile_password";
     return template 'profile', {
       warning => "You are not allowed to update this user",
     }, { layout => 'admin' };

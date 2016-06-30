@@ -26,7 +26,7 @@ get '/avatar/blog/:username/slug/:slug' => sub {
   my $slug          = route_parameters->get('slug');
   my $theme         = session( 'theme' ) || 'dark';
   my $user          = resultset('Users')->find({ username => $username });
-  my $avatar_config = config->{'avatar'};
+  my $avatar_config = config->{'avatar'}{'blog'};
   my $avatar_path   = $avatar_config->{'default'}{'dark'};
 
   if ( $user ) {

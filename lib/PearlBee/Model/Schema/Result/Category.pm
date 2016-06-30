@@ -176,7 +176,6 @@ sub as_hashref {
     name          => $self->name,
     slug          => $self->slug,
     user_id       => $self->user_id,
-    role_in_blog  => $self->role_in_blog,
   };          
               
   return $category_href;
@@ -194,21 +193,6 @@ sub as_hashref_sanitized {
 
   delete $href->{id};
   return $href;
-}
-
-sub role_in_blog {
-  my ($self)     = @_;
-  my $schema     = $self->result_source->schema;
-  my $blog_category   = $schema->resultset('BlogCategories')->find({category_id => $self->id});
-  my $blog       =$schema->resultset('Blog')->find({id => $blog_category->blog_id});
-  my $blog_owner = $schema->resultset('BlogOwner')->find({user_id => $self->user_id, blog_id =>$blog->id});
-  
-  if ($blog_owner->get_column('is_admin') == 1){
-    return 'admin';
-  }
-  else{
-    return 'author';
-  }
 }
 
 1;
