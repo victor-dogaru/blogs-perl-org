@@ -260,8 +260,10 @@ CREATE TABLE notification (
   name varchar(255) NOT NULL REFERENCES notification_type (name),
   old_status varchar(255) NULL,
   viewed boolean NOT NULL DEFAULT false,
+  accepted boolean NOT NULL DEFAULT false,
   created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  user_id integer NOT NULL REFERENCES users (id),
+  sender_id integer NOT NULL REFERENCES users (id),
+  user_id integer NOT NULL REFERENCES users (id)
 );
 
 
