@@ -51,7 +51,7 @@ sub read_comment {
 }
 
 
-=head2 create_invitation({ blog_id => 1, user_id => 1, sender_id })
+=head2 create_invitation({ blog_id => 1, role => 'author', user_id => 1, sender_id })
 
 Create invitation notification
 
@@ -64,6 +64,7 @@ sub create_invitation {
   $schema->resultset('Notification')->create({
     name       => 'invitation',
     generic_id => $args->{blog_id},
+    role       => $args->{role},
     sender_id  => $args->{sender_id},
     user_id    => $args->{user_id}
   });

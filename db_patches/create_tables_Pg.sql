@@ -258,6 +258,7 @@ CREATE TABLE notification_type (
 CREATE TABLE notification (
   id serial UNIQUE,
   name varchar(255) NOT NULL REFERENCES notification_type (name),
+  role varchar(255) NULL,
   old_status varchar(255) NULL,
   viewed boolean NOT NULL DEFAULT false,
   accepted boolean NOT NULL DEFAULT false,

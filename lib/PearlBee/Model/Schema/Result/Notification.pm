@@ -49,6 +49,12 @@ __PACKAGE__->table("notification");
   is_nullable: 0
   size: 255
 
+=head2 role
+
+  data_type: 'varchar'
+  is_nullable: 0
+  size: 255
+
 =head2 old_status
 
   data_type: 'varchar'
@@ -95,6 +101,8 @@ __PACKAGE__->add_columns(
   "id",
   { data_type => "integer", is_auto_increment => 1, is_nullable => 0 },
   "name",
+  { data_type => "varchar", is_nullable => 0, size => 255 },
+  "role",
   { data_type => "varchar", is_nullable => 0, size => 255 },
   "old_status",
   { data_type => "varchar", is_nullable => 0, size => 255 },
@@ -148,6 +156,7 @@ sub as_hashref {
   my $as_href = {
     id           => $self->id,
     name         => $self->name,
+    role         => $self->role,
     old_status   => $self->old_status,
     viewed       => $self->viewed,
     accepted     => $self->accepted,
