@@ -8,7 +8,6 @@ Notification API
 
 use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
-use Data::Dumper;
 
 our $VERSION = '0.1';
 
