@@ -178,6 +178,7 @@ sub as_hashref {
 
     $as_href->{comment} = $c;
     $as_href->{sender}  = $u;
+
   }
   elsif ( $self->name eq 'invitation' ) {
     my $blog = $schema->resultset('Blog')->find({
@@ -193,9 +194,37 @@ sub as_hashref {
     $as_href->{blog}   = $b;
     $as_href->{sender} = $u;
   }
+  elsif ( $self->name eq 'response' ) {
+    my $blog = $schema->resultset('Blog')->find({
+      id => $self->generic_id
+    });
+    my $user = $schema->resultset('Users')->find({
+      id => $self->user_id
+    });
 
+    my $b = $blog->as_hashref_sanitized;
+    my $u = $user->as_hashref_sanitized;
+
+    $as_href->{blog}      = $b;
+    $as_href->{receiver}  = $u;
+    
+  }  
+  else{
+    my $blog = $schema->resultset('Blog')->find({
+      id => $self->generic_id
+    });
+    my $user = $schema->resultset('Users')->find({
+      id => $self->sender_id
+    });
+
+    my $b = $blog->as_hashref_sanitized;
+    my $u = $user->as_hashref_sanitized;
+
+    $as_href->{blog}   = $b;
+    $as_href->{sender} = $u;
+  }
   return $as_href;
-}             
+}           
 
 =head2 as_hashref_sanitized
 
