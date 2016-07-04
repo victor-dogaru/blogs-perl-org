@@ -288,10 +288,21 @@ Display page for add method
 
 get '/author/posts/add' => sub {
 
-  my @categories = resultset('Category')->all();
+  my @categories  = resultset('Category')->all();
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user_obj->id });
+  my @blogs;
+
+  for my $blog_owner ( @blog_owners ) {
+    push @blogs, map { $_->as_hashref }
+                 resultset('Blog')->search({ id => $blog_owner->blog_id });
+  }
 
   template 'admin/posts/add',
-           { categories => \@categories },
+           { 
+            categories => \@categories,
+            blogs => \@blogs 
+           },
            { layout => 'admin' };
 };
 
