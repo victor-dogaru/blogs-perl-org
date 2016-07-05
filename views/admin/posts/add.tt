@@ -18,7 +18,7 @@
 
                            <div class="awidget-body">
 
-                             <select name="posts_blog_slug" onChange="window.location.href=this.value">
+                             <select name="posts_blog_slug">
                               [% FOREACH blog IN blogs %]
                                 <option [% blog.selected %] value="[% blog.slug %]">[% blog.name %]</option>
                               [% END %]
