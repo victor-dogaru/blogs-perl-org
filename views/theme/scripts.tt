@@ -29,6 +29,8 @@
         <script src="/blog/js/author.js"></script>
     [% ELSIF global.template_name == 'homepage' %]
         <script src="/blog/js/home.js"></script>
+		[% ELSIF global.template_name == 'create_blog' %]
+				<script src="/js/croppie.js"></script>
     [% END %]
 
 
