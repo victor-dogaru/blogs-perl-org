@@ -320,7 +320,7 @@ get '/author/posts/edit/:slug' => sub {
   # Check if the author has enough permissions for editing this post
   my $user     = session('user');
   my $user_obj = resultset('Users')->find_by_session(session);
-  unless ( $user and $user->can_do( 'update post' ) ) {
+  unless ( $user_obj and $user_obj->can_do( 'update post' ) ) {
     warn "***** Redirecting guest away from /author/posts/edit/:slug";
     return redirect '/author/posts';
   }
