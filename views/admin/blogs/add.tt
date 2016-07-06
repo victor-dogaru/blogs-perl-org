@@ -81,7 +81,7 @@
 
 					[% INCLUDE components/alerts.tt %]
 
-					<form class="form-horizontal" role="form" method="post" action>
+					<form class="form-horizontal" role="form" method="post" action="/create-blog">
 						<div class="col-lg-9">
 							<div class="form-group">
 								<label class="col-lg-4 control-label">Blog Name</label>
