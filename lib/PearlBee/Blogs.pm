@@ -212,6 +212,13 @@ post '/create-blog' => sub{
     warn "***** Redirecting guest away from /create-blog";
     redirect '/'
   }
+
+  my $flag = 0;
+  my $check_blog = resultset('Blog')->find({ name=> $params->{blog_name}});
+  if ($check_blog){
+      $flag = 1;
+  }
+  
   my $blog     = resultset('Blog')->create_with_slug({
     name         => $params->{blog_name},
     description  => $params->{blog_description},
@@ -227,7 +234,14 @@ post '/create-blog' => sub{
     user_id   => $user->id,
     is_admin  =>"true",
   });
-  if ($blog && $blog_owner){
+
+  if ($flag){
+  template 'admin/blogs/add', {
+      error => 'There already exists a blog with this name.'
+    },
+  { layout => 'admin' };
+  }
+  elsif ($blog && $blog_owner){
   template 'admin/blogs/add', {
       success => 'The blog was created.'
     },
@@ -240,7 +254,6 @@ post '/create-blog' => sub{
   { layout => 'admin' };
   }
 };
-
 =head2 admin/create-blog
 
   Getter for blog-creation for admins;
