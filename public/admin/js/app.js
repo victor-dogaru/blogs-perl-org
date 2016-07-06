@@ -152,17 +152,4 @@ $(document).ready(function() {
             height: 180
         }
     });
-
-    
-
-
-
-
-
-
-
-
-
-
-
 });

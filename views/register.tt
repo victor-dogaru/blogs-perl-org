@@ -38,7 +38,7 @@
 
             <button type="submit" class="submitRegister" id="submitRegister">Submit</button>
           </form>          
-         <!-- <div class="social_register">
+         <div class="social_register">
             <p>You can register using the following accounts:</p>
             <div class="separator"></div>
           <div class="row">
@@ -52,7 +52,7 @@
               </div>                           
              </div>
             </div>
-          </div>   -->       
+          </div>
         </div> 
        </div> 
      </div> 
