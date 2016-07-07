@@ -47,8 +47,7 @@ get '/post/:slug' => sub {
       $next_post     = $post->next_post;
       $previous_post = $post->previous_post;
       @post_tags     = $post->tag_objects;
-      @comments      = map { $_->as_hashref_sanitized }
-                       resultset('Comment')->get_approved_comments_by_post_id($post->id);
+      @comments      = resultset('Comment')->get_approved_comments_by_post_id($post->id);
     }
 
     my $user       = resultset('Users')->find_by_session(session);
