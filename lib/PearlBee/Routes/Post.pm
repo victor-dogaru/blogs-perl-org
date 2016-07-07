@@ -50,6 +50,18 @@ get '/post/:slug' => sub {
       @comments      = map { $_->as_hashref_sanitized }
                        resultset('Comment')->get_approved_comments_by_post_id($post->id);
     }
+
+    my $user       = resultset('Users')->find_by_session(session);
+    foreach my $comment( @comments){
+    my $notifications =resultset('Notification')->search ({
+      name        => 'comment', 
+      user_id     => $user->id, 
+      generic_id  => $comment->id,
+      viewed      => 0 })
+      ->update({ viewed=>1 });
+    }
+
+   map { $_->as_hashref } @comments;
  
     template 'post', {
       post          => $post,
