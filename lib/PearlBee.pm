@@ -172,7 +172,6 @@ post '/comments' => sub {
     $args->{comment_id} = $comment->id;
     $args->{user_id}    = $author->id;
     $args->{sender_id}  = $user->id;
-    $args->{name}       ='comment';
     my $notification    = resultset('Notification')->create_comment($args);
   }
 

@@ -138,4 +138,4 @@ search:
 api:  
   notification:  
     comment:
-      max_rows: 5 # Maximum number of rows to return at any time
+      max_rows: 5
