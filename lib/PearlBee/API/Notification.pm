@@ -38,7 +38,7 @@ get '/api/notification/comment/user/:username/page/:page' => sub {
     resultset('Notification')->search(
       { user_id  => $user->id,
         name     => 'comment' },
-      { num_rows => config->{api}{notification}{comment}{max_rows},
+      { rows     => config->{api}{notification}{comment}{max_rows},
         page     => $page,
         order_by => { -desc => 'created_date' } }
     );
