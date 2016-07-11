@@ -14,13 +14,15 @@
 <!-- Styles -->
 <!-- Bootstrap CSS -->
 <link href="/blog/css/bootstrap.min.css" rel="stylesheet">
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 <!-- Animate css -->
 <link href="/blog/css/animate.min.css" rel="stylesheet">
 <!--User-image cropper-->
 <link href="/blog/css/croppie.css" rel="stylesheet">
 
 <!-- Font awesome CSS -->
-<link href="/blog/css/font-awesome.min.css" rel="stylesheet">
+<script src="https://use.fontawesome.com/3f7b04593d.js"></script>
 <!-- Custom CSS -->
 <link href="/blog/css/style.css" rel="stylesheet">
 <!-- <link id="theme" href="/blog/css/dark.css" rel="stylesheet">
@@ -32,7 +34,7 @@
 <link id="theme" href="/blog/css/[%session.theme%].css" rel="stylesheet">
 [%END%]
 <!-- Favicon -->
-<link rel="shortcut icon" href="#"> 
+<link rel="shortcut icon" href="#">
 
 <!-- Social Media Buttons  -->
 <link href="/blog/css/bootstrap-social.css" rel="stylesheet">
@@ -48,13 +50,13 @@
 
   })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
- 
+
 
   ga('create', 'UA-74661277-1', 'auto');
 
   ga('send', 'pageview');
 
- 
+
 </script>
 
     <noscript>
@@ -74,4 +76,3 @@
           <h2>Thank you!</h2>
         </div>
     </noscript>
-
