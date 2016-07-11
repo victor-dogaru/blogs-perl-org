@@ -49,7 +49,8 @@ get '/author/categories/page/:page' => sub {
                      resultset('Category')->search({ name => { '!=' => 'Uncategorized'}, id => $category->category_id });
   }   
   my $all                = scalar (@categories);
-  my @actual_categories  = splice(@categories,($page-1)*$nr_of_rows,$nr_of_rows);
+  my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
+  my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
 
   
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
@@ -68,7 +69,7 @@ get '/author/categories/page/:page' => sub {
      previous_link => $previous_link,
      action_url    => 'author/categories/page',
      pages         => $pagination->pages_in_set,
-     categories          => \@actual_categories 
+     categories    => \@actual_categories 
     }, 
     { layout => 'admin' };
 };

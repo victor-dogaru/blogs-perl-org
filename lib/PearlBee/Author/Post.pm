@@ -34,11 +34,29 @@ get '/author/posts/page/:page' => sub {
       warning => "Please log in before viewing your posts"
     }
   }
-  my @posts       = resultset('Post')->search({ user_id => $user_obj->id }, { order_by => \'created_date DESC', rows => $nr_of_rows, page => $page });
-  my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
 
-  my ($all, $publish, $draft, $trash) = $count->get_all_status_counts;
+  my @posts;
+  my @blog_owners = resultset('BlogOwner')-> search({ user_id => $user_obj->id });
+  foreach my $iterator (@blog_owners){
+    push @posts, resultset('Blog')-> find({ id =>$iterator->blog_id})->posts;
+  }
+  #my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
 
+  my ($all, $publish, $draft, $trash);
+
+  foreach my $post (@posts){
+    if ($post->status eq 'published'){
+      $publish++;
+    }
+    elsif ($post->status eq 'draft'){
+      $draft++;
+    }
+    else {
+      $trash++;
+    }
+  }
+
+  $all = scalar @posts;
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
   my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/posts');
@@ -50,10 +68,12 @@ get '/author/posts/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
   map { $_->as_hashref } @posts;
-  
+  my @sorted_posts    = sort {$b->id <=> $a->id} @posts;
+  my @actual_posts    = splice(@sorted_posts,($page-1)*$nr_of_rows,$nr_of_rows);
+
   template 'admin/posts/list',
     {
-      posts         => \@posts,
+      posts         => \@actual_posts,
       trash         => $trash,
       draft         => $draft,
       publish       => $publish,
