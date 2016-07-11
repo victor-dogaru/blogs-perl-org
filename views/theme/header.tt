@@ -72,7 +72,7 @@
             </div>
             <div class="dropdown-menu dropdown-login">
               <div class="input-group input-login">
-                <input type="text" class="form-control dropdown_input" placeholder="Email or username" aria-describedby="basic-addon1" name="username">
+                <input type="text" class="form-control dropdown_input margin-top-5" placeholder="Email or username" aria-describedby="basic-addon1" name="username">
                 <input type="password" class="form-control dropdown_input margin-top-5" placeholder="Password" aria-describedby="basic-addon1" name="password">
               </div>
 

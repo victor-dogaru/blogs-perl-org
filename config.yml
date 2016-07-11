@@ -32,17 +32,17 @@ engines:
 
 mail_server:
     user: 'jobs@builtinperl.com'
-    password: 
+    password:
     host: 'mail.evozon.com'
     port: 587
 
 plugins:
       DBIC:
         default:
-          dsn: dbi:Pg:database=blogs_perl_org_multiblog
+          dsn: dbi:Pg:host=139.162.204.109;database=blogs_perl_org_multiblog
           schema_class: PearlBee::Model::Schema
-          user: paulm
-          password: 
+          user: jgoff
+          password:
           options:
             RaiseError:        1
             PrintError:        1
@@ -52,8 +52,8 @@ plugins:
         format:    'Atom'
         max_posts: 10
       reCAPTCHA:
-        site_key: 
-        secret: 
+        site_key:
+        secret:
         options:
           theme: 'light'
           type:  'image'
@@ -105,7 +105,7 @@ blog-avatar:
 covers_folder:    'public/uploads/covers/'
 import_folder:    'public/uploads/import/'
 images_folder:    'public/uploads/images/'
-images_path:      '/uploads/images' 
+images_path:      '/uploads/images'
 default_avatar:   '/blog/img/male-user.png'
 theme:            'light'
 
@@ -135,7 +135,7 @@ search:
   user_posts: 10
 
 # API parameters
-api:  
-  notification:  
+api:
+  notification:
     comment:
       max_rows: 5
