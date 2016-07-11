@@ -47,7 +47,8 @@ get '/author/tags/page/:page' => sub {
                      resultset('Tag')->search({ id => $tag->tag_id});
   } 
   my $all         = scalar (@aux_tags);
-  @tags           = splice(@aux_tags,($page-1)*$nr_of_rows,$nr_of_rows);
+  my @sorted_tags = sort {$b->id <=> $a->id} @aux_tags;
+  @tags           = splice(@sorted_tags,($page-1)*$nr_of_rows,$nr_of_rows);
 
   
   my $total_pages                 = get_total_pages($all, $nr_of_rows);

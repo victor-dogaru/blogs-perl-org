@@ -117,6 +117,8 @@
                 <a href="/password_recovery" class="login-links pull-right">Forgotten Password?</a>
                 <a href="/register" class="login-links pull-left">Don't have an account? Register</a>
               </div>
+
+
               <div class="links-group buttons-group">
                 <button type="button" onclick="self.close()" class="light-button btn-xs pull-left">Close</button>
                 <button type="submit" class="dark-button btn-xs pull-right" id="submitRegister">Sign In</button>
