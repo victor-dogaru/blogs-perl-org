@@ -1304,7 +1304,7 @@ footer .copy{
 }
 #notification-parent {
   bottom: 4px;
-  left: 35px;
+  left: 30px;
 }
 .header-notifications {
   font-weight: 300;
@@ -1313,7 +1313,7 @@ footer .copy{
 span.header-badge {
   background-color: red;
   border-radius: 50%;
-  padding: 0 5px;
+  padding: 0 5px 1px;
   border: 2px solid #fff;
   position:relative;
   top: 7px;
