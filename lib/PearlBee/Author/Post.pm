@@ -70,6 +70,10 @@ get '/author/posts/page/:page' => sub {
   map { $_->as_hashref } @posts;
   my @sorted_posts    = sort {$b->id <=> $a->id} @posts;
   my @actual_posts    = splice(@sorted_posts,($page-1)*$nr_of_rows,$nr_of_rows);
+  
+  foreach my $post(@actual_posts){
+      $post->{role_in_blog} = $post->can_edit($user_obj->id);
+  }
 
   template 'admin/posts/list',
     {
