@@ -548,4 +548,11 @@ sub blog {
   return $blog;
 }
 
+sub can_edit{
+  my ($self, $user_id)     = @_;
+  my $schema     = $self->result_source->schema;
+  my $blog_owner = $schema->resultset('BlogOwner')-> find ({ blog_id=>$self->blog->id, user_id =>$user_id});
+  return $blog_owner->is_admin;
+}
+
 1;
