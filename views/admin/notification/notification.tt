@@ -2,9 +2,9 @@
 <div class="page-content blocky">
    <div class="container">
 
-      [% IF session.user %]
+
           [% INCLUDE layouts/admin.tt %]
-      [% END %]
+
 
       <div class="mainy">
       	<!-- Page title -->
@@ -112,5 +112,4 @@
 
    </div>
 </div>
-
-<script src="/admin/js/notification.js"></script>
+<script src="/admin/js/bootstrap.min.js"></script>

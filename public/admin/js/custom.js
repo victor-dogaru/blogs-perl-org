@@ -423,11 +423,7 @@ $(document).ready(function(){
     $(".chosen-select").chosen({disable_search_threshold: 10});
   };
 
+if (window.location.pathname !== "/notification") {
+  $('#notification-parent').hide();
+}
 });
-
-
-
-
-
-
-
