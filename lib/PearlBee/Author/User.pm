@@ -38,20 +38,21 @@ get '/author/users/page/:page' => sub {
   }
 
   for my $blog (@blogs){
-    my @tmp_blogs = resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
-    $_->{blog_name} = $blog->name for @tmp_blogs;
-    $_->{blog_slug} = $blog->slug for @tmp_blogs;
+    my @tmp_blogs      = resultset('BlogOwner')->search(
+    { blog_id => $blog->get_column('id') });
+    $_->{blog_name}    = $blog->name for @tmp_blogs;
+    $_->{blog_slug}    = $blog->slug for @tmp_blogs;
     $_->{blog_creator} = $blog->blog_creator->username for @tmp_blogs;
     push @blogs_aux, @tmp_blogs;
   }
 
   for my $iterator (@blogs_aux){
-    my @tmp_users = map {$_->as_hashref_sanitized}
+    my @tmp_users      = map {$_->as_hashref_sanitized}
               resultset('Users')->search({ id => $iterator->get_column('user_id') });      
     $_->{role_in_blog} = $iterator->is_admin for @tmp_users;
     $_->{blog_name }   = $iterator->{blog_name} for @tmp_users;
     $_->{blog_slug }   = $iterator->{blog_slug} for @tmp_users;
-    $_->{blog_creator }   = $iterator->{blog_creator} for @tmp_users;
+    $_->{blog_creator} = $iterator->{blog_creator} for @tmp_users;
     $_->{can_change}   = resultset('BlogOwner')->find(
     {blog_id => $iterator->blog_id, user_id =>$user_obj->id})->is_admin for @tmp_users; 
     push @users, @tmp_users;
@@ -267,10 +268,10 @@ get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
                   resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => params->{blog}});
   }
     for my $blog (@blogs){
-    my @tmp_blogs = resultset('BlogOwner')->search (
+    my @tmp_blogs      = resultset('BlogOwner')->search (
     { blog_id => $blog->get_column('id') });  
-    $_->{blog_name} = $blog->name for @tmp_blogs;
-    $_->{blog_slug} = $blog->slug for @tmp_blogs;
+    $_->{blog_name}    = $blog->name for @tmp_blogs;
+    $_->{blog_slug}    = $blog->slug for @tmp_blogs;
     $_->{blog_creator} = $blog->blog_creator->username for @tmp_blogs;
     push @blogs_aux, @tmp_blogs;
   }
@@ -294,13 +295,13 @@ get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
   }
 
   for my $iterator (@blogs_aux){
-    my @tmp_users = map {$_->as_hashref_sanitized}
+    my @tmp_users       = map {$_->as_hashref_sanitized}
               resultset('Users')->search({ id => $iterator->get_column('user_id') });      
-    $_->{role_in_blog} = $iterator->is_admin for @tmp_users;
-    $_->{blog_name }   = $iterator->{blog_name} for @tmp_users;
-    $_->{blog_slug }   = $iterator->{blog_slug} for @tmp_users;
-    $_->{blog_creator }   = $iterator->{blog_creator} for @tmp_users;
-    $_->{can_change}   = resultset('BlogOwner')->find(
+    $_->{role_in_blog}  = $iterator->is_admin for @tmp_users;
+    $_->{blog_name }    = $iterator->{blog_name} for @tmp_users;
+    $_->{blog_slug }    = $iterator->{blog_slug} for @tmp_users;
+    $_->{blog_creator } = $iterator->{blog_creator} for @tmp_users;
+    $_->{can_change}    = resultset('BlogOwner')->find(
     {blog_id => $iterator->blog_id, user_id =>$user_obj->id})->is_admin for @tmp_users; 
     push @users, @tmp_users;
   }
