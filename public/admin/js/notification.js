@@ -1,3 +1,8 @@
+// Made with love By: Vlad Spatariu
+// Email: vlad.spatariu@gmail.com
+// Created on 11.06.2016
+
+
 $(document).ready(function(){
     var pageURL = window.location.pathname.split('/');
     var SessionUsername = $('#sessionUsername').text();
