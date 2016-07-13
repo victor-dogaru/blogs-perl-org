@@ -30,7 +30,7 @@ get '/author/users/page/:page' => sub {
   }
   my @users;
   my @blogs;
-  my @blogs2;
+  my @blogs_aux;
   my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
   for my $blog_owner (@blog_owners){
     push @blogs, 
@@ -38,14 +38,22 @@ get '/author/users/page/:page' => sub {
   }
 
   for my $blog (@blogs){
-    push @blogs2,
-    resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+    my @tmp_blogs = resultset('BlogOwner')->search ({ blog_id => $blog->get_column('id') });
+    $_->{blog_name} = $blog->name for @tmp_blogs;
+    $_->{blog_slug} = $blog->slug for @tmp_blogs;
+    $_->{blog_creator} = $blog->blog_creator->username for @tmp_blogs;
+    push @blogs_aux, @tmp_blogs;
   }
 
-  for my $blog (@blogs2){
+  for my $iterator (@blogs_aux){
     my @tmp_users = map {$_->as_hashref_sanitized}
-              resultset('Users')->search({ id => $blog->get_column('user_id') });      
-    $_->{role_in_blog} = $blog->is_admin for @tmp_users;
+              resultset('Users')->search({ id => $iterator->get_column('user_id') });      
+    $_->{role_in_blog} = $iterator->is_admin for @tmp_users;
+    $_->{blog_name }   = $iterator->{blog_name} for @tmp_users;
+    $_->{blog_slug }   = $iterator->{blog_slug} for @tmp_users;
+    $_->{blog_creator }   = $iterator->{blog_creator} for @tmp_users;
+    $_->{can_change}   = resultset('BlogOwner')->find(
+    {blog_id => $iterator->blog_id, user_id =>$user_obj->id})->is_admin for @tmp_users; 
     push @users, @tmp_users;
   }
 
@@ -63,10 +71,11 @@ get '/author/users/page/:page' => sub {
   my $current_page   = $page;
   my $pages_per_set  = 7;
   my $pagination     = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
+  my @actual_users   = splice(@users,($page-1)*$nr_of_rows,$nr_of_rows);
 
   template 'admin/users/list',
     {
-      users         => \@users,
+      users         => \@actual_users,
       blogs         => \@blogs,
       all           => $all, 
       active        => $active,
@@ -250,36 +259,49 @@ get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
   }
   my $user_obj   = resultset('Users')->find_by_session(session);
   my @blogs;
-  my @blogs2;
+  my @blogs_aux;
   my @users;
   my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
   for my $blog_owner (@blog_owners){
     push @blogs, 
                   resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => params->{blog}});
   }
+    for my $blog (@blogs){
+    my @tmp_blogs = resultset('BlogOwner')->search (
+    { blog_id => $blog->get_column('id') });  
+    $_->{blog_name} = $blog->name for @tmp_blogs;
+    $_->{blog_slug} = $blog->slug for @tmp_blogs;
+    $_->{blog_creator} = $blog->blog_creator->username for @tmp_blogs;
+    push @blogs_aux, @tmp_blogs;
+  }
 
-   map { $_->as_hashref } @blogs;
+  map { $_->as_hashref } @blogs;
   if ($role ne 'all' && $status ne 'all'){
-  push @blogs2,
+  push @blogs_aux,
   resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), status=>$status, is_admin=>$flag });
   }
   elsif ($role eq 'all' && $status ne 'all'){
-       push @blogs2,
+       push @blogs_aux,
   resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), status=>$status });
   }
   elsif ($role ne 'all' && $status eq 'all'){
-       push @blogs2,
+       push @blogs_aux,
   resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), is_admin=>$flag });
   }
   else {
-       push @blogs2,
+       push @blogs_aux,
   resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id') });
   }
 
-  for my $blog (@blogs2){
+  for my $iterator (@blogs_aux){
     my @tmp_users = map {$_->as_hashref_sanitized}
-              resultset('Users')->search({ id => $blog->get_column('user_id') });      
-    $_->{role_in_blog} = $blog->is_admin for @tmp_users;
+              resultset('Users')->search({ id => $iterator->get_column('user_id') });      
+    $_->{role_in_blog} = $iterator->is_admin for @tmp_users;
+    $_->{blog_name }   = $iterator->{blog_name} for @tmp_users;
+    $_->{blog_slug }   = $iterator->{blog_slug} for @tmp_users;
+    $_->{blog_creator }   = $iterator->{blog_creator} for @tmp_users;
+    $_->{can_change}   = resultset('BlogOwner')->find(
+    {blog_id => $iterator->blog_id, user_id =>$user_obj->id})->is_admin for @tmp_users; 
     push @users, @tmp_users;
   }
 
