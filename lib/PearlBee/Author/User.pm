@@ -535,4 +535,46 @@ any '/author/users/add' => sub {
   }  
 };
 
+=head2 /author/users/make_admin/:username/:blog
+
+Set a contributor from your blogs to be an admin.
+
+=cut
+
+any '/author/users/make_admin/:username/:blog' => sub {
+
+  my $user_obj   = resultset('Users')->find_by_session(session);
+  unless ( $user_obj and $user_obj->id ) {
+    warn "***** Redirecting guest away from /author/users/page/:page";
+    redirect '/'
+  }
+  my $blog   = resultset('Blog')->find({ name =>params->{blog} });
+  my $user   = resultset('Users')->find({ username=> params->{username}});
+  my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
+  ->update({ is_admin=>1 });
+  redirect '/author/users';
+
+};
+
+=head2 /author/users/make_author/:username/:blog
+
+Set a contributor from your blogs to be an author.
+
+=cut
+
+any '/author/users/make_author/:username/:blog' => sub {
+
+  my $user_obj   = resultset('Users')->find_by_session(session);
+  unless ( $user_obj and $user_obj->id ) {
+    warn "***** Redirecting guest away from /author/users/page/:page";
+    redirect '/'
+  }
+  my $blog   = resultset('Blog')->find({ name =>params->{blog} });
+  my $user   = resultset('Users')->find({ username=> params->{username}});
+  my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
+  ->update({ is_admin=>0 });
+  redirect '/author/users';
+
+};
+
 1;
