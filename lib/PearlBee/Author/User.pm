@@ -31,7 +31,7 @@ get '/author/users/page/:page' => sub {
   my @users;
   my @blogs;
   my @blogs_aux;
-  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin=>1});
   for my $blog_owner (@blog_owners){
     push @blogs, 
                   resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
@@ -262,7 +262,7 @@ get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
   my @blogs;
   my @blogs_aux;
   my @users;
-  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin=>1});
   for my $blog_owner (@blog_owners){
     push @blogs, 
                   resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => params->{blog}});
