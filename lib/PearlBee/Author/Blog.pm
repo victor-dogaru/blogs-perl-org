@@ -38,6 +38,9 @@ get '/author/blogs/page/:page' => sub {
   push @actual_blogs, 
                   resultset('Blog')->search({ id => $blog->id});
   }
+  foreach my $blog (@actual_blogs){
+  $blog->{role_in_blog} = resultset('BlogOwner')->find ({ blog_id =>$blog->id, user_id =>$user->id })->is_admin;
+  }
   map { $_->as_hashref } @actual_blogs ;
   template 'admin/blogs/list',
       {
