@@ -5,7 +5,7 @@
 
 $(document).ready(function(){
     var pageURL = window.location.pathname.split('/');
-    var SessionUsername = $('#sessionUsername').text();
+    var SessionUsername = $('.modal-title').text().split(', ')[1]
     var invitation = $(".invitation-row")[0];
     var response = $(".response-row")[0];
     var role = $(".role-row")[0];
@@ -25,6 +25,7 @@ var  CommentsSection = function() {
   })
     .done(function(data) {
       var CommentData = JSON.parse(data);
+      var username = data.username;
           // Update nr of new Comments
           $('.commentsNr').prepend( CommentData.total + ' New Comments');
       });
