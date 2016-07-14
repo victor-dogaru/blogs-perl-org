@@ -57,7 +57,6 @@
 							<th> Comment </th>
 							<th> Post </th>
 							<th> Blog </th>
-							<th> Status </th>
 							<th> Action </th>
 						</tr>
 					</thead>
@@ -95,13 +94,11 @@
 							<td width="15%"> <a href="/post/[% comment.post.slug %]"> [% comment.post.title %] </a> </td>
 
 							<td width="15%"> <a href="/blogs/user/[% comment.post.user.username %]/slug/[%comment.post.blog.slug%]/name/[%comment.post.blog.name%]">[% comment.post.blog.name %] </a> </td>
-
-							<td width="15%"> <a href="/blogs/user/[][% comment.post.slug %]"> [% comment.post.blog.status %] </a> </td>
-
+							
 							<td width="10%">
 								[% IF comment.reply_to %]
 								<a href="/post/[% comment.post.slug %]#comment_[% comment.reply_to %]"> Reply </a> [% ELSE %] [% IF comment.status == 'approved' %]
-								<a href="/post/[% comment.post.slug %]#comment_[% comment.id %]"> Comment </a> [% ELSE %] Comment [% END %] [% END %]
+								<a href="/post/[% comment.post.slug %]#comment_[% comment.id %]">View Comment </a> [% ELSE %] Comment [% END %] [% END %]
 							</td>
 						</tr>
 
