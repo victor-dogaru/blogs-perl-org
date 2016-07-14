@@ -5,7 +5,7 @@
 
 $(document).ready(function(){
     var pageURL = window.location.pathname.split('/');
-    var SessionUsername = $('.modal-title').text().split(', ')[1]
+    var SessionUsername = $('.modal-title').text().split(', ')[1];
     var invitation = $(".invitation-row")[0];
     var response = $(".response-row")[0];
     var role = $(".role-row")[0];
