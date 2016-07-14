@@ -12,8 +12,8 @@
                  </a>
                  <!-- Sub menu -->
                  <ul>
-                    <li><a href="/admin/blogs">All</a></li>
-                    <li><a href="/admin/create-blog">New Blog</a></li>
+                    <li><a href="/[% role %]/blogs">All</a></li>
+                    <li><a href="/[% role %]/create-blog">New Blog</a></li>
                 </ul>
             </li>
 
@@ -31,11 +31,11 @@
 
             <li><a href="/[% role %]/comments"><i class="icon-comment"></i> Comments</a></li>
 
-            [% IF (session.user.is_admin) %]
+            
 
-                <li><a href="/admin/categories"><i class="icon-list"></i> Categories</a></li>
+                <li><a href="/[% role %]/categories"><i class="icon-list"></i> Categories</a></li>
 
-                <li><a href="/admin/tags"><i class="icon-tag"></i> Tags</a></li>
+                <li><a href="/[% role %]/tags"><i class="icon-tag"></i> Tags</a></li>
 
                 <li class="has_submenu">
                      <a href="#">
@@ -44,8 +44,8 @@
                      </a>
                      <!-- Sub menu -->
                      <ul>
-                        <li><a href="/admin/users">All</a></li>
-                        <li><a href="/admin/users/add">Create user</a></li>
+                        <li><a href="/[% role %]/users">All</a></li>
+                        <li><a href="/[% role %]/users/add">Add user</a></li>
                     </ul>
                 </li>
 
@@ -57,12 +57,12 @@
                     </a>
                     <!-- Sub menu -->
                     <ul>
-                       <li><a href="/admin/settings">General</a></li>
-                       <li><a href="/admin/settings/import">Import</a></li>
+                       <li><a href="/[% role %]/settings">General</a></li>
+<!--                       <li><a href="/[% role %]/settings/import">Import</a></li>-->
                     </ul>
                 </li>
                 <li><a href="/notification"><i class="icon-list"></i> Notifications</a></li>
-            [% END %]
+            
         </ul>
      </div>
   </div>

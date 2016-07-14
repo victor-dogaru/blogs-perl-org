@@ -18,40 +18,30 @@
 
                   <form class="form-horizontal" role="form" method="post" action>
                   
-                    <div class="form-group">
-                      <label class="col-lg-2 control-label">Username</label>
-                      <div class="col-lg-10">
-                        <input type="text" class="form-control" name="username" placeholder="Username" required>
-                      </div>
-                    </div>
+
 
                     <div class="form-group">
                       <label class="col-lg-2 control-label">Email</label>
                       <div class="col-lg-10">
-                        <input type="email" class="form-control" name="email" placeholder="Email" required>
+                        <input type="email" class="form-control" name="email" placeholder="Email Address" required>
                       </div>
                     </div>
 
-                    <div class="form-group">
-                      <label class="col-lg-2 control-label">Name</label>
-                      <div class="col-lg-10">
-                        <input type="text" class="form-control" name="name" placeholder="Name" required>
-                      </div>
-                    </div>
 
                     <div class="form-group">
                       <label class="col-lg-2 control-label">Role</label>
                       <div class="col-lg-10">
+
                         <div class="radio">
                           <label>
-                            <input type="radio" name="role" id="admin" value="admin" checked>
-                            Administrator <i> (somebody who has access to all the administration features within a single site.) </i>
+                            <input type="radio" name="role" id="author" value="author">
+                            Author <i> (user will have limited access to your blog. User will only be able to manage & publish their own entries) </i>
                           </label>
                         </div>
                         <div class="radio">
                           <label>
-                            <input type="radio" name="role" id="author" value="author">
-                            Author <i> (somebody who can publish and manage their own posts.) </i>
+                            <input type="radio" name="role" id="admin" value="admin" checked>
+                            Admin <i> (user will have full access to your blog. User will be able to change and publish anything, even delete the blog) </i>
                           </label>
                         </div>
                       </div>

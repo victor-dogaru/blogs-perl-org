@@ -27,8 +27,8 @@
 								<option value=""> All </option>
 								[% FOREACH blog IN blogs %]
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-								<option [% selected %] value="/[% role %]/blog/[% blog.name %]/page/1"> [% blog.name %] </option>
-								[% END %]
+								<option [% selected %] value="/author/users/blog/[% blog.name %]/all/all/page/1"> [% blog.name %] </option>
+								[% END %] 
 							</select>
 						</div>
 					</div>
@@ -75,10 +75,12 @@
 					<thead>
 						<tr>
 							<th> Username </th>
-							<th> Full name </th>
+							<th> Display Name </th>
 							<th> Email </th>
-							<th> Registered Date </th>
+							<th> Blog joined </th>
+							<th> Date added </th>
 							<th> Role </th>
+							<th> Status </th>
 						</tr>
 					</thead>
 					<tbody>
@@ -87,7 +89,7 @@
 
 						<tr>
 							<td>
-								[% user.name %] ([% user.username %])
+								[% user.username %]
 
 								<br />
 								<br /> [% IF (user.status == 'pending') %]
@@ -114,9 +116,28 @@
 
 							<td> [% user.email %] </td>
 
+							<td> <a href="/blogs/user/[% user.blog_creator %]/slug/[% user.blog_slug %]/name/[% user.blog_name %]">[% user.blog_name %] </a></td>
+
 							<td> [% user.register_date %] </td>
 
-							<td> [% user.role %] </td>
+							<td> 
+								[% IF (user.role_in_blog == '1') %]
+								Admin
+								<br />
+								<br />
+								<span class="label label-success"> Admin </span> | 
+								<a href="/author/users/make_author/[% user.username %]/[% user.blog_name %]"> Author </a> 
+								[% ELSE %]
+								Author
+								<br />
+								<br />
+								<a href="/author/users/make_admin/[% user.username %]/[% user.blog_name %]"> Admin </a> | 
+								<span class="label label-success"> Author </span>
+								[% END %]
+							</td>
+							
+							<td> [% user.status %] </td>
+							
 						</tr>
 
 						[% END %]
