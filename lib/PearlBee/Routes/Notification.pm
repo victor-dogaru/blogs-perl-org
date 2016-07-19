@@ -44,17 +44,19 @@ View all notifications
 
 =cut
 
-get '/notification/comment/:id/user/:username/mark-read' => sub {
+get '/notification/comment/:id/user/:username/mark-read/:status' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
   my $id              = route_parameters->{'id'};
   my $username        = route_parameters->{'username'};
   my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
+  my $status          = route_parameters->{'status'};
 
   resultset('Notification')->read_comment({
     comment_id => $id,
-    user_id    => $user_id
+    user_id    => $user_id,
+    status     => $status
   });
 
   redirect '/notification'
@@ -67,17 +69,19 @@ View all notifications
 
 =cut
 
-get '/notification/invitation/:id/user/:username/mark-read' => sub {
+get '/notification/invitation/:id/user/:username/mark-read/:status' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
   my $username        = route_parameters->{'username'};
   my $id              = route_parameters->{'id'};
   my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
+  my $status          = route_parameters->{'status'};
 
   resultset('Notification')->read_invitation({
     blog_id => $id,
-    user_id => $user_id
+    user_id => $user_id,
+    status  => $status
   });
 
   redirect '/notification'
@@ -90,17 +94,19 @@ View all notifications
 
 =cut
 
-get '/notification/response/:id/user/:username/mark-read' => sub {
+get '/notification/response/:id/user/:username/mark-read/:status' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
   my $username        = route_parameters->{'username'};
   my $id              = route_parameters->{'id'};
   my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
+  my $status          = route_parameters->{'status'};
 
   resultset('Notification')->read_response({
     blog_id => $id,
-    user_id => $user_id
+    user_id => $user_id,
+    status  => $status
   });
 
   redirect '/notification'
@@ -113,17 +119,19 @@ View all notifications
 
 =cut
 
-get '/notification/changed_role/:id/user/:username/mark-read' => sub {
+get '/notification/changed_role/:id/user/:username/mark-read/:status' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
   my $username        = route_parameters->{'username'};
   my $id              = route_parameters->{'id'};
   my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
+  my $status          = route_parameters->{'status'};
 
   resultset('Notification')->read_changed_role({
     blog_id => $id,
-    user_id => $user_id
+    user_id => $user_id,
+    status  => $status,
   });
 
   redirect '/notification'

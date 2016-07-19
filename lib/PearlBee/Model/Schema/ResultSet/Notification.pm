@@ -41,13 +41,19 @@ sub read_comment {
   my $schema = $self->result_source->schema;
 
   my $now = DateTime->now;
+  my $status       = $args->{status};
   my $notification = $schema->resultset('Notification')->find({
     name       => 'comment',
     generic_id => $args->{comment_id},
     user_id    => $args->{user_id}
   });
   if ( $notification ) {
-    $notification->update({ viewed => 1, read_date => $now });
+    if ($status eq 'true'){
+    $notification->update({ viewed => 1, read_date => $now, accepted => 1 });
+    }
+    else{
+    $notification->update({ viewed => 1, read_date => $now, accepted => 0 });
+    }
   }
 }
 
@@ -83,13 +89,19 @@ sub read_invitation {
   my $schema = $self->result_source->schema;
 
   my $now = DateTime->now;
+  my $status       = $args->{status};
   my $notification = $schema->resultset('Notification')->find({
     name       => 'invitation',
     generic_id => $args->{blog_id},
     user_id    => $args->{user_id}
   });
   if ( $notification ) {
-    $notification->update({ viewed => 1, read_date => $now });
+    if ($status eq 'true'){
+    $notification->update({ viewed => 1, read_date => $now, accepted => 1 });
+    }
+    else {
+    $notification->update({ viewed => 1, read_date => $now, accepted => 0 });
+    }
   }
 }
 
@@ -124,13 +136,19 @@ sub read_response {
   my $schema = $self->result_source->schema;
 
   my $now = DateTime->now;
+  my $status       = $args->{status};
   my $notification = $schema->resultset('Notification')->find({
     name       => 'response',
     generic_id => $args->{blog_id},
     user_id    => $args->{user_id}
   });
   if ( $notification ) {
-    $notification->update({ viewed => 1, read_date => $now });
+    if ($status eq 'true'){
+    $notification->update({ viewed => 1, read_date => $now, accepted => 1 });
+    }
+    else {
+    $notification->update({ viewed => 1, read_date => $now, accepted => 0 });
+    }
   }
 }
 
@@ -165,13 +183,19 @@ sub read_changed_role {
   my $schema = $self->result_source->schema;
 
   my $now = DateTime->now;
+  my $status       = $args->{status};
   my $notification = $schema->resultset('Notification')->find({
     name       => 'changed_role',
     old_status => $args->{old_role},
     user_id    => $args->{user_id}
   });
   if ( $notification ) {
-    $notification->update({ viewed => 1, read_date => $now });
+    if ($status eq 'true'){
+    $notification->update({ viewed => 1, read_date => $now, accepted => 1 });
+    }
+    else {
+    $notification->update({ viewed => 1, read_date => $now, accepted => 0 });
+    }
   }
 }
 
