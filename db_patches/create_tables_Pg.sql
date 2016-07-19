@@ -270,7 +270,8 @@ CREATE TABLE notification (
   accepted boolean NOT NULL DEFAULT false,
   created_date timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   sender_id integer NOT NULL REFERENCES users (id),
-  user_id integer NOT NULL REFERENCES users (id)
+  user_id integer NOT NULL REFERENCES users (id),
+  read_date timestamp NOT NULL DEFAULT NULL
 );
 
 
