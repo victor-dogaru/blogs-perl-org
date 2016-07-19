@@ -80,6 +80,13 @@ __PACKAGE__->table("notification");
   default_value: current_timestamp
   is_nullable: 0
 
+=head2 read_date
+
+  data_type: 'timestamp'
+  datetime_undef_if_invalid: 1
+  default_value: NULL
+  is_nullable: 0  
+
 =head2 user_id
 
   data_type: 'integer'
@@ -116,6 +123,13 @@ __PACKAGE__->add_columns(
     datetime_undef_if_invalid => 1,
     default_value => \"current_timestamp",
     is_nullable => 0,
+  },
+  "read_date",
+  {
+    data_type => "timestamp",
+    datetime_undef_if_invalid => 1,
+    default_value => "NULL",
+    is_nullable => 1,
   },
   "user_id",
   { data_type => "integer", is_auto_increment => 0, is_nullable => 0 },
@@ -161,6 +175,7 @@ sub as_hashref {
     viewed       => $self->viewed,
     accepted     => $self->accepted,
     created_date => $self->created_date,
+    read_date    => $self->read_date,    
     user_id      => $self->user_id,
     sender_id    => $self->sender_id,
     generic_id   => $self->generic_id,

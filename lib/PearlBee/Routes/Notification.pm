@@ -49,7 +49,7 @@ get '/notification/comment/:id/user/:username/mark-read' => sub {
   my $res_user        = resultset('Users')->find_by_session(session);
   my $id              = route_parameters->{'id'};
   my $username        = route_parameters->{'username'};
-  my $invitation_user = resultset('Users')->search({ username => $username });
+  my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
 
   resultset('Notification')->read_comment({
@@ -72,7 +72,7 @@ get '/notification/invitation/:id/user/:username/mark-read' => sub {
   my $res_user        = resultset('Users')->find_by_session(session);
   my $username        = route_parameters->{'username'};
   my $id              = route_parameters->{'id'};
-  my $invitation_user = resultset('Users')->search({ username => $username });
+  my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
 
   resultset('Notification')->read_invitation({
@@ -95,7 +95,7 @@ get '/notification/response/:id/user/:username/mark-read' => sub {
   my $res_user        = resultset('Users')->find_by_session(session);
   my $username        = route_parameters->{'username'};
   my $id              = route_parameters->{'id'};
-  my $invitation_user = resultset('Users')->search({ username => $username });
+  my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
 
   resultset('Notification')->read_response({
@@ -118,7 +118,7 @@ get '/notification/changed_role/:id/user/:username/mark-read' => sub {
   my $res_user        = resultset('Users')->find_by_session(session);
   my $username        = route_parameters->{'username'};
   my $id              = route_parameters->{'id'};
-  my $invitation_user = resultset('Users')->search({ username => $username });
+  my $invitation_user = resultset('Users')->find({ username => $username });
   my $user_id         = $invitation_user->id;
 
   resultset('Notification')->read_changed_role({
