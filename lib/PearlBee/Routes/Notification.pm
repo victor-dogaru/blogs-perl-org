@@ -78,11 +78,28 @@ get '/notification/invitation/:id/user/:username/mark-read/:status' => sub {
   my $user_id         = $invitation_user->id;
   my $status          = route_parameters->{'status'};
 
-  resultset('Notification')->read_invitation({
+  my $notification    = resultset('Notification')->read_invitation({
     blog_id => $id,
     user_id => $user_id,
     status  => $status
   });
+
+  my $role_flag;
+  
+  if ($notification->role eq 'admin'){
+    $role_flag = 1;
+  }
+  else {
+    $role_flag = 0;
+  }
+
+  if  ($status eq 'true'){
+    my $new_entry = resultset('BlogOwner')->create({
+     blog_id  => $id,
+     user_id  => $user_id,
+     is_admin => $role_flag,
+     });
+  }
 
   redirect '/notification'
 };
