@@ -67,6 +67,7 @@ var InvitationSection = function() {
       $(modal).on('click', function() {
         $('.invitation-blogname').html('I would like to invite you to join my blog ' + '<a href="#">' + InvitationData.notifications[idx].blog.name + '</a>' + '.');
         $('.invitation-username').html('<a href="#">' + InvitationData.notifications[idx].sender.username + '</a>');
+        $('.modal-footer').html('<button class="btn btn-primary btn-ok modal-accept" data-dismiss="modal" onclick="' + '' + 'location.pathname=' +"'/notification/invitation/" + InvitationData.notifications[idx].generic_id  + '/user/' + InvitationData.username + '/mark-read' + "'" +'">' + 'Accept' + '</button>' + '<a type="button" class="btn  btn-danger modal-reject" data-dismiss="modal">Reject</a>');
       });
       $(invitation).removeClass("invitation-row");
    });
