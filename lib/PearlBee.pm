@@ -72,6 +72,18 @@ hook before => sub {
   session app_url   => config->{app_url} unless ( session('app_url') );
   session blog_name => resultset('Setting')->first->blog_name unless ( session('blog_name') );
   session multiuser => resultset('Setting')->first->multiuser;
+  my $user_obj    = resultset('Users')->find_by_session(session);
+  if ( $user_obj ) {
+    my $counter  = resultset('Notification')->search({
+    user_id      => $user_obj->id,
+    name         => { '!=' => 'response'}
+    })->count;
+    $counter     += resultset('Notification')->search({
+    sender_id    => $user_obj->id,
+    name         => 'response'
+    })->count;
+    session total => $counter;
+    }
 };
 
 =head2 /theme
