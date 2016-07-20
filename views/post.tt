@@ -6,7 +6,7 @@
         <div class="row">
 
             [% INCLUDE components/alerts.tt %]
-            <br><br><br><br><br>
+            <br><br>
             <div class="col-md-12 individual-post">
                 <div class="col-md-2">
                 </div>
