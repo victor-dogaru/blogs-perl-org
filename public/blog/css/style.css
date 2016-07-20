@@ -292,14 +292,6 @@ strong{
 
 
 /* Logo & Navigation */
-.header{
-   height:80px;
-   position: fixed;
-   width: 100%;
-   z-index: 999;
-   background: #ffffff;
-    border-bottom: 3px solid #3BBEDC;
-}
 .header label {
   margin: 0;
 }
@@ -2424,16 +2416,13 @@ a:focus {
   position: relative;
   margin-top: 0px;
 }
-.blog .content {
-   margin-top: 80px;
-}
 .blog .page-heading {
-   margin-bottom: 35px;
-   margin-top: 95px;
+   margin-bottom: 25px;
    font-family: 'Montserrat', 'Open Sans', sans-serif;
    font-size: 24px;
    text-transform: uppercase;
    font-weight: bold;
+   margin-top: 45px;
 }
 .blog .posts.listings .entry {
     font-size: 18px;
