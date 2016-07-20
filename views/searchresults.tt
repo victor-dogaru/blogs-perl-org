@@ -4,7 +4,7 @@
 
 <div class="search-page">
 
-    <div class="container-fluid">
+    <div class="content">
         <div class="search-input">
             <div class="container">
                 <input type="text" name="search_term" placeholder="Search blogs.perl.org"/>
