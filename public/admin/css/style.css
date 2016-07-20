@@ -1307,13 +1307,12 @@ footer .copy{
   left: 30px;
 }
 .header-notifications {
-  font-weight: 300;
-  font-size: 23px;
+  font-size: 23px!important;
 }
 span.header-badge {
   background-color: red;
   border-radius: 50%;
-  padding: 0 5px 1px;
+  padding: 0 5px 2px 2px;
   border: 2px solid #fff;
   position:relative;
   top: 7px;
