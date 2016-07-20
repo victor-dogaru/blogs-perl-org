@@ -41,10 +41,13 @@
       <link href="/admin/css/chosen.css" rel="stylesheet">
       <!-- Custom CSS -->
       <link href="/admin/css/style.css" rel="stylesheet">
+      <!-- Font awesome CSS -->
+      <script src="https://use.fontawesome.com/3f7b04593d.js"></script>
       <!-- Select CSS -->
       <link href="/admin/js/select2/select2.css" rel="stylesheet">
       <link href="/admin/js/select2/select2-bootstrap.css" rel="stylesheet">
       <!-- End Select CSS -->
+
 
       <!-- Favicon -->
       <link rel="shortcut icon" href="#">
@@ -159,7 +162,7 @@
       <!-- Select JS -->
       <script src="/admin/js/ckeditor/ckeditor.js"></script>
       <!-- notification JS -->
-      <script src="/admin/js/notification.js"></script> 
+      <script src="/admin/js/notification.js"></script>
 
    </body>
 </html>
