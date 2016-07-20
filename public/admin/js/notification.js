@@ -13,7 +13,8 @@ $(document).ready(function(){
     var InvitationPage =  1;
     var ResponsePage =  1;
     var RolePage =  1;
-
+    var ModalApproveClick = false;
+    var ModalRejectClick = false;
 
 
     // Comments Function =====================
@@ -35,8 +36,11 @@ var  CommentsSection = function() {
     // Invitation Function ===========================
 var InvitationSection = function() {
 
+  // Freaking modals man, need to repopulate the invitation section each time the user accepts or rejects an invitation via the modal, thus not letting the page increment
+  var Pagination = ModalApproveClick || ModalRejectClick ? InvitationPage : InvitationPage++;
+
   $.ajax({
-    url:  '/api/notification/invitation/user/' + SessionUsername + '/page/' + InvitationPage++,
+    url:  '/api/notification/invitation/user/' + SessionUsername + '/page/' + Pagination,
     type: 'GET'
   })
   .done(function(data) {
@@ -55,6 +59,7 @@ var InvitationSection = function() {
      ($(invitation).first().nextUntil(invitation).length - 1) === totalPages ? $('.invitation-arrow').hide()  : $('.invitation-arrow').show();
     }
 
+
     // Populating each invitation row
   $('.invitation-row').each(function(idx, invitation) {
 
@@ -67,9 +72,38 @@ var InvitationSection = function() {
       $(modal).on('click', function() {
         $('.invitation-blogname').html('I would like to invite you to join my blog ' + '<a href="#">' + InvitationData.notifications[idx].blog.name + '</a>' + '.');
         $('.invitation-username').html('<a href="#">' + InvitationData.notifications[idx].sender.username + '</a>');
+        $('.modal-footer').html('<button class="btn btn-primary btn-ok modal-accept" data-dismiss="modal"  +">' + 'Accept' + '</button>' + '<a type="button" class="btn  btn-danger modal-reject" data-dismiss="modal">Reject</a>');
+
+
+        $('.modal-accept').on('click', function() {
+          ModalApproveClick = true;
+          $.ajax({
+            url:  '/notification/invitation/' + InvitationData.notifications[idx].generic_id  + '/user/' + InvitationData.username + '/mark-read/true',
+            type: 'GET'
+          });
+          $(invitation).remove();
+          $(invitation).removeClass("invitation-row");
+          InvitationSection();
+        });
+        $('.modal-reject').on('click', function() {
+          ModalApproveClick = true;
+          $.ajax({
+            url:  '/notification/invitation/' + InvitationData.notifications[idx].generic_id  + '/user/' + InvitationData.username + '/mark-read/false',
+            type: 'GET'
+          });
+          $(invitation).remove();
+          $(invitation).removeClass("invitation-row");
+          InvitationSection();
+        });
       });
+
+
       $(invitation).removeClass("invitation-row");
+
+
    });
+    ModalApproveClick = false;
+    ModalRejectClick = false;
   });
 }; // <- end of Invitation Function
 
