@@ -32,7 +32,7 @@ __PACKAGE__->result_source_instance->view_definition(
           users as u2 
             on bo2.user_id = u2.id
   
-  where u.id = ?
+  where u.id = ? and bo.is_admin = ?
  
     ]
 );

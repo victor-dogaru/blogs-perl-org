@@ -58,7 +58,7 @@ get '/author/users/page/:page' => sub {
     push @users, @tmp_users;
   }
 
-  my $count      = resultset('View::Count::StatusUserNonAdmin')->find({}, { bind => [ $user_obj->id ] });
+  my $count      = resultset('View::Count::StatusUserNonAdmin')->find({}, { bind => [ $user_obj->id ], 1 });
   my ($all, $active, $inactive, $suspended, $pending) = $count->get_all_status_counts;
 
 
