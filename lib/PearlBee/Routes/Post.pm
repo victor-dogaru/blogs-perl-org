@@ -10,6 +10,7 @@ use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Helpers::Util qw(map_posts);
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link);
+use DateTime;
 
 our $VERSION = '0.1';
 
@@ -51,15 +52,16 @@ get '/post/:slug' => sub {
     }
 
     my $user       = resultset('Users')->find_by_session(session);
-    
+         
     if ($user){
+      my $now = DateTime->now;
       foreach my $comment( @comments){
       my $notifications =resultset('Notification')->search ({
         name        => 'comment', 
         user_id     => $user->id, 
         generic_id  => $comment->id,
         viewed      => 0 })
-        ->update({ viewed=>1 });
+        ->update({ viewed=>1, read_date=> $now });
       }
     }
    map { $_->as_hashref } @comments;
