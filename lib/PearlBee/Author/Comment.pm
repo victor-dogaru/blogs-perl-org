@@ -131,13 +131,13 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
 
   if ($status eq ('all') ){
     foreach my $blog_post (@blog_posts){
-      push @comments, map { $_->as_hashref }
+      push @comments, 
               resultset('Comment')->search({post_id => $blog_post->post_id});
     }
   }
   else{
     foreach my $blog_post (@blog_posts){
-      push @comments, map { $_->as_hashref }
+      push @comments, 
               resultset('Comment')->search({post_id => $blog_post->post_id, status => $status});
     }
   }
@@ -162,7 +162,8 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
   }
   my @sorted_comments = sort {$b->id <=> $a->id} @comments;
   my @actual_comments = splice(@sorted_comments,($page-1)*$nr_of_rows,$nr_of_rows);
-
+  map { $_->as_hashref } @actual_comments;
+  
   template 'admin/comments/list',
       {
         comments      => \@actual_comments,

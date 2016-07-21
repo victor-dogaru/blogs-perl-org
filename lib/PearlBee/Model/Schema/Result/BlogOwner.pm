@@ -6,7 +6,7 @@ package PearlBee::Model::Schema::Result::BlogOwner;
 
 =head1 NAME
 
-PearlBee::Model::Schema::Result::BlogOwner - Blog owners.
+PearlBee::Model::Schema::Result::BlogOwner
 
 =cut
 
@@ -14,20 +14,6 @@ use strict;
 use warnings;
 
 use base 'DBIx::Class::Core';
-
-=head1 COMPONENTS LOADED
-
-=over 4
-
-=item * L<DBIx::Class::InflateColumn::DateTime>
-
-=item * L<DBIx::Class::TimeStamp>
-
-=back
-
-=cut
-
-__PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp");
 
 =head1 TABLE: C<blog_owners>
 
@@ -40,6 +26,7 @@ __PACKAGE__->table("blog_owners");
 =head2 user_id
 
   data_type: 'integer'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 is_admin
@@ -50,50 +37,57 @@ __PACKAGE__->table("blog_owners");
 =head2 blog_id
 
   data_type: 'integer'
-  is_nullable: 0
-
-=head2 is_admin
-
-  data_type: 'boolean'
+  is_foreign_key: 1
   is_nullable: 0
 
 =head2 created_date
 
   data_type: 'timestamp'
-  datetime_undef_if_invalid: 1
   default_value: current_timestamp
   is_nullable: 0
+  original: {default_value => \"now()"}
 
 =head2 status
 
   data_type: 'enum'
   default_value: 'inactive'
-  extra: {list => ["inactive","active","suspended","pending"]}
+  extra: {custom_type_name => "active_state",list => ["inactive","active","suspended","pending"]}
   is_nullable: 0
+
+=head2 activation_key
+
+  data_type: 'varchar'
+  is_nullable: 1
+  size: 100
 
 =cut
 
 __PACKAGE__->add_columns(
   "user_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "is_admin",
   { data_type => "boolean", is_nullable => 0 },
   "blog_id",
-  { data_type => "integer", is_nullable => 0 },
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "created_date",
   {
-    data_type => "timestamp",
-    datetime_undef_if_invalid => 1,
+    data_type     => "timestamp",
     default_value => \"current_timestamp",
-    is_nullable => 0,
+    is_nullable   => 0,
+    original      => { default_value => \"now()" },
   },
   "status",
   {
     data_type => "enum",
     default_value => "inactive",
-    extra => { list => ["inactive", "active", "suspended", "pending"] },
+    extra => {
+      custom_type_name => "active_state",
+      list => ["inactive", "active", "suspended", "pending"],
+    },
     is_nullable => 0,
   },
+  "activation_key",
+  { data_type => "varchar", is_nullable => 1, size => 100 },
 );
 
 =head1 PRIMARY KEY
@@ -110,9 +104,42 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key("user_id", "blog_id");
 
+=head1 RELATIONS
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-23 12:42:58
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:DVbLOOt1XlToZB7+hBeLDQ
+=head2 blog
+
+Type: belongs_to
+
+Related object: L<PearlBee::Model::Schema::Result::Blog>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "blog",
+  "PearlBee::Model::Schema::Result::Blog",
+  { id => "blog_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
+
+
+
+
+
+# Created by DBIx::Class::Schema::Loader v0.07045 @ 2016-07-21 08:46:30
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6bZn+8mJURbfScksRYJ9CQ
+=head2 user
+
+Type: belongs_to
+
+Related object: L<PearlBee::Model::Schema::Result::User>
+
+=cut
+__PACKAGE__->belongs_to(
+  "u",
+  "PearlBee::Model::Schema::Result::Users",
+  { id => "user_id" },
+  { is_deferrable => 0, on_delete => "NO ACTION", on_update => "NO ACTION" },
+);
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
