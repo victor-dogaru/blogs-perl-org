@@ -237,13 +237,13 @@ get '/author/users/role/:role/page/:page' => sub {
 
 };
 
-=head2 /author/users/blog/:blog/:status/:role/page/:page
+=head2 /author/users/blog/:blog/page/:page
 
 List all users grouped by blog's name, role and status.
 
 =cut
 
-get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
+get '/author/users/blog/:blog/page/:page' => sub {
 
 
   my $nr_of_rows = 5; # Number of posts per page
@@ -263,11 +263,26 @@ get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
   my @blogs_aux;
   my @users;
   my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin=>1});
+  
   for my $blog_owner (@blog_owners){
-    push @blogs, 
-                  resultset('Blog')->search({ id => $blog_owner->get_column('blog_id'), name => params->{blog}});
+    if (params->{blog} ne 'all'){
+      push @blogs, 
+                  resultset('Blog')->search({ 
+                      id => $blog_owner->get_column('blog_id'), 
+                      name => params->{blog}
+                      }
+                    );
+    }
+    else {
+      push @blogs, 
+        resultset('Blog')->search({ 
+            id => $blog_owner->get_column('blog_id') 
+          }
+        );
+    }
   }
-    for my $blog (@blogs){
+
+  for my $blog (@blogs){
     my @tmp_blogs      = resultset('BlogOwner')->search (
     { blog_id => $blog->get_column('id') });  
     $_->{blog_name}    = $blog->name for @tmp_blogs;
@@ -276,33 +291,42 @@ get '/author/users/blog/:blog/:status/:role/page/:page' => sub {
     push @blogs_aux, @tmp_blogs;
   }
 
-  map { $_->as_hashref } @blogs;
-  if ($role ne 'all' && $status ne 'all'){
-  push @blogs_aux,
-  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), status=>$status, is_admin=>$flag });
-  }
-  elsif ($role eq 'all' && $status ne 'all'){
-       push @blogs_aux,
-  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), status=>$status });
-  }
-  elsif ($role ne 'all' && $status eq 'all'){
-       push @blogs_aux,
-  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id'), is_admin=>$flag });
-  }
-  else {
-       push @blogs_aux,
-  resultset('BlogOwner')->search ({ blog_id => $blogs[0]->get_column('id') });
+  @blogs = map { $_->as_hashref } @blogs;
+
+  my $filter = {};
+  foreach my $iterator ( "is_admin", "status"){
+      if (params->{$iterator} ne 'all'){
+        $filter->{$iterator} = params->{$iterator};
+      }
   }
 
-  for my $iterator (@blogs_aux){
+  $filter->{"u.status"} = $filter->{status};
+  undef $filter->{status};
+  delete $filter->{status};
+
+  push @blogs_aux, 
+                resultset('BlogOwner')->search ({ 
+                          blog_id => [map {$_->{id}} @blogs ],
+                          %$filter
+                        },
+                        {
+                          columns => [qw/blog_id user_id u.status is_admin /],
+                          join => 'u',
+                          result_class => 'DBIx::Class::ResultClass::HashRefInflator',
+                          
+                        }
+                      );
+
+
+  foreach my $iterator (@blogs_aux){
     my @tmp_users       = map {$_->as_hashref_sanitized}
-              resultset('Users')->search({ id => $iterator->get_column('user_id') });      
-    $_->{role_in_blog}  = $iterator->is_admin for @tmp_users;
+              resultset('Users')->search({ id => $iterator->{user_id} });      
+    $_->{role_in_blog}  = $iterator->{is_admin} for @tmp_users;
     $_->{blog_name }    = $iterator->{blog_name} for @tmp_users;
     $_->{blog_slug }    = $iterator->{blog_slug} for @tmp_users;
     $_->{blog_creator } = $iterator->{blog_creator} for @tmp_users;
     $_->{can_change}    = resultset('BlogOwner')->find(
-    {blog_id => $iterator->blog_id, user_id =>$user_obj->id})->is_admin for @tmp_users; 
+    { blog_id => $iterator->{blog_id}, user_id =>$user_obj->id})->is_admin for @tmp_users; 
     push @users, @tmp_users;
   }
 
