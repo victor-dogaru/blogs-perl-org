@@ -10,9 +10,9 @@ $(document).ready(function(){
     //Tabs label align and tabs min-height
     $( ".tabs label" ).first().css( "margin-left", "10px" );
 
-    $('.search-page .tab-content').css('min-height',$(window).height() - $("footer").outerHeight(true) - $(".search-page .background-bar").outerHeight(true));
+    $('.search-page').css('min-height',$(window).height() - $("footer").outerHeight(true) - $(".header").outerHeight(true));
     $(window).resize(function(){
-        $('.search-page .tab-content').css('min-height',$(window).height() - $("footer").outerHeight(true) - $(".search-page .background-bar").outerHeight(true));
+        $('.search-page').css('min-height',$(window).height() - $("footer").outerHeight(true) - $(".header").outerHeight(true));
     });
 
 //tab 1 user-posts

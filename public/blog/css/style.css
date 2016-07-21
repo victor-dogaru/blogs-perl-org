@@ -292,6 +292,14 @@ strong{
 
 
 /* Logo & Navigation */
+.header{
+   height:80px;
+   position: fixed;
+   width: 100%;
+   z-index: 999;
+   background: #ffffff;
+   border-bottom: 3px solid #3BBEDC;
+}
 .header label {
   margin: 0;
 }
