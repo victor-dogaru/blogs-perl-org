@@ -1,18 +1,14 @@
 [% SET global.template_name = 'notification' %]
-<div class="page-content blocky">
+
+[% INCLUDE layouts/admin.tt %]
+
    <div class="container">
-
-
-          [% INCLUDE layouts/admin.tt %]
-
-
       <div class="mainy">
       	<!-- Page title -->
       	<div class="page-title">
       		<h2> &nbsp; <i class="fa fa-flag" aria-hidden="true"></i> Notifications</h2>
       		<hr />
       	</div>
-
 
       <div class="row">
         <div class="col-md-12">
@@ -107,9 +103,7 @@
           </div>
         </div>
       </div>
-
-      </div>
-
-   </div>
-</div>
+    </div>
+  </div>
+  
 <script src="/admin/js/bootstrap.min.js"></script>
