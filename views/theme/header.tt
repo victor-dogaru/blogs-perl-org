@@ -53,7 +53,7 @@
                 <a href="/profile" class="pull-left">Profile</a>
               </div>
               <div class="links-group header-menu-links">
-                <a href="/author/posts" class="pull-left">Publications</a>
+                <a href="/author/posts" class="pull-left">Dashboard</a>
               </div>
               <div class="links-group log-out">
                 <a href="/logout" class="pull-left">Log Out</a>
