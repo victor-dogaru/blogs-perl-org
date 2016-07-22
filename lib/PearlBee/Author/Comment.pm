@@ -204,6 +204,7 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
       {
         comments      => \@actual_comments,
         blogs         => \@blogs,
+        searched_blog => $blog_ref,
         all           => $all,
         approved      => $approved,
         spam          => $spam,
