@@ -127,21 +127,57 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
   my $blog_ref   =resultset('Blog')->find({name => params->{blog}});
   my $user       = resultset('Users')->find_by_session(session);
   my @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
-  my @comments;
+  my @comments_aux;
 
   if ($status eq ('all') ){
     foreach my $blog_post (@blog_posts){
-      push @comments, 
+      push @comments_aux, 
               resultset('Comment')->search({post_id => $blog_post->post_id});
     }
   }
   else{
     foreach my $blog_post (@blog_posts){
-      push @comments, 
+      push @comments_aux, 
               resultset('Comment')->search({post_id => $blog_post->post_id, status => $status});
     }
   }
-  my $all          = scalar @comments;
+  
+  my $flag         = resultset('BlogOwner')->find({blog_id => $blog_ref->id, user_id=>$user->id});
+
+
+  my @comments;
+  if ($flag->is_admin == 0){
+  for (@comments_aux) {
+    if ($_->get_column('uid') == $user->id){  
+      push @comments, $_;
+      }
+    }
+  }
+  else{
+   @comments = @comments_aux;
+  }
+
+  my $all       = scalar @comments;
+  my $approved  = 0;
+  my $spam      = 0;
+  my $trash     = 0;
+  my $pending   = 0;
+
+  foreach my $iterator(@comments){
+    if ($iterator->status eq 'approved')
+    {
+      $approved ++;
+    }
+    elsif ($iterator->status eq 'pending'){
+      $pending++;
+    }
+    elsif ($iterator->status eq 'trash'){
+      $trash++;
+    }
+    else{
+      $spam++;
+    }
+  }
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
@@ -169,6 +205,10 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
         comments      => \@actual_comments,
         blogs         => \@blogs,
         all           => $all,
+        approved      => $approved,
+        spam          => $spam,
+        pending       => $pending,
+        trash         => $trash,
         page          => $page,
         next_link     => $next_link,
         previous_link => $previous_link,
