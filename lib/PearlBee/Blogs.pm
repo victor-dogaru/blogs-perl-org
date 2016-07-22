@@ -36,6 +36,7 @@ get '/blogs/user/:username/slug/:slug/name/:name' => sub {
   my $num_user_posts = config->{blogs}{user_posts} || 10;
   my $slug        = route_parameters->{'slug'};
   my $blog_name   = route_parameters->{'name'};
+  $blog_name =~ s/%20/ /g;
   my $username    = route_parameters->{'username'};
   my ( $user )    = resultset('Users')->match_lc( $username );
   my @blog_ids;
