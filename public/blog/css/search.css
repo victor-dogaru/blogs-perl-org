@@ -120,6 +120,11 @@
 #tab4:checked ~ #tab-content4{
     display: block;
 }
+
+#tab1:checked ~ #tab-content1, #tab2:checked ~ #tab-content2, #tab3:checked ~ #tab-content3, #tab4:checked ~ #tab-content4 {
+    display: block;
+}
+
 .no-posts2, .no-posts3, .no-posts-found1 {
     font-family: 'Open Sans', sans-serif;
     font-size: 36px;
@@ -129,7 +134,7 @@
     padding-left: 0;
 }
 .search-page .row.search-top {
-    margin-top: 45px;
+    margin-top: 14px;
     position: relative;
 }
 
@@ -137,12 +142,12 @@
     font-size: 18px;
 }
 .search-page .background-bar {
-        z-index: -1;
+    z-index: 0;
     position: absolute;
-    top:0px;
+    top: 0;
     width: 100%;
     background-color: #dadada;
-    height: 195px;
+    height: 120px;
 }
 @media all and (min-width: 768px) {
 
@@ -227,6 +232,13 @@
     }
 }
 /*search page input*/
+.search-page {
+    margin-top: 80px;
+    position: relative;
+}
+.search-page .content{
+    position: relative;
+}
 .search-input{
     background: #dadada;
     height: 100%;
