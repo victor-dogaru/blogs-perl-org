@@ -56,11 +56,8 @@
                               <p class="invitation-username"></p>
                             </div>
                         </div>
-
-                        <div class="modal-footer">
-                          <!-- <a class="modal-accept"></a> -->
-                          <!-- <a type="button" class="btn btn-default modal-reject" data-dismiss="modal">Reject</a> -->
-                        </div>
+                        
+                        <div class="modal-footer"></div>
                     </div>
                 </div>
             </div> <!-- end modal -->
@@ -105,5 +102,5 @@
       </div>
     </div>
   </div>
-  
+
 <script src="/admin/js/bootstrap.min.js"></script>

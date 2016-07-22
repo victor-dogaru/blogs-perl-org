@@ -202,7 +202,6 @@ var RoleSection = function() {
   RoleSection();
 
 // More arrow/button
-
 $('.invitation-arrow').click(function() {
     InvitationSection();
   });
@@ -217,7 +216,6 @@ $('.role-arrow').click(function() {
 
  // Styling hack for the header  and sidebar (both get sent and in other zones this structure is needed)
   if (window.location.pathname === '/notification') {
-    $('#header_onion_logo').hide();
     $('.sidey').css('margin-top', '30px');
     $('#notification-parent').show();
   }
