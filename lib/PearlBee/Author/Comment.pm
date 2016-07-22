@@ -119,8 +119,7 @@ List all comments grouped by blog.
 =cut
 
 get '/author/comments/blog/:blog/:status/page/:page' => sub {
-  use DDP;
-  use Data::Dumper;
+
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $blog       = params->{blog};
