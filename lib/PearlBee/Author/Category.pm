@@ -32,22 +32,28 @@ get '/author/categories/page/:page' => sub {
   my @blog_posts;
   my @categories;
   my @post_categories;
-  for my $blog_owner ( @blog_owners ) {
-  push @blog_posts, 
-                   resultset('BlogPost')->search({ blog_id => $blog_owner->blog_id });
 
+  for my $blog_owner ( @blog_owners ) {
+  my @tmp_blogs      = resultset('BlogPost')->
+  search({ blog_id => $blog_owner->blog_id });
+  $_->{blog_role}    = $blog_owner->is_admin for @tmp_blogs;
+  push @blog_posts, @tmp_blogs;                   
   }
 
   for my $blog (@blog_posts){
-    push @post_categories, 
+  my @post_categories_temp = 
                      resultset('PostCategory')->search({ post_id => $blog->post_id });
-
+  $_->{blog_role}    = $blog->{blog_role} for @post_categories_temp;
+  push @post_categories, @post_categories_temp; 
   }
 
   for my $category (@post_categories){
-    push @categories, 
+    my @categories_temp = 
                      resultset('Category')->search({ name => { '!=' => 'Uncategorized'}, id => $category->category_id });
-  }   
+  $_->{blog_role}    = $category->{blog_role} for @categories_temp;
+  push @categories, @categories_temp;                
+  } 
+      
   my $all                = scalar (@categories);
   my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
   my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
