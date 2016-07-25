@@ -130,7 +130,11 @@
 							<td> [% category.name %] </td>
 							<td> [% category.slug %] </td>
 							<td> [% category.user.name %] </td>
-							<td> rolul in acest blog frumos </td>
+							<td> [% IF category.blog_role == 0 %]
+								 author 
+								 [%ELSE%] 
+								 admin 
+								 [%END%]  </td>
 							<td style="width: 5%">
 								<a href="/admin/categories/edit/[% category.id %]">
 									<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
