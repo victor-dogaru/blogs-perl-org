@@ -100,8 +100,8 @@
 
 
       <!-- Footer starts -->
-<!--
-      <footer>
+
+      <!-- <footer>
          <div class="container">
 
             <div class="copy text-center">
@@ -109,8 +109,8 @@
             </div>
 
          </div>
-      </footer>
--->
+      </footer> -->
+
       <!-- Footer ends -->
 
       <!-- Scroll to top -->
@@ -165,7 +165,9 @@
       <!-- Select JS -->
       <script src="/admin/js/ckeditor/ckeditor.js"></script>
       <!-- notification JS -->
+      [% IF (request.uri == '/notification') %]
       <script src="/admin/js/notification.js"></script>
+      [% END %]
 
    </body>
 </html>
