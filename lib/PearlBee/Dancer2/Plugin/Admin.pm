@@ -3,7 +3,7 @@ use strict;
 use Dancer2::Plugin;
 #use PearlBee;
 use Dancer2::Plugin::DBIC;
-use DDP;
+
 on_plugin_import {
     my $dsl = shift;
     $dsl->app->add_hook(
