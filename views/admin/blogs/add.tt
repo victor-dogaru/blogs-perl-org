@@ -1,10 +1,7 @@
-<!--[% SET global.template_name = 'create_blog' %]-->
 <!--<link href="/blog/css/profile.css" rel="stylesheet">-->
-<link href="/blog/css/style.css" rel="stylesheet"> 
+<link href="/blog/css/style.css" rel="stylesheet">
 <link href="/blog/css/croppie.css" rel="stylesheet">
-<script src="/admin/js/croppie.js"></script>
-<script src="public/blog/js/profile.js"></script>
-<!--<script src="public/blog/js/app.js"></script>-->
+<script src="public/blog/js/app.js"></script>
 
 	
 
