@@ -133,7 +133,11 @@
 							<td class="long-input"> [% tag.name %] </td>
 							<td class="long-input"> [% tag.slug %] </td>
 							<td style="width: 15%"> MaricicaMaricica </td>
-							<td style="width: 15%"> Campioana pa sat </td>
+							<td style="width: 15%"> [% IF tag.blog_role == 0 %]
+								 author 
+								 [%ELSE%] 
+								 admin 
+								 [%END%]  </td>
 							<td style="width: 5%">
 								<a href="/admin/tags/edit/[% tag.id %]">
 									<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
