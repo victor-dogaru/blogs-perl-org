@@ -128,6 +128,19 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
   my $user       = resultset('Users')->find_by_session(session);
   my @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
   my @comments_aux;
+  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+  my @posts; 
+  my @ids;
+
+  foreach my $i (@blog_posts){
+    push @posts, resultset ('Post')->search({ id => $i->post_id})
+  };
+  
+  foreach my $i (@posts){
+     if ($i->user_id == $user->id){
+      push @ids, $i->id;
+     }
+  }
 
   if ($status eq ('all') ){
     foreach my $blog_post (@blog_posts){
@@ -147,8 +160,9 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
 
   my @comments;
   if ($flag->is_admin == 0){
-  for (@comments_aux) {
-    if ($_->get_column('uid') == $user->id){  
+  foreach (@comments_aux) {
+    my $found_id = $_->post_id;
+    if (( grep /$found_id/, @ids ) or  ($_->get_column('uid') == $user->id)){ 
       push @comments, $_;
       }
     }
@@ -191,7 +205,7 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
   my $pagination      = generate_pagination_numbering($total_comments, $posts_per_page, $current_page, $pages_per_set);
 
   my @blogs;
-  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+ 
   for my $blog_owner ( @blog_owners ) {
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });

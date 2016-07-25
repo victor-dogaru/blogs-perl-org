@@ -30,22 +30,28 @@ get '/author/tags/page/:page' => sub {
   my @tags;
   my @aux_tags;
   my @post_tags;
-  for my $blog_owner ( @blog_owners ) {
-  push @blog_posts, 
-                   resultset('BlogPost')->search({ blog_id => $blog_owner->blog_id });
 
+  for my $blog_owner ( @blog_owners ) {
+  my @blog_posts_temp= 
+                   resultset('BlogPost')->search({ blog_id => $blog_owner->blog_id });
+  $_->{blog_role}    = $blog_owner->is_admin for @blog_posts_temp;
+  push @blog_posts, @blog_posts_temp; 
   }
 
   for my $blog (@blog_posts){
-    push @post_tags, 
+    my @post_tags_temp= 
                      resultset('PostTag')->search({ post_id => $blog->post_id });
-
+    $_->{blog_role}    = $blog->{blog_role} for @post_tags_temp;
+    push @post_tags, @post_tags_temp;
   }
 
   for my $tag (@post_tags){
-    push @aux_tags, 
+    my @aux_tags_temp = 
                      resultset('Tag')->search({ id => $tag->tag_id});
+    $_->{blog_role}    = $tag->{blog_role} for @aux_tags_temp;
+    push @aux_tags, @aux_tags_temp;                    
   } 
+  
   my $all         = scalar (@aux_tags);
   my @sorted_tags = sort {$b->id <=> $a->id} @aux_tags;
   @tags           = splice(@sorted_tags,($page-1)*$nr_of_rows,$nr_of_rows);
