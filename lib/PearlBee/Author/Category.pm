@@ -5,8 +5,6 @@ use Dancer2;
 
 use Dancer2::Plugin::DBIC;
 use PearlBee::Dancer2::Plugin::Admin;
-use Data::Dumper;
-
 use PearlBee::Helpers::Util qw(string_to_slug);
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link generate_pagination_numbering);
 
