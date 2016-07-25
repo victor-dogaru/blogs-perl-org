@@ -216,7 +216,8 @@ $('.role-arrow').click(function() {
 
  // Styling hack for the header  and sidebar (both get sent and in other zones this structure is needed)
   if (window.location.pathname === '/notification') {
-    $('.sidey').css('margin-top', '30px');
+    $('.sidey').css('margin-top', '60px');
+    $('.mainy').css('margin-top', '40px');
     $('#notification-parent').show();
   }
 
