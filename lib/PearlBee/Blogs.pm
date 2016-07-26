@@ -282,13 +282,19 @@ get 'admin/create-blog' => sub{
 get 'author/create-blog' => sub{
 
       my $user       = resultset('Users')->find_by_session(session);
+      my @timezones = DateTime::TimeZone->all_names;
       my @blogs;
       my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
       for my $blog_owner ( @blog_owners ) {
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });
       }
-      template 'admin/blogs/add',{blogs => \@blogs}, { layout => 'admin' };
+      template 'admin/blogs/add',
+      {
+        blogs => \@blogs,
+        timezones => \@timezones
+      },
+      { layout => 'admin' };
 };
 
 =head2 /add-contributor/user/:username

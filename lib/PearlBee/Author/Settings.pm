@@ -2,6 +2,7 @@ package PearlBee::Author::Settings;
 use Try::Tiny;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
+use PearlBee::Dancer2::Plugin::Admin;
 
 
 =head

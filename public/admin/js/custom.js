@@ -423,7 +423,9 @@ $(document).ready(function(){
     $(".chosen-select").chosen({disable_search_threshold: 10});
   };
 
-// if (window.location.pathname !== "/notification") {
-//   $('#notification-parent').hide();
-// }
+  if (window.location.pathname.split('/')[2] === 'create-blog') {
+    $('.sidey').css('margin-top', '60px');
+    $('.mainy').css('margin-top', '60px');
+    $('#notification-parent').show();
+  }
 });

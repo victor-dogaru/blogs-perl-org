@@ -6,39 +6,34 @@ use Dancer2::Plugin::DBIC;
 
 on_plugin_import {
     my $dsl = shift;
-    #$dsl->prefix('/admin');  
     $dsl->app->add_hook(
         Dancer2::Core::Hook->new(
             name => 'before',
             code => sub {
                 $dsl->set( layout => 'admin' );
                 my $context = shift;
-
                 my $user = $context->session->{'data'}->{'user'};
+                $user = $dsl->resultset('Users')->find({ id => $user->{id} }) if ($user);
 
-                $user = $dsl->resultset('Users')->find({ username => $user->{username} }) if ($user);
                 my $request = $context->request->path_info;
-                my $app_url = $context->config->{'app_url'};
+
                 # Check if the user is logged in
-                if ( !$user && $request =~ /admin/ ) {
-                    my $redir = $dsl->redirect( $app_url . '/admin' );
+                if (($request =~ '/author/' && !$user) || 
+                    ($request =~ '/admin/' && !$user) ) {
+
+                    my $redir = $dsl->redirect( '/' );
                     return $redir;
-                }
-                # Check if the user is activated
-                if ( $request !~ /\/dashboard/ && $user) {
-                    my $redir = $dsl->redirect( $app_url . '/dashboard' ) if ( $user->status eq 'inactive' );
-                    return $redir;
-                }
+                }   
 
                 # Restrict access to non-admin users
-                if ( $request =~ '/admin/' && $user->is_author ) {
-                    my $redir = $dsl->redirect( $app_url . '/author/posts' );
+                if ( $request =~ '/admin/' && !($user->is_admin) ) {
+
+                    my $redir = $dsl->redirect( '/' );
                     return $redir;
                 }
             }
         )
     );
 };
-
 
 register_plugin for_versions => [2];
