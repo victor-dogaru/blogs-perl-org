@@ -35,6 +35,7 @@ get '/author/posts/page/:page' => sub {
     }
   }
 
+  my @posts;
   my @blog_owners = resultset('BlogOwner')-> search({ user_id => $user_obj->id });
   foreach my $iterator (@blog_owners){
     if ($iterator->is_admin == 1){      
