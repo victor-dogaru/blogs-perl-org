@@ -100,9 +100,7 @@ strong{
    margin:20px 0px;
    background: url("../img/sep.png") repeat;
 }
-.blocky{
-   margin:30px 0px;
-}
+
 .page-title{
    margin:10px 0px;
 }
@@ -297,7 +295,7 @@ strong{
    position: fixed;
    width: 100%;
    z-index: 999;
-   /*background: #ffffff;*/
+   background: #ffffff;
    border-bottom: 3px solid #3BBEDC;
 }
 .header label {
@@ -2950,11 +2948,6 @@ input.cmn-toggle-round-flat:checked + label:after {
 /* end toggle switch */
 
 /* header container */
-/*Need to do this because we have two headers with the same class, using parent as differentiator*/
-.header > .header-container {
-  background: #fff;
-  border-bottom: 3px solid #3BBEDC;
-}
 @media all and (min-width: 768px){
    .container.header-container {
        max-width: 750px;

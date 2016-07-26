@@ -1,4 +1,4 @@
-/* ============================================================ 
+/* ============================================================
     All of the aplication's custom javascript scripts goes here
    ============================================================
 
@@ -22,7 +22,7 @@ $(document).ready(function() {
 	$('#trash_btn').on('click', function() {
 		$('#status').val('trash');
 	});
-	
+
 });
 
 // Autocomplete the Tag/Category slug
@@ -31,7 +31,7 @@ $(document).ready(function() {
 
 	$('input[name="name"').on('keyup', function(){
 		var slug = $(this).val();
-		
+
 		// Replace all non-alphanumeric characters with a hypen
 		slug = slug.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'').toLowerCase();
 
@@ -40,7 +40,7 @@ $(document).ready(function() {
 
 	$('input[name="title"').on('keyup', function(){
 		var slug = $(this).val();
-		
+
 		// Replace all non-alphanumeric characters with a hypen
 		slug = slug.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'').toLowerCase();
 
@@ -67,7 +67,7 @@ $(document).ready(function() {
 	$.getJSON('/api/tags.json', function(tags_list) {
 		$("#tags").select2({tags: tags_list});
 	});
-	
+
 });
 
 
@@ -76,7 +76,12 @@ $(document).ready(function() {
 	$.getJSON('/api/categories.json', function(categories_list) {
 		$("#categories").select2({tags: categories_list});
 	});
-	
+
+});
+
+$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
+$(window).resize(function(){
+	$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
 });
 
 
@@ -231,12 +236,14 @@ $(document).ready(function() {
 	}
 
 	var input = document.getElementById('file-upload-blog');
-	input.onchange = function(e) {
-		getOrientation(input.files[0], function(orientation) {
-			if (orientation === 6) {
-				$(".croppie-container .cr-boundary").rotate({animateTo:90});
-			}
-		});
+	if (input) {
+		input.onchange = function(e) {
+			getOrientation(input.files[0], function(orientation) {
+				if (orientation === 6) {
+					$(".croppie-container .cr-boundary").rotate({animateTo:90});
+				}
+			});
+		}
 	}
 
 	$("#file-upload-blog").change(function () {

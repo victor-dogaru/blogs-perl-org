@@ -96,8 +96,11 @@ strong{
 }
 
 .blocky{
-   margin:30px 0px;
+   margin:70px 0 0;
+   padding: 30px 0;
 }
+
+
 
 .modal h4{
    font-family:"Open Sans", sans-serif;
@@ -175,13 +178,16 @@ strong{
 
 /* Logo & Navigation */
 
-.header{
-   height:70px;
-   background:#16cbe6;
-   border-top:4px solid #0fa6bc;
-   border-bottom:1px solid #0fa6bc;
+.header.admin-header {
+   height: 70px;
+   background: #16cbe6;
+   border-top: 4px solid #0fa6bc;
+   border-bottom: 1px solid #0fa6bc;
+   position: fixed;
+   width: 100%;
+   top: 0;
+   z-index: 999;
 }
-
 .header .logo h1{
    font-size:40px;
    margin:0px;
