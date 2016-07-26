@@ -35,10 +35,15 @@ get '/author/posts/page/:page' => sub {
     }
   }
 
-  my @posts;
   my @blog_owners = resultset('BlogOwner')-> search({ user_id => $user_obj->id });
   foreach my $iterator (@blog_owners){
-    push @posts, resultset('Blog')-> find({ id =>$iterator->blog_id})->posts;
+    if ($iterator->is_admin == 1){      
+    push @posts, resultset('Blog')-> find({ id =>$iterator->blog_id})->posts(1,$user_obj->id);
+    }
+    else{
+      push @posts, resultset('Blog')-> find({ id =>$iterator->blog_id})->posts(0, $user_obj->id);
+    }
+
   }
   #my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
 
