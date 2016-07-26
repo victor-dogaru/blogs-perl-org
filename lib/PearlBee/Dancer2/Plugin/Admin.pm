@@ -13,20 +13,22 @@ on_plugin_import {
                 $dsl->set( layout => 'admin' );
                 my $context = shift;
                 my $user = $context->session->{'data'}->{'user'};
-
-                $user = $dsl->resultset('Users')->find({ username => $user->{username} }) if ($user);
+                $user = $dsl->resultset('Users')->find({ id => $user->{id} }) if ($user);
 
                 my $request = $context->request->path_info;
-                my $app_url = $context->config->{'app_url'};
+
                 # Check if the user is logged in
-                if (!$user ) {
-                 my $redir = $dsl->redirect( $app_url );
-                 return $redir;
+                if (($request =~ '/author/' && !$user) || 
+                    ($request =~ '/admin/' && !$user) ) {
+
+                    my $redir = $dsl->redirect( '/' );
+                    return $redir;
                 }   
+
                 # Restrict access to non-admin users
                 if ( $request =~ '/admin/' && !($user->is_admin) ) {
 
-                    my $redir = $dsl->redirect( $app_url );
+                    my $redir = $dsl->redirect( '/' );
                     return $redir;
                 }
             }
