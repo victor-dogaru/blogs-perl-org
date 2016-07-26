@@ -1111,8 +1111,8 @@ strong{
 
 
 /* Blog */
-.blog {
-   position: absolute;
+.blog, .blog-post {
+   position: relative;
    width: 100%;
    margin-top: 80px;
 }
@@ -2418,10 +2418,6 @@ a:focus {
   }
 
 /* Listings*/
-.blog {
-  position: relative;
-  margin-top: 0px;
-}
 .blog .page-heading {
    margin-bottom: 25px;
    font-family: 'Montserrat', 'Open Sans', sans-serif;
