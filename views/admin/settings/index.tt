@@ -17,14 +17,14 @@
 				<div class="awidget-body">
 					[% INCLUDE components/alerts.tt %]
 					<div class="col-lg-9">
-						<form method="post" action="/admin/settings/save">
+						<form method="post" action="/blog/profile">
 							<h2>Choose blog</h2>
 							<div class="btn-group">
 								<!-- <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select time zone <span class="caret"></span></button> -->
-								<select name="timezone" class="chosen-select">
+								<select name="current_name" class="chosen-select">
 										[% FOREACH blog IN blogs %]
 										[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-										<option [% selected %] value=""> [% blog.name %] </option>
+										<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
 										[% END %]
 								</select>
 							</div>
@@ -90,7 +90,7 @@
 							<div class="form-group">
 								<div>
 									<button type="submit" class="btn btn-default">Save</button>
-									<a href="/admin/settings">
+									<a href="/blog/profile">
 										<button type="button" class="btn btn-danger">Cancel</button>
 									</a>
 								</div>
