@@ -78,11 +78,13 @@ $(document).ready(function() {
 	});
 
 });
+	// if (location.pathname !== '/notification') {
+	// 	$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
+	// 	$(window).resize(function(){
+	// 		$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
+	// 	});
+	// }
 
-$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
-$(window).resize(function(){
-	$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
-});
 
 
 function getBlog(gb) {
