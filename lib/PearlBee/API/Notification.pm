@@ -33,6 +33,15 @@ get '/api/notification/comment/user/:username/page/:page' => sub {
   my $username = route_parameters->{'username'};
   my $page     = route_parameters->{'page'};
   my ( $user ) = resultset('Users')->match_lc( $username );
+  my $res_user = resultset('Users')->find_by_session(session);
+
+  if ( !$res_user ){
+    redirect ('/');
+    }
+  elsif (($res_user->id != $user->id) and (!$res_user->is_admin  ))
+  {
+    redirect ('/');
+  }  
 
   my @notifications =
     resultset('Notification')->search(
@@ -72,6 +81,15 @@ get '/api/notification/invitation/user/:username/page/:page' => sub {
   my $username = route_parameters->{'username'};
   my $page     = route_parameters->{'page'};
   my ( $user ) = resultset('Users')->match_lc( $username );
+  my $res_user = resultset('Users')->find_by_session(session);
+
+  if ( !$res_user ){
+    redirect ('/');
+    }
+  elsif (($res_user->id != $user->id) and (!$res_user->is_admin  ))
+  {
+    redirect ('/');
+  }  
 
   my @notifications =
     resultset('Notification')->search(
@@ -111,6 +129,15 @@ get '/api/notification/response/user/:username/page/:page' => sub {
   my $username = route_parameters->{'username'};
   my $page     = route_parameters->{'page'};
   my ( $user ) = resultset('Users')->match_lc( $username );
+  my $res_user = resultset('Users')->find_by_session(session);
+
+  if ( !$res_user ){
+    redirect ('/');
+    }
+  elsif (($res_user->id != $user->id) and (!$res_user->is_admin  ))
+  {
+    redirect ('/');
+  }  
 
   my @notifications =
     resultset('Notification')->search(
@@ -148,6 +175,15 @@ get '/api/notification/changed_role/user/:username/page/:page' => sub {
   my $username = route_parameters->{'username'};
   my $page     = route_parameters->{'page'};
   my ( $user ) = resultset('Users')->match_lc( $username );
+  my $res_user = resultset('Users')->find_by_session(session);
+
+  if ( !$res_user ){
+    redirect ('/');
+    }
+  elsif (($res_user->id != $user->id) and (!$res_user->is_admin  ))
+  {
+    redirect ('/');
+  }  
 
   my @notifications =
     resultset('Notification')->search(
