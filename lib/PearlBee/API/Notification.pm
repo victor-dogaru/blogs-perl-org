@@ -43,7 +43,6 @@ get '/api/notification/comment/user/:username/page/:page' => sub {
     redirect ('/');
   }  
 
-
   my @notifications =
     resultset('Notification')->search(
       { user_id  => $user->id,
@@ -91,7 +90,6 @@ get '/api/notification/invitation/user/:username/page/:page' => sub {
   {
     redirect ('/');
   }  
-
 
   my @notifications =
     resultset('Notification')->search(
@@ -141,7 +139,6 @@ get '/api/notification/response/user/:username/page/:page' => sub {
     redirect ('/');
   }  
 
-
   my @notifications =
     resultset('Notification')->search(
       { sender_id  => $user->id,
@@ -187,7 +184,6 @@ get '/api/notification/changed_role/user/:username/page/:page' => sub {
   {
     redirect ('/');
   }  
-
 
   my @notifications =
     resultset('Notification')->search(
