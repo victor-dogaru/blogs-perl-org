@@ -28,7 +28,7 @@ var  CommentsSection = function() {
       var CommentData = JSON.parse(data);
       var username = data.username;
           // Update nr of new Comments
-          $('.commentsNr').prepend( CommentData.total + ' New Comments');
+          $('.commentsNr').html( CommentData.total + ' New Comments');
       });
     }; // <- End of Comments Function
 
@@ -171,7 +171,7 @@ var RoleSection = function() {
 
 
     // Update the Number of Roles
-    $('.roleNr').html('<a href="#">' + roleData.total + '</a>' + ' Other Notifications');
+    $('.roleNr').html(roleData.total + ' Other Notifications');
 
     // Pagination and making the arrow dissapear when all elements have loaded
    for (var i = (RolePage == 2) ? 1 : 0; i < roleData.notifications.length; i++) {
