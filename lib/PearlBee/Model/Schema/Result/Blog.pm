@@ -358,14 +358,24 @@ sub blog_creator {
 }
 
 sub posts {
-  my ($self)     = @_;
-  my $schema     = $self->result_source->schema;
+  my ($self, $flag, $user_id) = @_;
+  my $schema                  = $self->result_source->schema;
   my @posts;
-  my $id         = $self->id;
-  my @blog_posts = $schema->resultset('BlogPost')-> search ({ blog_id => $id });
-  foreach my $iterator(@blog_posts){
-    push @posts, $schema->resultset('Post')-> find ({ id=> $iterator->post_id});
+  my $id                      = $self->id;
+  my @blog_posts              = $schema->resultset('BlogPost')-> search ({ 
+                                blog_id => $id });
+  
+  if ($flag ){
+    foreach my $iterator(@blog_posts){
+      push @posts, $schema->resultset('Post')-> find ({ id=> $iterator->post_id });
+    }
   }
+  else{
+    foreach my $iterator(@blog_posts){
+      push @posts, $schema->resultset('Post')-> search ({ id=> $iterator->post_id, user_id =>$user_id });
+    }   
+  }
+
   return @posts;
 }
 

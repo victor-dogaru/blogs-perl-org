@@ -188,11 +188,14 @@ sub as_hashref {
     my $user = $schema->resultset('Users')->find({
       id => $self->sender_id
     });
-    my $c    = $comment->as_hashref_sanitized;
-    my $u    = $user->as_hashref_sanitized;
 
-    $as_href->{comment} = $c;
-    $as_href->{sender}  = $u;
+    if ($comment) {
+      my $c    = $comment->as_hashref_sanitized;
+      my $u    = $user->as_hashref_sanitized;
+
+      $as_href->{comment} = $c;
+      $as_href->{sender}  = $u;
+    } 
 
   }
   elsif ( $self->name eq 'invitation' ) {
@@ -203,11 +206,14 @@ sub as_hashref {
       id => $self->sender_id
     });
 
-    my $b = $blog->as_hashref_sanitized;
-    my $u = $user->as_hashref_sanitized;
+    if ($blog){
+      my $b = $blog->as_hashref_sanitized;
+      my $u = $user->as_hashref_sanitized;
 
-    $as_href->{blog}   = $b;
-    $as_href->{sender} = $u;
+      $as_href->{blog}   = $b;
+      $as_href->{sender} = $u;
+    }
+
   }
   elsif ( $self->name eq 'response' ) {
     my $blog = $schema->resultset('Blog')->find({
@@ -217,11 +223,13 @@ sub as_hashref {
       id => $self->user_id
     });
 
-    my $b = $blog->as_hashref_sanitized;
-    my $u = $user->as_hashref_sanitized;
+    if ($blog){
+      my $b = $blog->as_hashref_sanitized;
+      my $u = $user->as_hashref_sanitized;
 
-    $as_href->{blog}      = $b;
-    $as_href->{receiver}  = $u;
+      $as_href->{blog}      = $b;
+      $as_href->{receiver}  = $u;
+    }
     
   }  
   else{
@@ -232,11 +240,14 @@ sub as_hashref {
       id => $self->sender_id
     });
 
-    my $b = $blog->as_hashref_sanitized;
-    my $u = $user->as_hashref_sanitized;
+    if ($blog){
+      my $b = $blog->as_hashref_sanitized;
+      my $u = $user->as_hashref_sanitized;
 
-    $as_href->{blog}   = $b;
-    $as_href->{sender} = $u;
+      $as_href->{blog}   = $b;
+      $as_href->{sender} = $u;
+    }
+    
   }
   return $as_href;
 }           
