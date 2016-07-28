@@ -151,10 +151,6 @@
       <script src="/admin/js/respond.min.js"></script>
       <!-- HTML5 Support for IE -->
       <script src="/admin/js/html5shiv.js"></script>
-      <!-- Custom JS -->
-      <script src="/admin/js/custom.js"></script>
-      <!-- App JS -->
-      <script src="/admin/js/app.js"></script>
       <!-- Croppie plugin -->
       <script src="/js/croppie.js"></script>
 
@@ -168,6 +164,12 @@
       [% IF (request.uri == '/notification') %]
       <script src="/admin/js/notification.js"></script>
       [% END %]
+
+
+    <!-- Custom JS -->
+    <script src="/admin/js/custom.js"></script>
+    <!-- App JS -->
+    <script src="/admin/js/app.js"></script>
 
    </body>
 </html>
