@@ -28,7 +28,7 @@ var  CommentsSection = function() {
       var CommentData = JSON.parse(data);
       var username = data.username;
           // Update nr of new Comments
-          $('.commentsNr').prepend( CommentData.total + ' New Comments');
+          $('.commentsNr').html( CommentData.total + ' New Comments');
       });
     }; // <- End of Comments Function
 
