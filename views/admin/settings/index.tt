@@ -1,7 +1,10 @@
+<link href="/blog/css/style.css" rel="stylesheet">
+<link href="/blog/css/croppie.css" rel="stylesheet">
+
 <div class="mainy">
 	<!-- Page title -->
 	<div class="page-title">
-		<h2><i class="icon-wrench color"></i> Settings <small>manage your blog's settings</small></h2>
+		<h2><i class="icon-wrench color"></i> Settings <small>manage your blog settings</small></h2>
 		<hr />
 	</div>
 	<!-- Page title -->
@@ -16,7 +19,7 @@
 				</div>
 				<div class="awidget-body">
 					[% INCLUDE components/alerts.tt %]
-					<div class="col-lg-9">
+					<div class="col-lg-6">
 						<form method="post" action="/blog/profile">
 							<h2>Choose blog</h2>
 							<div class="btn-group">
@@ -112,7 +115,21 @@
 
 						</form>
 					</div>
-
+					<div class="col-lg-6">
+						<div class="col-lg-3 profile-pic blog-pic">
+							<div class="bubble">
+								[% IF session.blog.avatar_path %]
+								<img id="blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% searched_blog.slug %]/user/[% user.username %]" />
+								[% ELSE %]
+								<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
+								[% END %]
+							</div>
+							<div>
+								<button type="button" class="btn change-pic" data-toggle="modal" data-target="#changeImgBlog">Change photo
+								</button>
+							</div>
+						</div>
+					</div>
 				</div>
 
 			</div>
@@ -120,4 +137,55 @@
 
 	</div>
 
+</div>
+
+<div class="profile-modal">
+	<!-- Modal -->
+	<div class="modal fade" id="changeImgBlog" tabindex="-1" role="dialog" aria-labelledby="changeImgBlogLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="changeImgBlogLabel">Change Photo</h4>
+				</div>
+				<div class="modal-body clearfix">
+					<div class="col-xs-12 col-sm-6 profile-pic">
+						<div class="bubble text-center">
+							[% IF session.blog.avatar_path %]
+							<img id="modal_blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% searched_blog.slug %]/user/[% user.username %]" />
+							[% ELSE %]
+							<img id="modal_blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
+							[% END %]
+
+							<div id="croppie_pic">
+							</div>
+
+
+						</div>
+					</div>
+					<div class="col-xs-12 col-sm-6 picture-btn">
+						<form action="/blog-image/large/slug/[% blog.slug %]/user/[% blog.blog_creator.username %]" enctype="multipart/form-data" method="post" id="upload_blog_img">
+							<span class="file-input btn btn-file light-button buttons-group change-pic">
+								<p>Choose picture</p> <!-- <input type="file" name="file"> -->
+								<input type="file" id="file-upload-blog" class="form-control" name="file">
+								<input type="text" class="form-control hidden" name="width">
+								<input type="text" class="form-control hidden" name="height">
+								<input type="text" class="form-control hidden" name="top">
+								<input type="text" class="form-control hidden" name="left">
+								<input type="text" class="form-control hidden" name="zoom">
+								<input type="text" class="form-control hidden" name="action_form">
+							</span>
+						</form>
+						<label class="error_file">We only allows file types of PNG, JPG, GIF and BMP.</label>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="save-img btn btn-primary">Save</button>
+					<button type="button" class="cancel-img btn btn-default">Undo</button>
+					<button type="button" class="delete-img btn">Delete Photo</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>

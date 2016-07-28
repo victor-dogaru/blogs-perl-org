@@ -120,10 +120,10 @@ $(document).ready(function() {
 // Image upload preview modal cancel button
 	$(".modal-footer .cancel-img").on('click', function(){
 		var src = $( ".blog-pic #blog_img_preview").attr('src');
-		$('#blog_img_preview').attr('src', src);
+		$('#modal_blog_img_preview').attr('src', src);
 
-		if (!$('#blog_img_preview').hasClass('defaultAvatar')) {
-			$('#blog_img_preview').addClass('hidden');
+		if (!$('#modal_blog_img_preview').hasClass('defaultAvatar')) {
+			$('#modal_blog_img_preview').addClass('hidden');
 			$('#croppie_pic').croppie('bind', {
 				url: src
 			}, function() {
@@ -140,15 +140,15 @@ $(document).ready(function() {
 			$('#croppie_pic').removeClass('hidden');
 		} else {
 			$('#croppie_pic').addClass('hidden');
-			$('#blog_img_preview').removeClass('hidden');
-			$('#blog_img_preview.defaultAvatar').show();
+			$('#modal_blog_img_preview').removeClass('hidden');
+			$('#modal_blog_img_preview.defaultAvatar').show();
 		}
 		$('#upload_blog_img').get(0).reset();
 	});
 
 
 	$('#croppie_pic').croppie({
-		url: $('#blog_img_preview').attr('src'),
+		url: $('#modal_blog_img_preview').attr('src'),
 		viewport: {
 			width: 140,
 			height: 140,
@@ -170,8 +170,13 @@ $(document).ready(function() {
 		$('#croppie_pic .cr-slider').attr('min', 1).attr('max', 2);
 	});
 
-	if (!$('#blog_img_preview').hasClass('defaultAvatar')){
-		$('#blog_img_preview').addClass('hidden');
+	//undo the blog avatars when click outside the modal
+	$('#changeImgBlog').on('hidden.bs.modal', function () {
+
+	})
+
+	if (!$('#modal_blog_img_preview').hasClass('defaultAvatar')){
+		$('#modal_blog_img_preview').addClass('hidden');
 	} else {
 		$('#croppie_pic').addClass('hidden');
 	}
@@ -181,7 +186,7 @@ $(document).ready(function() {
 		if (input.files && input.files[0]) {
 			var reader = new FileReader();
 			reader.onload = function (e) {
-				$('#blog_img_preview').attr('src', e.target.result).addClass('hidden');
+				$('#modal_blog_img_preview').attr('src', e.target.result).addClass('hidden');
 				var imageStyle = $('#croppie_pic .cr-image').get(0).style;
 				imageStyle.removeProperty('transform-origin');
 				imageStyle.removeProperty('transform');
@@ -259,14 +264,14 @@ $(document).ready(function() {
 		var themeinitial = $('#cmn-toggle-4').is(':checked');
 		$( "#file-upload-blog" ).val("");
 		if (themeinitial === false){
-			$('#blog_img_preview').attr('src', '/blog/img/blog_dark_large.png');
+			$('#modal_blog_img_preview').attr('src', '/blog/img/blog_dark_large.png');
 		} else if (themeinitial === true) {
-			$('#blog_img_preview').attr('src', '/blog/img/blog_light_large.png');
+			$('#modal_blog_img_preview').attr('src', '/blog/img/blog_light_large.png');
 		}
 
 		$('[name=action_form]').val('delete');
 
-		$('#blog_img_preview').removeClass('hidden');
+		$('#modal_blog_img_preview').removeClass('hidden');
 		$('#croppie_pic').addClass('hidden');
 	});
 
