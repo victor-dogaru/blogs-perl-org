@@ -12,6 +12,7 @@ use PearlBee::Helpers::Util qw(map_posts);
 use PearlBee::Helpers::Notification_Email;
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link);
 use DateTime::TimeZone;
+use Try::Tiny;
 
 our $VERSION = '0.1';
 
