@@ -247,15 +247,14 @@ post '/profile-image' => sub {
     };
 };
 
-=head2 /blog-image/:size/slug/:slug/user/:username
+=head2 /blog-image/:size/blog/:blogname
 
 =cut
 
-post '/blog-image/:size/slug/:slug/user/:username' => sub {
+post '/blog-image/:size/blog/:blogname' => sub {
 
   my $size        = route_parameters->{'size'};
-  my $slug        = route_parameters->{'slug'};
-  my $username    = route_parameters->{'username'};
+  my $blogname    = route_parameters->{'blogname'};  
   my $file        = params->{'file'};
   my $upload_dir  = "/" . config->{'blog-avatar'}{'path'};
   my $folder_path = config->{'blog_pics'};
@@ -269,12 +268,15 @@ post '/blog-image/:size/slug/:slug/user/:username' => sub {
     }, { layout => 'admin' };
   }
 
-  my $blog = resultset('Blog')->search_by_user_id_and_slug({
-    slug     => $slug,
-    username => $username
+  my $blog = resultset('Blog')-> find({
+              name => $blogname
   });
-
-  if ( $blog ) {
+  my $flag = resultset('BlogOwner')-> find({ 
+              blog_id => $blog->id,
+              user_id => $user->id,
+              });
+  
+  if ( $blog && $blog->is_admin) {
     my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
                             $size,
@@ -321,10 +323,16 @@ post '/blog-image/:size/slug/:slug/user/:username' => sub {
         success => $message
       };
   }
-  else {
+  elsif (!$blog->is_admin) {
     template 'blog',
       {
-        warning => "Could not find a blog for slug '$slug' and username '$username'"
+        warning => "You do not have the right to perform this action on the blog '$blogname' "
+      };
+  }
+  else {
+        template 'blog',
+      {
+        warning => "Could not find a blog for with that name '$blogname' "
       };
   }
 };
