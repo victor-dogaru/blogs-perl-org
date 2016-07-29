@@ -204,8 +204,10 @@ get '/blogs/authors/slug/:slug/page/:page' => sub {
 =cut
 
 post '/create-blog' => sub{
-  my $params   = body_parameters;
-  my $user     = resultset('Users')->find_by_session(session);
+
+  my $params    = body_parameters;
+  my @timezones = DateTime::TimeZone->all_names;
+  my $user      = resultset('Users')->find_by_session(session);
   unless ( $user and $user->can_do( 'create blog' ) ) {
     if ( $user->id ) {
       my $id = $user->id;
@@ -221,41 +223,47 @@ post '/create-blog' => sub{
       $flag = 1;
   }
   
-  my $blog     = resultset('Blog')->create_with_slug({
-    name         => $params->{blog_name},
-    description  => $params->{blog_description},
-    timezone     => $params->{timezone},
-    slug         => $params->{blog_url},
-    social_media => $params->{newblog_social_media},
-    multiuser    => $params->{newblog_multiuser},
-    accept_comments=>$params->{newblog_comments},
-  });
+  if (!$flag ){
+    try{
+      my $blog = resultset('Blog')->create_with_slug({
+        name            => $params->{blog_name},
+        description     => $params->{blog_description},
+        timezone        => $params->{timezone},
+        slug            => $params->{blog_url},
+        social_media    => $params->{newblog_social_media},
+        multiuser       => $params->{newblog_multiuser},
+        accept_comments => $params->{newblog_comments},
+      });
 
-  my $blog_owner = resultset('BlogOwner')->create({
-    blog_id   => $blog->id,
-    user_id   => $user->id,
-    is_admin  =>"true",
-  });
+      my $blog_owner = resultset('BlogOwner')->create({
+        blog_id   => $blog->id,
+        user_id   => $user->id,
+        is_admin  =>"true",
+      });
+    }
+    catch{
+      error $_;
+    };
+  }
 
   if ($flag){
-  template 'admin/blogs/add', {
-      error => 'There already exists a blog with this name.'
+  template 'admin/blogs/add',
+   {    
+    timezones => \@timezones,
+    error     => 'There already exists a blog with this name.'
     },
-  { layout => 'admin' };
-  }
-  elsif ($blog && $blog_owner){
-  template 'admin/blogs/add', {
-      success => 'The blog was created.'
-    },
-  { layout => 'admin' };
+    { layout  => 'admin' };
   }
   else {
-  template 'admin/blogs/add', {
-      error => 'There was an error when creating the blog'
+    template 'admin/blogs/add', {
+    timezones => \@timezones,
+    success   => 'The blog was created.'
     },
-  { layout => 'admin' };
+     {layout  => 'admin' };
   }
+
 };
+
 =head2 admin/create-blog
 
   Getter for blog-creation for admins;
