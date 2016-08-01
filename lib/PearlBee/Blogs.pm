@@ -60,13 +60,13 @@ get '/blogs/user/:username/slug/:slug/name/:name/page/:page' => sub {
   my $nr_of_posts = scalar @posts;
   # extract demo posts info
   my @sorted_posts = sort {$b->created_date <=> $a->created_date}@posts;
-  my @mapped_posts = map_posts(@sorted_posts);
+  #my @mapped_posts = map_posts(@sorted_posts);
   my $movable_type_url = config->{movable_type_url};
   my $app_url = config->{app_url};
 
-  for my $post ( @mapped_posts ) {
-    $post->{content} =~ s{$movable_type_url}{$app_url}g;
-  }
+  # for my $post ( @mapped_posts ) {
+  #   $post->{content} =~ s{$movable_type_url}{$app_url}g;
+  # }
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
@@ -77,7 +77,9 @@ get '/blogs/user/:username/slug/:slug/name/:name/page/:page' => sub {
   $searched_blog     = $searched_blog->as_hashref_sanitized if $searched_blog;
   my @authors        = map { $_->as_hashref_sanitized } @aux_authors;
   my $page           = params->{page}; 
-  my @actual_posts   = splice(@mapped_posts,($page-1)*$num_user_posts,$num_user_posts);
+  #the map_posts method must be investigated and refined, so, for the moment, 
+  #we'll make the splice on the sorted_posts array, NOT on the mapped_posts one
+  my @actual_posts   = splice(@sorted_posts,($page-1)*$num_user_posts,$num_user_posts);
 
   my $template_data = 
       {
