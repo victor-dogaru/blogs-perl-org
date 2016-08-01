@@ -32,9 +32,9 @@ get '/users/:username' => sub {
   redirect "/blogs/user/$username/slug/$slug"
 };
 
-get '/blogs/user/:username/slug/:slug/name/:name' => sub {
+get '/blogs/user/:username/slug/:slug/name/:name/page/:page' => sub {
 
-  my $num_user_posts = config->{blogs}{user_posts} || 10;
+  my $num_user_posts =  10;
   my $slug        = route_parameters->{'slug'};
   my $blog_name   = route_parameters->{'name'};
   $blog_name =~ s/%20/ /g;
@@ -70,33 +70,37 @@ get '/blogs/user/:username/slug/:slug/name/:name' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
-  my ($previous_link, $next_link) = get_previous_next_link(1, $total_pages, '/posts/user/' . $username);
-
-  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
-  my @blogs;
-  for my $blog_owner ( @blog_owners ) {
-    push @blogs, resultset('Blog')->find({ id => $blog_owner->blog_id });
-  }
+  my ($previous_link, $next_link) = get_previous_next_link
+  (1, $total_pages, '/blogs/user/' . $username .'/slug/'.$slug.'/name/'.$blog_name);
   
-  my @aux_authors = $searched_blog->contributors;
+  my @aux_authors    = $searched_blog->contributors;
+  $searched_blog     = $searched_blog->as_hashref_sanitized if $searched_blog;
+  my @authors        = map { $_->as_hashref_sanitized } @aux_authors;
+  my $page           = params->{page}; 
+  my @actual_posts   = splice(@mapped_posts,($page-1)*$num_user_posts,$num_user_posts);
 
-  $searched_blog = $searched_blog->as_hashref_sanitized if $searched_blog;
-  my @authors = map { $_->as_hashref_sanitized } @aux_authors;
-
-  template 'blogs',
+  my $template_data = 
       {
-        posts          => \@mapped_posts,
-        page           => 1,
+        posts          => \@actual_posts,
+        page           => $page,
         total_pages    => $total_pages,
         next_link      => $next_link,
         previous_link  => $previous_link,
         posts_for_user => $username,
-        blogs          => \@blogs,
         user           => $user,
         authors        => \@authors,
         searched_blog  => $searched_blog,
         nr_of_posts    => $nr_of_posts
     };
+  if ( param('format') ) {
+    my $json = JSON->new;
+    $json->allow_blessed(1);
+    $json->convert_blessed(1);
+    $json->encode( $template_data );
+  }
+  else {
+    template 'blogs', $template_data;
+  }
 };
 
 =head2 /blogs/user/:username/slug/:slug/page/:page route
