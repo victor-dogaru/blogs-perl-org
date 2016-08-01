@@ -52,15 +52,15 @@ get '/blogs/user/:username/slug/:slug/name/:name/page/:page' => sub {
   push @blog_ids, resultset('BlogPost')->search({ blog_id => $searched_blog->id });
 
   foreach my $iterator (@blog_ids){
-    push @posts, resultset('Post')->search (
-      { id => $iterator->post_id},
-      { order_by => { -desc => "created_date" }, rows => $num_user_posts }
-      );
+    push @posts, resultset('Post')->search ({ 
+      id => $iterator->post_id
+      });
   }
 
   my $nr_of_posts = scalar @posts;
   # extract demo posts info
-  my @mapped_posts = map_posts(@posts);
+  my @sorted_posts = sort {$b->created_date <=> $a->created_date}@posts;
+  my @mapped_posts = map_posts(@sorted_posts);
   my $movable_type_url = config->{movable_type_url};
   my $app_url = config->{app_url};
 
