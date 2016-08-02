@@ -8,6 +8,7 @@ use Dancer2::Plugin::DBIC;
 use PearlBee::Model::Schema;
 use PearlBee::Helpers::Util qw( string_to_slug );
 use base 'DBIx::Class::ResultSet';
+use utf8;
 
 =head2 create_with_slug
 
@@ -85,11 +86,12 @@ sub find_by_name_uid {
   my $name          = $args->{name};
   my $user_id       = $args->{user_id};
 
-  my $schema = $self->result_source->schema;
-  my %blog_ids = map {
+  my $schema        = $self->result_source->schema;
+  my %blog_ids      = map {
     $_->blog_id => 1
   } $schema->resultset('BlogOwner')->search({ user_id => $user_id });
-
+  
+  my $decoder       = utf8::decode($name);
   my $blog;
   for my $blog_id ( keys %blog_ids ) {
     my $temp_blog = $schema->resultset('Blog')->find({ id => $blog_id });
