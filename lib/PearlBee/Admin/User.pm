@@ -415,7 +415,7 @@ Add a new user
 
 =cut
 
-any '/admin/users/add' => sub {
+post '/admin/users/add' => sub {
 
   my $res_user = resultset('Users')->find_by_session(session);
   unless ( $res_user and $res_user->can_do( 'create user' ) ) {
@@ -476,6 +476,24 @@ any '/admin/users/add' => sub {
   else {
     template 'admin/users/add', {},  { layout => 'admin' };
   }  
+};
+
+=head2 /admin/users/add
+
+getter for the user's dashboard when adding an user
+
+=cut
+
+get '/admin/users/add' => sub {
+
+  my $res_user = resultset('Users')->find_by_session(session);
+  my @blogs    = resultset('Blog')->all();
+  template 'admin/users/add',
+  {
+    blogs   => \@blogs
+  },
+  { layout => 'admin' }; 
+  
 };
 
 1;

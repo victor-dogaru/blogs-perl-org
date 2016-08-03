@@ -312,55 +312,97 @@ get 'author/create-blog' => sub{
       { layout => 'admin' };
 };
 
-=head2 /add-contributor/user/:username
+=head2 /add-contributor/blog
  
   Add a contributor, making her/him an admin or a simple author.
+  The confirmation must be made through email.
 
 =cut
 
-post '/add-contributor/blog/:slug/email/:email/role/:role' => sub {
-    my $user    = resultset('Users')->find_by_session(session);
-    unless ( $user and $user->can_do('create blog_owner') ) {
-      warn "***** Redirecting guest away from /add-contributor/blog/:slug/email/:email/role/:role";
-      return template 'blog-profile', {
-        warning => "You are not allowed to add a contributor to this blog",
-      }, { layout => 'admin' };
+post '/add-contributor/blog' => sub {
+
+    my $user        = resultset('Users')->find_by_session(session);
+    my $params      = body_parameters;
+    my $blogname    = $params->{'blog_name'};
+    my $email       = $params->{'email'};
+    my $role        = $params->{'role'};
+    my $invitee     = resultset('Users')->find({ email => $email });
+    my $blog        = resultset('Blog')->find({ name  => $blogname });
+    my @blogs;
+    my @blog_owners = resultset('BlogOwner')->search ({ user_id => $user->id });
+    foreach my $iterator (@blog_owners){
+      push @blogs, map {$_ -> as_hashref}
+                resultset('Blog')->search({ id => $iterator->blog_id }); 
     }
-    my $slug    = route_parameters->{'slug'};
-    my $email   = route_parameters->{'email'};
-    my $role    = route_parameters->{'role'};
-    my $invitee = resultseet('User')->find({ email => $email });
-    my $blog    = resultseet('Blog')->find({ slug => $slug });
 
-    if ( $blog ) {
-        my $date    = DateTime->now();
-        my $token   = generate_hash( $email . $date );
-        my $blog_id = $blog->id;
-        my $user_id = $user->id;
+    my $flag    = 0;
+    my $message ='';
 
-        my $blog_owner = resultset('BlogOwners')->create({
-            user_id        => $user_id,
-            blog_id        => $blog_id,
-            is_admin       => $role eq 'admin' ? 1 : 0,
-            status         => 'inactive', #
-            # created_date defaults cleanly
-            activation_key => $token,
-        });
-	my $notification = resultset('Notification')->create_invitation({
-            blog_id => $blog_id,
-            user_id => $user_id
-        });
+    my $check   = resultset('BlogOwner')->search ({ 
+                    user_id  => $user->id,
+                    blog_id  => $blog->id,
+                    is_admin =>1
+                })->count;
 
-        PearlBee::Helpers::Notification_Email->announce_contributor(
-            user => $user,
-            invitee => $invitee,
-            config => config
-        );
+    if ( $check == 0 ) {
+
+        $flag = 1;
+        $message = 'You are not on admin on the blog '. $blogname ;
+     
+      }
+    
+    my $check2  = resultset('BlogOwner')->search ({
+                     blog_id => $blog->id, 
+                     user_id => $invitee->id
+                   })->count;
+
+    if ( $check2 > 0 ){
+
+        $flag = 1;
+        $message = 'The user '.  $invitee->name . ' is already  on your blog!';
+      
+      } 
+  
+    if ( $flag == 0) {
+
+      my $date    = DateTime->now();
+      my $token   = generate_hash( $email . $date );
+      my $blog_id = $blog->id;
+      my $user_id = $user->id;
+
+      my $blog_owner = resultset('BlogOwner')->create({
+          user_id        => $invitee->id,
+          blog_id        => $blog_id,
+          is_admin       => $role eq 'admin' ? 1 : 0,
+          status         => 'inactive', #
+          # created_date defaults cleanly
+          activation_key => $token,
+      });
+      my $notification = resultset('Notification')->create_invitation({
+          blog_id => $blog_id,
+          user_id => $invitee->id,
+          sender_id => $user->id
+      });
+
+      PearlBee::Helpers::Notification_Email->announce_contributor({
+          user => $user,
+          invitee => $invitee,
+          config => config
+      });
+
+      template 'admin/users/add', {
+        success => 'The user received an invitation successfully!',
+        blogs   => \@blogs
+      }, 
+      { layout => 'admin' }; 
+          
     }
     else {
-        template 'blog-profile', {
-            warning => 'Could not find chosen blog'
-        }
+      template 'admin/users/add', {
+        warning => $message,
+        blogs   => \@blogs
+      }, 
+      { layout => 'admin' }; 
     }
 };
 
