@@ -328,7 +328,10 @@ post '/add-contributor/blog' => sub {
     my $invitee     = resultset('Users')->find({ email => $email });
     my $blog        = resultset('Blog')->find({ name  => $blogname });
     my @blogs;
-    my @blog_owners = resultset('BlogOwner')->search ({ user_id => $user->id });
+    my @blog_owners = resultset('BlogOwner')->search ({ 
+                        user_id => $user->id,
+                        is_admin=>1
+                       });    
     foreach my $iterator (@blog_owners){
       push @blogs, map {$_ -> as_hashref}
                 resultset('Blog')->search({ id => $iterator->blog_id }); 
