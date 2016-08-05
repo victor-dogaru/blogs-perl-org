@@ -19,10 +19,10 @@ use Cwd qw( realpath );
 use lib realpath("$FindBin::Bin/../lib");
 
 sub announce_contributor {
-    my ( %args ) = @_;
-    my $user     = $args{user};
-    my $invitee  = $args{invitee};
-    my $config   = $args{config};
+    my ($self, $args) = @_;
+    my $user     = $args->{user};
+    my $invitee  = $args->{invitee};
+    my $config   = $args->{config};
 
     try {
         PearlBee::Helpers::Email::send_email_complete({
@@ -48,10 +48,10 @@ sub announce_contributor {
 }
 
 sub invite_contributor {
-    my ( %args ) = @_;
-    my $user     = $args{user};
-    my $invitee  = $args{invitee};
-    my $config   = $args{config};
+    my ($self, $args) = @_;
+    my $user     = $args->{user};
+    my $invitee  = $args->{invitee};
+    my $config   = $args->{config};
 
     try {
         PearlBee::Helpers::Email::send_email_complete({
