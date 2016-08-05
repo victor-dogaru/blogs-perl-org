@@ -72,6 +72,7 @@ sub create_invitation {
     name       => 'invitation',
     generic_id => $args->{blog_id},
     role       => $args->{role},
+    old_status => $args->{old_status},
     sender_id  => $args->{sender_id},
     user_id    => $args->{user_id}
   });

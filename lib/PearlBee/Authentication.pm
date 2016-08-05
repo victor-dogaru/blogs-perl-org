@@ -187,7 +187,7 @@ post '/register_success' => sub {
   my $blog_timezone    = $params->{timezone} //
                          config->{blogs}{default_timezone};
 
-  resultset('Users')->create_hashed_with_blog({
+  my $new_entry = resultset('Users')->create_hashed_with_blog({
     username       => $params->{username},
     password       => $params->{password},
     email          => $params->{email},
@@ -198,6 +198,7 @@ post '/register_success' => sub {
     status         => 'pending',
     activation_key => $token,
   });
+  my $invitee = resultset('Users')->find({ id=>$new_entry->user_id });
 
   # Notify the author that a new comment was submitted
   my $first_admin =
@@ -209,6 +210,7 @@ post '/register_success' => sub {
     $first_admin = config->{admin_email_sender};
   }
   info "No administrator found in the database!" unless $first_admin;
+  my $flag = resultset('Notification')->find ({ old_status => $params->{'email'} }); 
 
   try {
      PearlBee::Helpers::Email::send_email_complete({
@@ -236,13 +238,36 @@ post '/register_success' => sub {
          config    => config,
          name      => $params->{'name'},
          username  => $params->{'username'},
-         mail_body => "/activation?token=$token",
+         mail_body => "activation?token=$token",
        }
      });
   }
   catch {
       error $_;
   };
+  if ($flag){
+      
+    my $blog_owner = resultset('BlogOwner')->create({
+      user_id        => $invitee->id,
+      blog_id        => $flag->generic_id,
+      is_admin       => $flag->role eq 'admin' ? 1 : "0",
+      status         => 'inactive',
+      activation_key => $token,
+    });
+
+    $flag ->update ({ 
+      user_id    => $invitee->id,
+      old_status =>'read'
+    });
+    my $user = resultset('Users')->find ({ id => $flag->sender_id });
+      
+    PearlBee::Helpers::Notification_Email->announce_contributor({
+      user    => $user,
+      invitee => $invitee,
+      config  => config
+    });
+    
+    }
 
   template 'register_success';
 };

@@ -315,7 +315,6 @@ get 'author/create-blog' => sub{
 =head2 /add-contributor/blog
  
   Add a contributor, making her/him an admin or a simple author.
-  The confirmation must be made through email.
 
 =cut
 
@@ -334,76 +333,90 @@ post '/add-contributor/blog' => sub {
       push @blogs, map {$_ -> as_hashref}
                 resultset('Blog')->search({ id => $iterator->blog_id }); 
     }
+    my $date    = DateTime->now();
+    my $token   = generate_hash( $email . $date );
 
-    my $flag    = 0;
-    my $message ='';
+    if ($invitee){
+      my $flag    = 0;
+      my $message = '';
 
-    my $check   = resultset('BlogOwner')->search ({ 
-                    user_id  => $user->id,
-                    blog_id  => $blog->id,
-                    is_admin =>1
-                })->count;
+      my $check   = resultset('BlogOwner')->search ({ 
+                      user_id  => $user->id,
+                      blog_id  => $blog->id,
+                      is_admin =>1
+                  })->count;
 
-    if ( $check == 0 ) {
-
-        $flag = 1;
-        $message = 'You are not on admin on the blog '. $blogname ;
-     
-      }
-    
-    my $check2  = resultset('BlogOwner')->search ({
-                     blog_id => $blog->id, 
-                     user_id => $invitee->id
-                   })->count;
-
-    if ( $check2 > 0 ){
-
-        $flag = 1;
-        $message = 'The user '.  $invitee->name . ' is already  on your blog!';
+      if ( $check == 0 ) {
+          $flag = 1;
+          $message = 'You are not on admin on the blog '. $blogname ;       
+        }
       
-      } 
-  
-    if ( $flag == 0) {
+      my $check2  = resultset('BlogOwner')->search ({
+                       blog_id => $blog->id, 
+                       user_id => $invitee->id
+                     })->count;
 
-      my $date    = DateTime->now();
-      my $token   = generate_hash( $email . $date );
-      my $blog_id = $blog->id;
-      my $user_id = $user->id;
+      if ( $check2 > 0 ){
+          $flag = 1;
+          $message = 'The user '.  $invitee->name . ' is already  on your blog!';      
+        } 
 
-      my $blog_owner = resultset('BlogOwner')->create({
-          user_id        => $invitee->id,
-          blog_id        => $blog_id,
-          is_admin       => $role eq 'admin' ? 1 : 0,
-          status         => 'inactive', #
-          # created_date defaults cleanly
-          activation_key => $token,
-      });
-      my $notification = resultset('Notification')->create_invitation({
-          blog_id => $blog_id,
-          user_id => $invitee->id,
-          sender_id => $user->id
-      });
+      if ( $flag == 0) {
 
-      PearlBee::Helpers::Notification_Email->announce_contributor({
-          user => $user,
-          invitee => $invitee,
-          config => config
-      });
+        my $blog_id = $blog->id;
+        my $user_id = $user->id;
 
-      template 'admin/users/add', {
-        success => 'The user received an invitation successfully!',
-        blogs   => \@blogs
-      }, 
-      { layout => 'admin' }; 
-          
-    }
-    else {
-      template 'admin/users/add', {
-        warning => $message,
-        blogs   => \@blogs
-      }, 
-      { layout => 'admin' }; 
-    }
+        my $blog_owner = resultset('BlogOwner')->create({
+            user_id        => $invitee->id,
+            blog_id        => $blog_id,
+            is_admin       => $role eq 'admin' ? 1 : 0,
+            status         => 'inactive', #
+            # created_date defaults cleanly
+            activation_key => $token,
+        });
+        my $notification = resultset('Notification')->create_invitation({
+            blog_id => $blog_id,
+            user_id => $invitee->id,
+            old_status => 'unread',
+            sender_id => $user->id
+        });
+
+        PearlBee::Helpers::Notification_Email->announce_contributor({
+            user => $user,
+            invitee => $invitee,
+            config => config
+        });
+
+        template 'admin/users/add', {
+          success => 'The user received an invitation successfully!',
+          blogs   => \@blogs
+        }, 
+        { layout => 'admin' }; 
+            
+      }
+      else {
+        template 'admin/users/add', {
+          warning => $message,
+          blogs   => \@blogs
+        }, 
+        { layout => 'admin' }; 
+      }
+  }
+  else{   
+
+    my $notification = resultset('Notification')->create_invitation({
+    blog_id => $blog->id,
+    old_status => $email,
+    role      =>$role,
+    sender_id => $user->id,
+    user_id   => '1'
+    });
+    template 'admin/users/add', {
+      warning => 'The user does not have an account. An  invitation mail has been sent to that address',
+      blogs   => \@blogs
+    }, 
+    {layout => 'admin' }; 
+  }
 };
 
 1;
