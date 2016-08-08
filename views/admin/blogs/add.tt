@@ -108,9 +108,9 @@
 								<label class="col-lg-4 control-label">Social media buttons</label>
 								<div class="col-lg-8">
 									<div class="make-switch" data-on="success" data-off="danger">
-										<input id="newblog_social_media_check" name="newblog_social_media" type="checkbox" [% IF setting.social_media %]checked[% END %]>
+										<input id="newblog_social_media_check" name="newblog_social_media" type="checkbox" >
 									</div>
-									<input id="newblog_social_media_state" type="hidden" value="[% setting.social_media %]" />
+									<input id="newblog_social_media_state" type="hidden"  />
 								</div>
 							</div>
 
@@ -120,9 +120,9 @@
 								<label class="col-lg-4 control-label">Multiuser</label>
 								<div class="col-lg-8">
 									<div class="make-switch" data-on="success" data-off="danger">
-										<input id="newblog_multiuser_check" name="newblog_multiuser" type="checkbox" [% IF setting.multiuser %]checked[% END %]>
+										<input id="newblog_multiuser_check" name="newblog_multiuser" type="checkbox" >
 									</div>
-									<input id="newblog_multiuser_state" type="hidden" value="[% setting.social_media %]" />
+									<input id="newblog_multiuser_state" type="hidden" />
 								</div>
 							</div>
 
@@ -132,9 +132,9 @@
 								<label class="col-lg-4 control-label">Accepting comments</label>
 								<div class="col-lg-8">
 									<div class="make-switch" data-on="success" data-off="danger">
-										<input id="newblog_comments_check" name="newblog_comments" type="checkbox" [% IF setting.accept_comments %]checked[% END %]>
+										<input id="newblog_comments_check" name="newblog_comments" type="checkbox" >
 									</div>
-									<input id="newblog_comments_state" type="hidden" value="[% setting.social_media %]" />
+									<input id="newblog_comments_state" type="hidden"  />
 								</div>
 							</div>
 
