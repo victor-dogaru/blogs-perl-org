@@ -15,8 +15,9 @@
 			<div class="awidget-body">
 
 				[% INCLUDE components/alerts.tt %]
+				[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 
-				<form method="post" action="/admin/tags/edit/[% tag.id %]">
+				<form method="post" action="/[%role%]/tags/edit/[% tag.id %]">
 
 					<div class="form-group">
 						<label class="col-lg-2 control-label">Name</label>
@@ -39,7 +40,7 @@
 						<div class="col-lg-offset-2 col-lg-10">
 							<hr />
 							<button type="submit" class="btn btn-default">Update</button>
-							<a href="/admin/tags">
+							<a href="/[%role%]/tags/edit/[%tag.id%]">
 								<button type="button" class="btn btn-danger">Cancel</button>
 							</a>
 						</div>
@@ -59,14 +60,14 @@
 
 	<div class="col-md-12">
 		<div class="awidget">
-			<div class="awidget-head">
-				<h3>Add a new tag</h3>
+			<div class="awidget-head">[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+				<h3>Add a new tag [%role%]</h3>
 			</div>
 			<div class="awidget-body">
 
 				[% INCLUDE components/alerts.tt %]
-
-				<form method="post" action="/admin/tags/add">
+				[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+				<form method="post" action="/[%role%]/tags/add">
 
 					<div class="form-group">
 						<label class="col-lg-2 control-label">Name</label>
@@ -89,7 +90,7 @@
 						<div class="col-lg-offset-2 col-lg-10">
 							<hr />
 							<button type="submit" class="btn btn-default">Add</button>
-							<a href="/admin/tags">
+							<a href="/[%role%]/tags">
 								<button type="button" class="btn btn-danger">Cancel</button>
 							</a>
 						</div>
@@ -132,17 +133,17 @@
 						<tr>
 							<td class="long-input"> [% tag.name %] </td>
 							<td class="long-input"> [% tag.slug %] </td>
-							<td style="width: 15%"> MaricicaMaricica </td>
+							<td style="width: 15%"> [% tag.tag_creator%] </td>
 							<td style="width: 15%"> [% IF tag.blog_role == 0 %]
 								 author 
 								 [%ELSE%] 
 								 admin 
 								 [%END%]  </td>
 							<td style="width: 5%">
-								<a href="/admin/tags/edit/[% tag.id %]">
+								<a href="/[%role%]/tags/edit/[% tag.id %]">
 									<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 								</a>
-								<a href="/admin/tags/delete/[% tag.id %]">
+								<a href="/[%role%]/tags/delete/[% tag.id %]">
 									<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 								</a>
 							</td>
