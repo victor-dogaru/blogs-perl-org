@@ -245,11 +245,14 @@ any '/author/tags/edit/:id' => sub {
         error "Could not update tag named '$name'";
       };
 
-
+    my @aux_tags    = resultset('Tag')->user_tags($user->id);
+    my $all         = scalar (@aux_tags);
+    my @sorted_tags = sort {$b->id <=> $a->id} @aux_tags;
+    my @tags        = splice(@sorted_tags,0*$nr_of_rows,$nr_of_rows);
 
     template 'admin/tags/list',
     {
-     warning       => 'The slug already exists',
+     success       => 'The slug was updated successfully',
      all           => $all, 
      page          => 1,
      next_link     => $next_link,

@@ -107,9 +107,10 @@ Return a non-blessed version of a blog database row
 sub as_hashref {
   my ($self)      = @_;
   my $tag_hashref = {
-    id   => $self->id,
-    name => $self->name,
-    slug => $self->slug,
+    id          => $self->id,
+    name        => $self->name,
+    slug        => $self->slug,
+    tag_creator =>$self->tag_creator,
   };          
               
   return $tag_hashref;
@@ -127,6 +128,15 @@ sub as_hashref_sanitized {
 
   delete $href->{id};
   return $href;
+}
+
+sub tag_creator {
+  my ($self, $args) = @_;
+  my $schema = $self->result_source->schema;
+  my $post_tag = $schema->resultset('PostTag')->find ({ tag_id => $self->id});
+  my $post      =$schema->resultset('Post')->find ({ id => $post_tag->post_id});
+  my $user       =$schema->resultset('Users')->find ({id => $post->user_id});
+  return $user->username;
 }
 
 1;
