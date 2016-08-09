@@ -139,9 +139,9 @@ Delete method
 
 get '/author/tags/delete/:id' => sub {
 
-  my $tag_id = params->{id};
-  my $tag    = resultset('Tag')->find( $tag_id );
-  my $res_user   = resultset('Users')->find_by_session(session);
+  my $tag_id   = params->{id};
+  my $tag      = resultset('Tag')->find( $tag_id );
+  my $res_user = resultset('Users')->find_by_session(session);
   unless ( $res_user and $res_user->can_do( 'delete tag' ) ) {
     warn "***** Redirecting guest away from /author/tags/delete/:id";
     info "You are not allowed to delete tags, please create an account";
@@ -149,6 +149,8 @@ get '/author/tags/delete/:id' => sub {
   }
 
   # Delete first all many to many dependecies for safly removal of the isolated tag
+  my $check    = $tag->tag_creator;
+  if ($check eq $res_user->username){
   try {
     foreach ( $tag->post_tags ) {
       $_->delete;
@@ -160,7 +162,7 @@ get '/author/tags/delete/:id' => sub {
     info $_;
     error "Could not delete tag";
   };
-
+ }
   redirect '/author/tags';
 
 };
@@ -234,34 +236,51 @@ any '/author/tags/edit/:id' => sub {
     { layout => 'admin' };
     }
     else {
-      try {
-        $tag->update({
-          name => $name,
-          slug => $slug
-        });
+      my $check        = $tag->tag_creator;
+      if ($check eq $user->username){
+        try {
+          $tag->update({
+            name => $name,
+            slug => $slug
+          });
+        }
+        catch {
+          info $_;
+          error "Could not update tag named '$name'";
+        };
+
+      my @aux_tags    = resultset('Tag')->user_tags($user->id);
+      my $all         = scalar (@aux_tags);
+      my @sorted_tags = sort {$b->id <=> $a->id} @aux_tags;
+      my @tags        = splice(@sorted_tags,0*$nr_of_rows,$nr_of_rows);
+
+      template 'admin/tags/list',
+      {
+       success       => 'The slug was updated successfully',
+       all           => $all, 
+       page          => 1,
+       next_link     => $next_link,
+       previous_link => $previous_link,
+       action_url    => 'author/tags/page',
+       pages         => $pagination->pages_in_set,
+       tags          => \@tags 
+      }, 
+      { layout => 'admin' };
       }
-      catch {
-        info $_;
-        error "Could not update tag named '$name'";
-      };
-
-    my @aux_tags    = resultset('Tag')->user_tags($user->id);
-    my $all         = scalar (@aux_tags);
-    my @sorted_tags = sort {$b->id <=> $a->id} @aux_tags;
-    my @tags        = splice(@sorted_tags,0*$nr_of_rows,$nr_of_rows);
-
-    template 'admin/tags/list',
-    {
-     success       => 'The slug was updated successfully',
-     all           => $all, 
-     page          => 1,
-     next_link     => $next_link,
-     previous_link => $previous_link,
-     action_url    => 'author/tags/page',
-     pages         => $pagination->pages_in_set,
-     tags          => \@tags 
-    }, 
-    { layout => 'admin' };
+      else {
+      template 'admin/tags/list',
+      {
+       warning       => 'You can modify only your tags!',
+       all           => $all, 
+       page          => 1,
+       next_link     => $next_link,
+       previous_link => $previous_link,
+       action_url    => 'author/tags/page',
+       pages         => $pagination->pages_in_set,
+       tags          => \@tags 
+      }, 
+      { layout => 'admin' };
+    }
     }
   }
   else {

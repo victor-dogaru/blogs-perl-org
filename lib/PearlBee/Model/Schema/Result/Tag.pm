@@ -132,10 +132,10 @@ sub as_hashref_sanitized {
 
 sub tag_creator {
   my ($self, $args) = @_;
-  my $schema = $self->result_source->schema;
-  my $post_tag = $schema->resultset('PostTag')->find ({ tag_id => $self->id});
-  my $post      =$schema->resultset('Post')->find ({ id => $post_tag->post_id});
-  my $user       =$schema->resultset('Users')->find ({id => $post->user_id});
+  my $schema   = $self->result_source->schema;
+  my $post_tag = $schema->resultset('PostTag')->search ({ tag_id => $self->id})->first();
+  my $post     = $schema->resultset('Post')->find ({ id => $post_tag->post_id});
+  my $user     = $schema->resultset('Users')->find ({id => $post->user_id});
   return $user->username;
 }
 
