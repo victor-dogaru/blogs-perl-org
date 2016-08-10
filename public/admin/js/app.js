@@ -170,10 +170,14 @@ $(document).ready(function() {
 		$('#croppie_pic .cr-slider').attr('min', 1).attr('max', 2);
 	});
 
+
+
 	//undo the blog avatars when click outside the modal
 	$('#changeImgBlog').on('hidden.bs.modal', function () {
 
 	})
+
+
 
 	if (!$('#modal_blog_img_preview').hasClass('defaultAvatar')){
 		$('#modal_blog_img_preview').addClass('hidden');
@@ -310,8 +314,6 @@ $(document).ready(function() {
 		$('#upload_blog_img [name=width]').val(widthCrop);
 		$('#upload_blog_img [name=height]').val(heightCrop);
 		$('#upload_blog_img [name=zoom]').val(cropData.zoom);
-
-
 
 		if (widthCrop !== '0' || heightCrop !== '0' || top !== '0' || left !== '0') {
 			$('[name=action_form]').val('crop');
