@@ -100,7 +100,7 @@ post '/author/categories/add' => sub {
   }
 
 
-  my @categories = resultset('Category')->user_categories($user->id);  $params->{categories} = \@categories;
+  my @categories = resultset('Category')->user_categories($user->id);  
   my $all                = scalar (@categories);
   my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
   my $nr_of_rows = 5;
@@ -123,9 +123,10 @@ post '/author/categories/add' => sub {
      previous_link => $previous_link,
      action_url    => 'author/categories/page',
      pages         => $pagination->pages_in_set,
-     categories    => \@actual_categories 
+     categories    => \@actual_categories,
+     %$params  
     }, 
-    $params, 
+    
     { layout => 'admin' };
 
 };
@@ -233,7 +234,8 @@ any '/author/categories/edit/:id' => sub {
      action_url    => 'author/categories/page',
      pages         => $pagination->pages_in_set,
      categories    => \@actual_categories,
-     category      => $category 
+     category      => $category,
+     %$params 
     }, 
     { layout => 'admin' };  
 
