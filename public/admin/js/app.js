@@ -319,6 +319,9 @@ $(document).ready(function() {
 			$('[name=action_form]').val('crop');
 		}
 
+		var blogName = $("#blog-select").val();
+		$('#upload_blog_img').attr('action', '/blog-image/large/blog/' + blogName);
+
 		$("#upload_blog_img").submit();
 	});
 });

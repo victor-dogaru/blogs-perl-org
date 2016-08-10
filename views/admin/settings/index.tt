@@ -24,38 +24,44 @@
 
 							<h5>Blog name</h5>
 
-							<input class="form-control"  name="blog_name" type="text" placeholder="Name" >
+							<input class="form-control" required name="blog_name" type="text" placeholder="Name" value="[% setting.blog_name %]">
 
 							<hr />
 
 							<h5>Blog Description</h5>
 
-							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" ></textarea>
+							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
 
 
 							<hr />
 
 							<h5>Social media buttons</h5>
 							<div class="make-switch" data-on="success" data-off="danger">
-								<input id="social_media_check" name="social_media" type="checkbox" checked> 
+								[% IF setting.social_media %]
+								<input id="social_media_check" name="social_media" type="checkbox" checked> [% ELSE %]
+								<input id="social_media_check" name="social_media" type="checkbox"> [% END %]
 							</div>
-							<input id="social_media_state" type="hidden" />
+							<input id="social_media_state" type="hidden" value="[% setting.social_media %]" />
 
 							<hr />
 
 							<h5>Multiuser</h5>
 							<div class="make-switch" data-on="success" data-off="danger">
-								<input id="multiuser_check" name="multiuser" type="checkbox" checked> 
+								[% IF setting.multiuser %]
+								<input id="multiuser_check" name="multiuser" type="checkbox" checked> [% ELSE %]
+								<input id="multiuser_check" name="multiuser" type="checkbox"> [% END %]
 							</div>
-							<input id="multiuser_state" type="hidden"  />
+							<input id="multiuser_state" type="hidden" value="[% setting.multiuser %]" />
 
 							<hr />
 
 							<h5>Accepting comments</h5>
 							<div class="make-switch" data-on="success" data-off="danger">
-								<input id="accepting_comments_check" name="accepting_comments" type="checkbox" checked> 
+								[% IF setting.multiuser %]
+								<input id="accepting_comments_check" name="accepting_comments" type="checkbox" checked> [% ELSE %]
+								<input id="accepting_comments_check" name="accepting_comments" type="checkbox"> [% END %]
 							</div>
-							<input id="accepting_comments_state" type="hidden" />
+							<input id="accepting_comments_state" type="hidden" value="[% setting.multiuser %]" />
 
 							<hr />
 
@@ -134,7 +140,6 @@
 						<!--select for each blog-->
 
 
-						<form action="/blog-image/:size/blog/:blogname" enctype="multipart/form-data" method="post" id="upload_blog_img">
 							<h2>Choose blog</h2>
 							<div class="btn-group">
 								<select id="blog-select" name="current_name" class="chosen-select">
@@ -147,6 +152,7 @@
 							<br><br>
 							<span class="file-input btn btn-file light-button buttons-group change-pic">
 								<p>Choose picture</p> <!-- <input type="file" name="file"> -->
+								<form enctype="multipart/form-data" method="post" id="upload_blog_img">
 									<input type="file" id="file-upload-blog" class="form-control" name="file">
 									<input type="text" class="form-control hidden" name="width">
 									<input type="text" class="form-control hidden" name="height">
@@ -154,8 +160,9 @@
 									<input type="text" class="form-control hidden" name="left">
 									<input type="text" class="form-control hidden" name="zoom">
 									<input type="text" class="form-control hidden" name="action_form">
+								</form>
 							</span>
-						</form>
+
 						<label class="error_file">We only allows file types of PNG, JPG, GIF and BMP.</label>
 					</div>
 
