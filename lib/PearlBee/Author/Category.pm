@@ -69,6 +69,7 @@ post '/author/categories/add' => sub {
     }, { layout => 'admin' };
   }
   my @categories;
+  my $user = resultset('Users')->find_by_session(session);
   my $name   = params->{name};
   my $slug   = params->{slug};
   my $params = {};
@@ -78,7 +79,7 @@ post '/author/categories/add' => sub {
   my $found_slug_or_name = resultset('Category')->search({ -or => [ slug => $slug, name => $name ] })->first;
 
   if ( $found_slug_or_name ) {
-    my @categories = resultset('Category')->user_categories($temp_user->id);
+    @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'},user_id=>$user->id });
 
     $params->{warning} = "The category name or slug already exists";
   }
@@ -98,10 +99,34 @@ post '/author/categories/add' => sub {
     $params->{success} = "The category was successfully added.";
   }
 
-  my @categories = resultset('Category')->user_categories($temp_user->id);
-  $params->{categories} = \@categories;
 
-  template 'admin/categories/list', $params, { layout => 'admin' };
+  my @categories = resultset('Category')->user_categories($user->id);  $params->{categories} = \@categories;
+  my $all                = scalar (@categories);
+  my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
+  my $nr_of_rows = 5;
+  my $page       = 1;
+  my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
+
+  
+  my $total_pages                 = get_total_pages($all, $nr_of_rows);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/categories');
+  my $total_posts     = $all;
+  my $posts_per_page  = $nr_of_rows;
+  my $current_page    = $page;
+  my $pages_per_set   = 5;
+  my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
+
+  template 'admin/categories/list',    {
+     all           => $all, 
+     page          => $page,
+     next_link     => $next_link,
+     previous_link => $previous_link,
+     action_url    => 'author/categories/page',
+     pages         => $pagination->pages_in_set,
+     categories    => \@actual_categories 
+    }, 
+    $params, 
+    { layout => 'admin' };
 
 };
 
@@ -184,13 +209,33 @@ any '/author/categories/edit/:id' => sub {
     }
   }
 
-  my @categories = resultset('Category')->user_categories($user->id);
+  my @categories = resultset('Category')->user_categories($user->id); 
+  my $all                = scalar (@categories);
+  my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
+  my $nr_of_rows = 5;
+  my $page       = 1;
+  my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
 
-  $params->{category}   = $category;
-  $params->{categories} = \@categories;
   
-  # If the form wasn't submited just list the categories
-  template 'admin/categories/list', $params, { layout => 'admin' };
+  my $total_pages                 = get_total_pages($all, $nr_of_rows);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/categories');
+  my $total_posts     = $all;
+  my $posts_per_page  = $nr_of_rows;
+  my $current_page    = $page;
+  my $pages_per_set   = 5;
+  my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
+
+  template 'admin/categories/list',    {
+     all           => $all, 
+     page          => $page,
+     next_link     => $next_link,
+     previous_link => $previous_link,
+     action_url    => 'author/categories/page',
+     pages         => $pagination->pages_in_set,
+     categories    => \@actual_categories,
+     category      => $category 
+    }, 
+    { layout => 'admin' };  
 
 };
 
