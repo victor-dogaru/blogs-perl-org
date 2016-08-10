@@ -24,44 +24,38 @@
 
 							<h5>Blog name</h5>
 
-							<input class="form-control" required name="blog_name" type="text" placeholder="Name" value="[% setting.blog_name %]">
+							<input class="form-control"  name="blog_name" type="text" placeholder="Name" >
 
 							<hr />
 
 							<h5>Blog Description</h5>
 
-							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
+							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" ></textarea>
 
 
 							<hr />
 
 							<h5>Social media buttons</h5>
 							<div class="make-switch" data-on="success" data-off="danger">
-								[% IF setting.social_media %]
-								<input id="social_media_check" name="social_media" type="checkbox" checked> [% ELSE %]
-								<input id="social_media_check" name="social_media" type="checkbox"> [% END %]
+								<input id="social_media_check" name="social_media" type="checkbox" checked> 
 							</div>
-							<input id="social_media_state" type="hidden" value="[% setting.social_media %]" />
+							<input id="social_media_state" type="hidden" />
 
 							<hr />
 
 							<h5>Multiuser</h5>
 							<div class="make-switch" data-on="success" data-off="danger">
-								[% IF setting.multiuser %]
-								<input id="multiuser_check" name="multiuser" type="checkbox" checked> [% ELSE %]
-								<input id="multiuser_check" name="multiuser" type="checkbox"> [% END %]
+								<input id="multiuser_check" name="multiuser" type="checkbox" checked> 
 							</div>
-							<input id="multiuser_state" type="hidden" value="[% setting.multiuser %]" />
+							<input id="multiuser_state" type="hidden"  />
 
 							<hr />
 
 							<h5>Accepting comments</h5>
 							<div class="make-switch" data-on="success" data-off="danger">
-								[% IF setting.multiuser %]
-								<input id="accepting_comments_check" name="accepting_comments" type="checkbox" checked> [% ELSE %]
-								<input id="accepting_comments_check" name="accepting_comments" type="checkbox"> [% END %]
+								<input id="accepting_comments_check" name="accepting_comments" type="checkbox" checked> 
 							</div>
-							<input id="accepting_comments_state" type="hidden" value="[% setting.multiuser %]" />
+							<input id="accepting_comments_state" type="hidden" />
 
 							<hr />
 

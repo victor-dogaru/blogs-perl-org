@@ -26,32 +26,8 @@ get '/author/categories/page/:page' => sub {
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page};
   my $user       = resultset('Users')->find_by_session(session);
-  my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
-  my @blog_posts;
-  my @categories;
-  my @post_categories;
+  my @categories = resultset('Category')->user_categories($user->id);
 
-  for my $blog_owner ( @blog_owners ) {
-  my @tmp_blogs      = resultset('BlogPost')->
-  search({ blog_id => $blog_owner->blog_id });
-  $_->{blog_role}    = $blog_owner->is_admin for @tmp_blogs;
-  push @blog_posts, @tmp_blogs;                   
-  }
-
-  for my $blog (@blog_posts){
-  my @post_categories_temp = 
-                     resultset('PostCategory')->search({ post_id => $blog->post_id });
-  $_->{blog_role}    = $blog->{blog_role} for @post_categories_temp;
-  push @post_categories, @post_categories_temp; 
-  }
-
-  for my $category (@post_categories){
-    my @categories_temp = 
-                     resultset('Category')->search({ name => { '!=' => 'Uncategorized'}, id => $category->category_id });
-  $_->{blog_role}    = $category->{blog_role} for @categories_temp;
-  push @categories, @categories_temp;                
-  } 
-      
   my $all                = scalar (@categories);
   my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
   my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
@@ -77,6 +53,7 @@ get '/author/categories/page/:page' => sub {
     }, 
     { layout => 'admin' };
 };
+
 =head2 /author/categories/add
 
 create method
@@ -92,6 +69,7 @@ post '/author/categories/add' => sub {
     }, { layout => 'admin' };
   }
   my @categories;
+  my $user = resultset('Users')->find_by_session(session);
   my $name   = params->{name};
   my $slug   = params->{slug};
   my $params = {};
@@ -101,7 +79,7 @@ post '/author/categories/add' => sub {
   my $found_slug_or_name = resultset('Category')->search({ -or => [ slug => $slug, name => $name ] })->first;
 
   if ( $found_slug_or_name ) {
-    @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
+    @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'},user_id=>$user->id });
 
     $params->{warning} = "The category name or slug already exists";
   }
@@ -121,10 +99,35 @@ post '/author/categories/add' => sub {
     $params->{success} = "The category was successfully added.";
   }
 
-  @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
-  $params->{categories} = \@categories;
 
-  template 'admin/categories/list', $params, { layout => 'admin' };
+  my @categories = resultset('Category')->user_categories($user->id);  
+  my $all                = scalar (@categories);
+  my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
+  my $nr_of_rows = 5;
+  my $page       = 1;
+  my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
+
+  
+  my $total_pages                 = get_total_pages($all, $nr_of_rows);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/categories');
+  my $total_posts     = $all;
+  my $posts_per_page  = $nr_of_rows;
+  my $current_page    = $page;
+  my $pages_per_set   = 5;
+  my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
+
+  template 'admin/categories/list',    {
+     all           => $all, 
+     page          => $page,
+     next_link     => $next_link,
+     previous_link => $previous_link,
+     action_url    => 'author/categories/page',
+     pages         => $pagination->pages_in_set,
+     categories    => \@actual_categories,
+     %$params  
+    }, 
+    
+    { layout => 'admin' };
 
 };
 
@@ -137,6 +140,7 @@ delete method
 get '/author/categories/delete/:id' => sub {
 
   my $id = params->{id};
+  my $user       = resultset('Users')->find_by_session(session);
 
   try {
     my $category = resultset('Category')->find( $id );
@@ -145,8 +149,7 @@ get '/author/categories/delete/:id' => sub {
   }
   catch {
     error $_;
-    my @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
-
+    my @categories = resultset('Category')->user_categories($user->id);
     template 'admin/categories/list', {
       categories => \@categories,
       warning => "Something went wrong."
@@ -207,13 +210,34 @@ any '/author/categories/edit/:id' => sub {
     }
   }
 
-  @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
+  my @categories = resultset('Category')->user_categories($user->id); 
+  my $all                = scalar (@categories);
+  my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
+  my $nr_of_rows = 5;
+  my $page       = 1;
+  my @actual_categories  = splice(@sorted_categories,($page-1)*$nr_of_rows,$nr_of_rows);
 
-  $params->{category}   = $category;
-  $params->{categories} = \@categories;
   
-  # If the form wasn't submited just list the categories
-  template 'admin/categories/list', $params, { layout => 'admin' };
+  my $total_pages                 = get_total_pages($all, $nr_of_rows);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/categories');
+  my $total_posts     = $all;
+  my $posts_per_page  = $nr_of_rows;
+  my $current_page    = $page;
+  my $pages_per_set   = 5;
+  my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
+
+  template 'admin/categories/list',    {
+     all           => $all, 
+     page          => $page,
+     next_link     => $next_link,
+     previous_link => $previous_link,
+     action_url    => 'author/categories/page',
+     pages         => $pagination->pages_in_set,
+     categories    => \@actual_categories,
+     category      => $category,
+     %$params 
+    }, 
+    { layout => 'admin' };  
 
 };
 

@@ -497,7 +497,7 @@ Add a new user
 
 =cut
 
-any '/author/users/add' => sub {
+post '/author/users/add' => sub {
 
   my $res_user     = resultset('Users')->find_by_session(session);
   unless ( $res_user and $res_user->can_do( 'create users' ) ) {
@@ -599,6 +599,31 @@ any '/author/users/make_author/:username/:blog' => sub {
   ->update({ is_admin=>0 });
   redirect '/author/users';
 
+};
+
+=head2 /author/users/add
+
+getter for the user's dashboard when adding an user
+
+=cut
+
+get '/author/users/add' => sub {
+
+  my $user        = resultset('Users')->find_by_session(session);
+  my @blog_owners = resultset('BlogOwner')->search ({ 
+                      user_id  => $user->id,
+                      is_admin => 1
+                    });
+  my @blogs;
+  foreach my $iterator (@blog_owners){
+    push @blogs, map {$_ -> as_hashref}
+              resultset('Blog')->search({ id => $iterator->blog_id }); 
+  }
+  template 'admin/users/add',
+  {
+    blogs   => \@blogs
+  },
+  { layout => 'admin' }; 
 };
 
 1;

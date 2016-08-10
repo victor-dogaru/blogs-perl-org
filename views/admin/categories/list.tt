@@ -4,6 +4,7 @@
 		<h2><i class="icon-list color"></i> Categories <small> manage categories</small></h2>
 		<hr />
 	</div>
+	[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 
 	[% IF (category) %]
 
@@ -16,7 +17,7 @@
 
 				[% INCLUDE components/alerts.tt %]
 
-				<form method="post" action="/admin/categories/edit/[% category.id %]">
+				<form method="post" action="/[%role%]/categories/edit/[% category.id %]">
 
 					<div class="form-group">
 						<label class="col-lg-2 control-label">Name</label>
@@ -39,7 +40,7 @@
 						<div class="col-lg-offset-2 col-lg-10">
 							<hr />
 							<button type="submit" class="btn btn-default">Update</button>
-							<a href="/admin/categories">
+							<a href="/[%role%]/categories">
 								<button type="button" class="btn btn-danger">Cancel</button>
 							</a>
 						</div>
@@ -63,7 +64,7 @@
 
 				[% INCLUDE components/alerts.tt %]
 
-				<form method="post" action="/admin/categories/add">
+				<form method="post" action="/[%role%]/categories/add">
 
 					<div class="form-group">
 						<label class="col-lg-2 control-label">Name</label>
@@ -86,7 +87,7 @@
 						<div class="col-lg-offset-2 col-lg-10">
 							<hr />
 							<button type="submit" class="btn btn-default">Add</button>
-							<a href="/admin/categories">
+							<a href="/[%role%]/categories">
 								<button type="button" class="btn btn-danger">Cancel</button>
 							</a>
 						</div>
@@ -108,7 +109,7 @@
 
 		<div class="awidget">
 			<div class="awidget-head">
-				<h3>All categories</h3>
+				<h3>All categories</h3> 
 			</div>
 			<div class="awidget-body">
 
@@ -136,10 +137,10 @@
 								 admin 
 								 [%END%]  </td>
 							<td style="width: 5%">
-								<a href="/admin/categories/edit/[% category.id %]">
+								<a href="/[%role%]/categories/edit/[% category.id %]">
 									<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 								</a>
-								<a href="/admin/categories/delete/[% category.id %]">
+								<a href="/[%role%]/categories/delete/[% category.id %]">
 									<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 								</a>
 							</td>
