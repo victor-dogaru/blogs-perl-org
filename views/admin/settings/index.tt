@@ -21,18 +21,6 @@
 					[% INCLUDE components/alerts.tt %]
 					<div class="col-lg-6">
 						<form method="post" action="/blog/profile">
-							<h2>Choose blog</h2>
-							<div class="btn-group">
-								<!-- <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select time zone <span class="caret"></span></button> -->
-								<select name="current_name" class="chosen-select">
-										[% FOREACH blog IN blogs %]
-										[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-										<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
-										[% END %]
-								</select>
-							</div>
-							<br/>
-							<hr />
 
 							<h5>Blog name</h5>
 
@@ -92,21 +80,6 @@
 									</a>
 								</div>
 							</div>
-
-							<!--
-						<div class="col-lg-3 profile-pic">
-							<div class="bubble">
-								[% IF session.user.avatar_path %]
-								<img id="image_upload_preview" class="user-image" src="/avatar/[% session.user.username %]" /> [% ELSE %]
-								<img id="image_upload_preview" class="user-image defaultAvatar" src="/avatar/[% session.user.username %]" /> [% END %]
-							</div>
-							<div>
-								<button type="button" class="btn change-pic" data-toggle="modal" data-target="#changeImg">Change photo
-								</button>
-							</div>
-						</div>
--->
-
 						</form>
 					</div>
 					<div class="col-lg-6">
@@ -119,7 +92,7 @@
 								[% END %]
 							</div>
 							<div>
-								<button type="button" class="btn change-pic" data-toggle="modal" data-target="#changeImgBlog">Change photo
+								<button type="button" class="btn change-pic" data-toggle="modal" data-target="#changeImgBlog">Change your blog avatar
 								</button>
 							</div>
 						</div>
@@ -158,16 +131,29 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-6 picture-btn">
-						<form action="/blog-image/large/slug/[% blog.slug %]/user/[% blog.blog_creator.username %]" enctype="multipart/form-data" method="post" id="upload_blog_img">
+						<!--select for each blog-->
+
+
+						<form action="/blog-image/:size/blog/:blogname" enctype="multipart/form-data" method="post" id="upload_blog_img">
+							<h2>Choose blog</h2>
+							<div class="btn-group">
+								<select id="blog-select" name="current_name" class="chosen-select">
+									[% FOREACH blog IN blogs %]
+									[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+									<option value="[% blog.name %]"> [% blog.name %] </option>
+									[% END %]
+								</select>
+							</div>
+							<br><br>
 							<span class="file-input btn btn-file light-button buttons-group change-pic">
 								<p>Choose picture</p> <!-- <input type="file" name="file"> -->
-								<input type="file" id="file-upload-blog" class="form-control" name="file">
-								<input type="text" class="form-control hidden" name="width">
-								<input type="text" class="form-control hidden" name="height">
-								<input type="text" class="form-control hidden" name="top">
-								<input type="text" class="form-control hidden" name="left">
-								<input type="text" class="form-control hidden" name="zoom">
-								<input type="text" class="form-control hidden" name="action_form">
+									<input type="file" id="file-upload-blog" class="form-control" name="file">
+									<input type="text" class="form-control hidden" name="width">
+									<input type="text" class="form-control hidden" name="height">
+									<input type="text" class="form-control hidden" name="top">
+									<input type="text" class="form-control hidden" name="left">
+									<input type="text" class="form-control hidden" name="zoom">
+									<input type="text" class="form-control hidden" name="action_form">
 							</span>
 						</form>
 						<label class="error_file">We only allows file types of PNG, JPG, GIF and BMP.</label>
