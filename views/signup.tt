@@ -82,3 +82,29 @@
         </div>
     </div>
 </div>
+<script src= "/js/jquery.js"> </script>
+<script src= "/js/oauth.min.js"> </script>
+<script> 
+$(document).ready(function(){
+  $(".btn-facebook").click(function(){
+    alert("brb");
+    OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
+    OAuth.popup('facebook').done(function(result) {
+        result.me().done(function(data) {
+        console.log(data);
+        data.type = "facebook";
+        $.post("/api_login",data, function(resp){
+          window.location.href = resp.location;
+        },"json");
+        // similar behavior as clicking on a link
+
+    })
+    })
+    return false;
+  });
+
+});
+
+
+
+</script>
