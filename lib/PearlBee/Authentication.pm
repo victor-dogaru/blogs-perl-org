@@ -317,6 +317,60 @@ post '/login' => sub {
   }
 };
 
+=head2 /api_login route
+
+handler for logging in with facebook
+
+=cut
+
+post '/api_login' => sub {
+
+  my $flag_oauth = resultset('UserOauth')->search({ service_id => params->{id}})->count;
+  my $flag_users  = resultset('Users')->search({ email=>params->{email} })->count;
+
+  if ($flag_oauth == 0 && $flag_users == 0){
+
+      my $user_entry =       resultset('Users')->create_hashed_with_blog({
+              username       => params->{name},
+              email          => params->{email},
+              name           => params->{name},
+              role           => 'author',
+              status         => 'active'
+            });
+      my $user = resultset('Users')->find ({ id =>$user_entry->user_id});
+
+      
+
+      my $oauth_entry = resultset('UserOauth')->create ({ 
+                                                user_id => $user->id,
+                                                service_id =>params->{id},
+                                                name => 'Facebook'
+                                                });
+
+      session user    => $user->as_hashref;
+      session user_id => $user->id;
+      setConnectedAccountsOntoSession();
+      
+    }
+    elsif($flag_oauth != 0 && $flag_users!=0){
+
+      my $user = resultset('Users')->search ({ email=> params->{email} })->first();
+      session user    => $user->as_hashref;
+      session user_id => $user->id;
+      setConnectedAccountsOntoSession();
+ 
+    }    
+  
+  elsif($flag_oauth == 0 && $flag_users!=0){
+    template 'index',
+    warning {warning => "It seems that the provided email is already in use!"};
+  }
+    my $json = JSON->new;
+    $json->allow_blessed(1);
+    $json->convert_blessed(1);
+    $json->encode( {location => '/'} );
+};
+
 =head2 /logout route
 
 logout method

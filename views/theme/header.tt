@@ -10,7 +10,7 @@
       <div class="row">
             <div class="pull-left">
                 <!-- Logo -->
-				        <img id="header_onion_logo" src="/blog/img/blog-logo2.png">
+                <img id="header_onion_logo" src="/blog/img/blog-logo2.png">
                 <img id="only-logo" src="/blog/img/only-logo.png">
             </div>
             <form id="switch-button" action="/theme" method="post">
@@ -26,13 +26,13 @@
               </div>
             </form>
             <div class="pull-right head-icons">
-      				<a href="/search">
-      					<div class="search header-icon bar">
-      						<span class="search-icon icon" aria-hidden="true"></span>
-      					</div>
-      				</a>
+              <a href="/search">
+                <div class="search header-icon bar">
+                  <span class="search-icon icon" aria-hidden="true"></span>
+                </div>
+              </a>
                 <div class="btn-group right-icon">
-      					<div class="user header-icon hidden" style="display:inline-block">
+                <div class="user header-icon hidden" style="display:inline-block">
 [% IF session.user.username %]
 
             <div class="user-logged icon icon-toggle dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -121,10 +121,36 @@
             </div>
             </form>
 [% END # IF session.user.username %]
-      					</div>
-      				</div>
+                </div>
+              </div>
             </div>
 
         </div>
       </div>
 </div>
+<script src= "/js/jquery.js"> </script>
+<script src= "/js/oauth.min.js"> </script>
+<script> 
+$(document).ready(function(){
+  $(".btn-facebook").click(function(){
+    alert("brb");
+    OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
+    OAuth.popup('facebook').done(function(result) {
+        result.me().done(function(data) {
+        console.log(data);
+        data.type = "facebook";
+        $.post("/api_login",data, function(resp){
+          window.location.href = resp.location;
+        },"json");
+        // similar behavior as clicking on a link
+
+    })
+    })
+    return false;
+  });
+
+});
+
+
+
+</script>

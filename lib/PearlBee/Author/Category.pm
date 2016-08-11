@@ -100,7 +100,7 @@ post '/author/categories/add' => sub {
   }
 
 
-  my @categories = resultset('Category')->user_categories($user->id);  
+  @categories = resultset('Category')->user_categories($user->id);  
   my $all                = scalar (@categories);
   my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
   my $nr_of_rows = 5;
@@ -210,7 +210,7 @@ any '/author/categories/edit/:id' => sub {
     }
   }
 
-  my @categories = resultset('Category')->user_categories($user->id); 
+  @categories = resultset('Category')->user_categories($user->id); 
   my $all                = scalar (@categories);
   my @sorted_categories  = sort {$b->id <=> $a->id} @categories;
   my $nr_of_rows = 5;
