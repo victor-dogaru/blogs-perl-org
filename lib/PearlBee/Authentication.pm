@@ -324,7 +324,7 @@ handler for logging in with facebook
 =cut
 
 post '/api_login' => sub {
-  use Data::Dumper; use DDP;
+
   my $flag_oauth = resultset('UserOauth')->search({ service_id => params->{id}})->count;
   my $flag_users  = resultset('Users')->search({ email=>params->{email} })->count;
 
@@ -349,7 +349,6 @@ post '/api_login' => sub {
 
       session user    => $user->as_hashref;
       session user_id => $user->id;
-      warn Dumper (session );
       setConnectedAccountsOntoSession();
       
     }
@@ -358,8 +357,6 @@ post '/api_login' => sub {
       my $user = resultset('Users')->search ({ email=> params->{email} })->first();
       session user    => $user->as_hashref;
       session user_id => $user->id;
-
-      warn Dumper (session );
       setConnectedAccountsOntoSession();
  
     }    
