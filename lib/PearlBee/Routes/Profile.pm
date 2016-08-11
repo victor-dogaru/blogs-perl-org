@@ -280,15 +280,14 @@ post '/blog-image/:size/blog/:blogname' => sub {
   my $blog = resultset('Blog')-> find({
               name => $blogname
   });
-  use DDP;
-   
+  
   my $flag = resultset('BlogOwner')-> find({ 
               blog_id => $blog->id,
               user_id => $user->id,
               });
    
   if ( $blog && $flag->is_admin) {
-        my $message  = "Your profile picture has been changed.";
+    my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
                             $size,
                             $blog->id );
