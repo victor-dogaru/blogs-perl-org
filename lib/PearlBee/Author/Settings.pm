@@ -188,7 +188,7 @@ get '/author/settings' => sub {
     push @blogs, resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
   }
   @blogs = map { $_->as_hashref } @blogs;
-  
+
   template 'admin/settings/index.tt', 
     { 
       setting   => $settings,
