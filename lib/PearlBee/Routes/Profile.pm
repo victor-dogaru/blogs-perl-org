@@ -276,7 +276,7 @@ post '/blog-image/:size/blog/:blogname' => sub {
               user_id => $user->id,
               });
   
-  if ( $blog && $blog->is_admin) {
+  if ( $blog && $flag->is_admin) {
     my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
                             $size,
@@ -318,19 +318,19 @@ post '/blog-image/:size/blog/:blogname' => sub {
       $message = "Your picture has been deleted";
     }
  
-    template 'profile',
+    template 'blogs',
       {
         success => $message
       };
   }
   elsif (!$blog->is_admin) {
-    template 'blog',
+    template 'blogs',
       {
         warning => "You do not have the right to perform this action on the blog '$blogname' "
       };
   }
   else {
-        template 'blog',
+        template 'blogs',
       {
         warning => "Could not find a blog for with that name '$blogname' "
       };
