@@ -261,6 +261,15 @@ post '/blog-image/:size/blog/:blogname' => sub {
   my $user        = resultset('Users')->find_by_session(session);
   my $params      = params;
 
+  my @timezones = DateTime::TimeZone->all_names;
+  my $user_obj  = resultset('Users')->find_by_session(session);
+  my @blogs;
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  for my $blog_owner (@blog_owners){
+    push @blogs, resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
+  }
+  @blogs = map { $_->as_hashref } @blogs;
+
   unless ( $user and $user->can_do( 'update blog' ) ) {
     warn "***** Redirecting guest away from /blog-image/slug/:slug/user/:username'";
     return template 'blog', {
@@ -271,11 +280,12 @@ post '/blog-image/:size/blog/:blogname' => sub {
   my $blog = resultset('Blog')-> find({
               name => $blogname
   });
+  
   my $flag = resultset('BlogOwner')-> find({ 
               blog_id => $blog->id,
               user_id => $user->id,
               });
-  
+   
   if ( $blog && $flag->is_admin) {
     my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
@@ -318,22 +328,31 @@ post '/blog-image/:size/blog/:blogname' => sub {
       $message = "Your picture has been deleted";
     }
  
-    template 'blogs',
+    template 'admin/settings/index',
       {
+        timezones => \@timezones,
+        blogs     => \@blogs,
         success => $message
-      };
+      },
+      { layout => 'admin' };
   }
-  elsif (!$blog->is_admin) {
-    template 'blogs',
-      {
+  elsif (!$flag->is_admin) {
+    template 'admin/settings/index',
+      { 
+        timezones => \@timezones,
+        blogs     => \@blogs,
         warning => "You do not have the right to perform this action on the blog '$blogname' "
-      };
+      },
+      { layout => 'admin' };
   }
   else {
-        template 'blogs',
+        template 'admin/settings/index',
       {
+        timezones => \@timezones,
+        blogs     => \@blogs,
         warning => "Could not find a blog for with that name '$blogname' "
-      };
+      },
+      { layout => 'admin' };
   }
 };
 
