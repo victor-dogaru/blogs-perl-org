@@ -67,4 +67,47 @@ get '/avatar/:username' => sub {
   return send_file $avatar_path;
 };
 
+=head2 /blog_avatar/:blogname route
+
+Avatar for each blog
+
+=cut
+
+get '/blog_avatar/:blogname' => sub{
+  my $blog_name = route_parameters->{'blogname'};
+  my $avatar_config = config->{'blog-avatar'};
+  my $blog      = resultset('Blog')->find ({ name => $blog_name});
+  my $avatar_path   = $avatar_config->{'default'}{'dark'}{'large'};
+  my $theme         = session( 'theme' );
+  
+  if ($blog->large_avatar_path ne ''){
+    my $path = $blog->large_avatar_path;
+    $avatar_path = $path if -e "public/$path";
+  }
+  elsif ( $theme and $theme eq 'light' ) {
+    $avatar_path = $avatar_config->{'default'}{'light'}{'large'};
+  }
+
+  return send_file $avatar_path;
+};
+
+=head2 /blog_avatar/ route
+
+Avatar route that just returns the theme-based blog image
+
+=cut
+
+get '/blog_avatar/' => sub{
+
+  my $avatar_path = config->{'blog-avatar'}{'default'}{'dark'}{'large'};
+  my $theme       = session( 'theme' );
+  use DDP;
+  p $avatar_path;
+  if ( $theme eq 'light' ) {
+    $avatar_path = config->{'blog-avatar'}{'default'}{'light'}{'large'};
+  }
+  p $avatar_path;
+  send_file $avatar_path;
+};
+
 1;
