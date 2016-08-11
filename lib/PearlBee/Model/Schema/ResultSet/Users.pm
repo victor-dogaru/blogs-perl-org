@@ -7,6 +7,7 @@ use Dancer2;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Model::Schema;
 use base 'DBIx::Class::ResultSet';
+use POSIX;
 
 =head2 find_by_session(session)
 
@@ -68,11 +69,13 @@ sub create_hashed {
   my @alpha  = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
   my $salt   = join '', map $alpha[ rand @alpha ], 1 .. 16;
   my $algo   = '$6$' . $salt . '$';
-  my $hashed = crypt( $args->{password}, $algo );
-
+  my $hashed;
+  if ($args->{password}){
+    $hashed = crypt( $args->{password}, $algo );
+  }
   $schema->resultset('Users')->create({
     username       => $args->{username},
-    password       => $hashed,
+    password       => ( $args->{password} ) ? $hashed : '',
     email          => $args->{email},
     name           => $args->{name},
     role           => $args->{role},
@@ -89,10 +92,11 @@ sub create_hashed_with_blog {
   my ($self, $args) = @_;
   my $schema = $self->result_source->schema;
   my $user   = $schema->resultset('Users')->create_hashed( $args );
+
   my $blog   = $schema->resultset('Blog')->create_with_slug({
     name        => $args->{name},
-    description => $args->{description},
-    timezone    => $args->{timezone},
+    description => $args->{description} // "My pretty blog",
+    timezone    => $args->{timezone} // strftime("%Z", localtime()),
   });
 
   $schema->resultset('BlogOwner')->create({
