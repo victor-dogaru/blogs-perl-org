@@ -171,12 +171,10 @@ $(document).ready(function() {
 	});
 
 
-
 	//undo the blog avatars when click outside the modal
-	$('#changeImgBlog').on('hidden.bs.modal', function () {
-
-	})
-
+	$('#changeImgBlog').on('hidden.bs.modal', function(e) {
+		$(".modal-footer .cancel-img").trigger('click');
+	});
 
 
 	if (!$('#modal_blog_img_preview').hasClass('defaultAvatar')){
