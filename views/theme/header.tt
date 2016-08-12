@@ -133,7 +133,7 @@
 <script> 
 $(document).ready(function(){
   $(".btn-facebook").click(function(){
-    alert("brb");
+    alert("Are you sure you want to connect your facebook account with BPO?");
     OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
     OAuth.popup('facebook').done(function(result) {
         result.me().done(function(data) {
