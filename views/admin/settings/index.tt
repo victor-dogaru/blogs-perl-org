@@ -21,7 +21,16 @@
 					[% INCLUDE components/alerts.tt %]
 					<div class="col-lg-6">
 						<form method="post" action="/blog/profile">
-
+							<!--select for each blog-->
+							<h2>Choose blog</h2>
+							<div class="btn-group">
+								<select id="blog-select" name="current_name" class="chosen-select">
+									[% FOREACH blog IN blogs %]
+									[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+									<option value="[% blog.name %]" data-slug="[%blog.slug%]"> [% blog.name %] </option>
+									[% END %]
+								</select>
+							</div>
 							<h5>Blog name</h5>
 
 							<input class="form-control" required name="blog_name" type="text" placeholder="Name" value="[% setting.blog_name %]">
@@ -91,8 +100,8 @@
 					<div class="col-lg-6">
 						<div class="col-lg-3 profile-pic blog-pic">
 							<div class="bubble">
-								[% IF session.blog.avatar_path %]
-								<img id="blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% searched_blog.slug %]/user/[% user.username %]" />
+								[% IF blogs.0.avatar_path %]
+								<img id="blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% blogs.0.slug %]/user/[% session.user.name %]" />
 								[% ELSE %]
 								<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
 								[% END %]
@@ -124,8 +133,8 @@
 				<div class="modal-body clearfix">
 					<div class="col-xs-12 col-sm-6 profile-pic">
 						<div class="bubble text-center">
-							[% IF session.blog.avatar_path %]
-							<img id="modal_blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% searched_blog.slug %]/user/[% user.username %]" />
+							[% IF blogs.0.avatar_path %]
+							<img id="modal_blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% blogs.0.slug %]/user/[% session.user.name %]" />
 							[% ELSE %]
 							<img id="modal_blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
 							[% END %]
@@ -137,31 +146,18 @@
 						</div>
 					</div>
 					<div class="col-xs-12 col-sm-6 picture-btn">
-						<!--select for each blog-->
-
-
-							<h2>Choose blog</h2>
-							<div class="btn-group">
-								<select id="blog-select" name="current_name" class="chosen-select">
-									[% FOREACH blog IN blogs %]
-									[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-									<option value="[% blog.name %]"> [% blog.name %] </option>
-									[% END %]
-								</select>
-							</div>
-							<br><br>
-							<span class="file-input btn btn-file light-button buttons-group change-pic">
-								<p>Choose picture</p> <!-- <input type="file" name="file"> -->
-								<form enctype="multipart/form-data" method="post" id="upload_blog_img">
-									<input type="file" id="file-upload-blog" class="form-control" name="file">
-									<input type="text" class="form-control hidden" name="width">
-									<input type="text" class="form-control hidden" name="height">
-									<input type="text" class="form-control hidden" name="top">
-									<input type="text" class="form-control hidden" name="left">
-									<input type="text" class="form-control hidden" name="zoom">
-									<input type="text" class="form-control hidden" name="action_form">
-								</form>
-							</span>
+						<span class="file-input btn btn-file light-button buttons-group change-pic">
+							<p>Choose picture</p> <!-- <input type="file" name="file"> -->
+							<form enctype="multipart/form-data" method="post" id="upload_blog_img">
+								<input type="file" id="file-upload-blog" class="form-control" name="file">
+								<input type="text" class="form-control hidden" name="width">
+								<input type="text" class="form-control hidden" name="height">
+								<input type="text" class="form-control hidden" name="top">
+								<input type="text" class="form-control hidden" name="left">
+								<input type="text" class="form-control hidden" name="zoom">
+								<input type="text" class="form-control hidden" name="action_form">
+							</form>
+						</span>
 
 						<label class="error_file">We only allows file types of PNG, JPG, GIF and BMP.</label>
 					</div>
