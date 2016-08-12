@@ -53,7 +53,7 @@ get '/profile' => sub {
 Display profile for a given author
 
 =cut
-  
+
 get '/profile/author/:username' => sub {
 
   my $nr_of_rows = config->{blogs_on_page} || 5; # Number of posts per page
@@ -81,19 +81,19 @@ get '/profile/author/:username' => sub {
       };
       $blog->{post_tags} = \@post_tags;
     }
- 
+
     my $template_data = {
       blogs      => \@blogs,
       blog_count => scalar @blogs,
       user       => $user->as_hashref_sanitized,
-    }; 
- 
+    };
+
     if (param('format')) {
       my $json = JSON->new;
       $json->allow_blessed(1);
       $json->convert_blessed(1);
       $json->encode( $template_data );
-    }     
+    }
     else {
       template 'profile/author', $template_data;
     }
@@ -119,7 +119,7 @@ post '/profile' => sub {
       warning => "You are not allowed to update this user"
     }, { layout => 'admin' };
   }
- 
+
   my $new_columns = { };
   my @message;
 
@@ -196,7 +196,7 @@ post '/profile-image' => sub {
       warning => "You are not allowed to update this user"
     }, { layout => 'admin' };
   }
-  
+
   my $message;
 
   my $upload_dir  = "/" . config->{'avatar'}{'path'};
@@ -215,7 +215,7 @@ post '/profile-image' => sub {
         );
         try {
           $logo->resize( $params, $scale, $folder_path, $filename );
-        } 
+        }
         catch {
           info 'There was an error resizing your avatar: ' . Dumper $_;
         };
@@ -254,7 +254,7 @@ post '/profile-image' => sub {
 post '/blog-image/:size/blog/:blogname' => sub {
 
   my $size        = route_parameters->{'size'};
-  my $blogname    = route_parameters->{'blogname'};  
+  my $blogname    = route_parameters->{'blogname'};
   my $file        = params->{'file'};
   my $upload_dir  = "/" . config->{'blog-avatar'}{'path'};
   my $folder_path = config->{'blog_pics'};
@@ -280,12 +280,12 @@ post '/blog-image/:size/blog/:blogname' => sub {
   my $blog = resultset('Blog')-> find({
               name => $blogname
   });
-  
-  my $flag = resultset('BlogOwner')-> find({ 
+
+  my $flag = resultset('BlogOwner')-> find({
               blog_id => $blog->id,
               user_id => $user->id,
               });
-   
+
   if ( $blog && $flag->is_admin) {
     my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
@@ -306,7 +306,7 @@ post '/blog-image/:size/blog/:blogname' => sub {
           );
           try {
             $logo->resize( $params, $scale, $folder_path, $filename );
-          } 
+          }
           catch {
             info 'There was an error resizing your avatar: ' . Dumper $_;
           };
@@ -318,16 +318,16 @@ post '/blog-image/:size/blog/:blogname' => sub {
           $logo->resize( $params, $scale, $folder_path, $filename );
         }
       }
- 
+
       $blog->update({ $blog_column => $upload_dir . $filename });
       $blog->{$blog_column} = $upload_dir . $filename;
     }
     elsif ( $params->{action_form} eq 'delete' ) {
       $blog->update({ $blog_column => '' });
- 
+
       $message = "Your picture has been deleted";
     }
- 
+
     template 'admin/settings/index',
       {
         timezones => \@timezones,
@@ -338,7 +338,7 @@ post '/blog-image/:size/blog/:blogname' => sub {
   }
   elsif (!$flag->is_admin) {
     template 'admin/settings/index',
-      { 
+      {
         timezones => \@timezones,
         blogs     => \@blogs,
         warning => "You do not have the right to perform this action on the blog '$blogname' "
@@ -370,13 +370,13 @@ post '/profile_password' => sub {
       warning => "You are not allowed to update this user",
     }, { layout => 'admin' };
   }
-  
-  my $template_data;
+
+ my $template_data;
 
   if (defined($res_user) && ($params->{'new_password'} ne '')) {
-    
+
     if ($params->{'new_password'} eq $params->{'confirm_password'}) {
-      
+
       if ($res_user->validate($params->{'old_password'})) {
 
         my $hashed_password =
@@ -406,7 +406,7 @@ post '/profile_password' => sub {
   else {
     $template_data = { warning => "No new password was entered" };
   }
- 
+
   template 'profile', $template_data;
 };
 
