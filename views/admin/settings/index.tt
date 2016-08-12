@@ -100,8 +100,8 @@
 					<div class="col-lg-6">
 						<div class="col-lg-3 profile-pic blog-pic">
 							<div class="bubble">
-								[% IF blogs.0.avatar_path %]
-								<img id="blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% blogs.0.slug %]/user/[% session.user.name %]" />
+								[% IF blogs.0.large_avatar_path %]
+								<img id="blog_img_preview" class="user-image" src="/blog_avatar/[% blogs.0.name %]"/>
 								[% ELSE %]
 								<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
 								[% END %]
@@ -133,8 +133,8 @@
 				<div class="modal-body clearfix">
 					<div class="col-xs-12 col-sm-6 profile-pic">
 						<div class="bubble text-center">
-							[% IF blogs.0.avatar_path %]
-							<img id="modal_blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% blogs.0.slug %]/user/[% session.user.name %]" />
+							[% IF blogs.0.large_avatar_path %]
+							<img id="modal_blog_img_preview" class="user-image" src="/blog_avatar/[% blogs.0.name %]"/>
 							[% ELSE %]
 							<img id="modal_blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
 							[% END %]
