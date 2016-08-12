@@ -371,7 +371,7 @@ post '/profile_password' => sub {
     }, { layout => 'admin' };
   }
 
- my $template_data;
+  my $template_data;
 
   if (defined($res_user) && ($params->{'new_password'} ne '')) {
 
