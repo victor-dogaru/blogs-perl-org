@@ -101,12 +101,11 @@ get '/blog_avatar/' => sub{
 
   my $avatar_path = config->{'blog-avatar'}{'default'}{'dark'}{'large'};
   my $theme       = session( 'theme' );
-  use DDP;
-  p $avatar_path;
+
   if ( $theme eq 'light' ) {
     $avatar_path = config->{'blog-avatar'}{'default'}{'light'}{'large'};
   }
-  p $avatar_path;
+
   send_file $avatar_path;
 };
 

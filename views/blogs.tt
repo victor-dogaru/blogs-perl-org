@@ -51,7 +51,11 @@
                                                         [% FOREACH author in authors %]
                                                         <div class="row">
                                                             <div class="col-sm-3">
-                                                                <img class="author-image" src="[% author.avatar_path %]">
+                                                                [% IF author.avatar_path %]  
+                                                                    <img class="author-image" src="[% author.avatar_path %]">
+                                                                [%ELSE %]
+                                                                    <img class="author-image" src="/avatar/" />                                                      
+                                                                [%END%]
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <ul>
