@@ -3048,6 +3048,14 @@ input[readonly] {
    font-size: 14px;
 }
 
+/*changes for croppie avatars for the blog avatars*/
+.blog-change-pic{
+   margin: 15px;
+}
+.blog-change-pic:visited{
+   color: #0fa6bc;
+}
+
 /*changes for no post messages*/
 .search-page .tabs .posts.listings h5,
 .no-posts {

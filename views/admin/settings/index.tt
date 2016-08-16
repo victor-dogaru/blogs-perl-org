@@ -107,7 +107,10 @@
 								[% END %]
 							</div>
 							<div>
-								<button type="button" class="btn change-pic" data-toggle="modal" data-target="#changeImgBlog">Change your blog avatar
+								<button type="button" class="btn blog-change-pic change-pic" data-toggle="modal" data-target="#changeImgBlog">
+									Change your
+									<br>
+									blog avatar
 								</button>
 							</div>
 						</div>
