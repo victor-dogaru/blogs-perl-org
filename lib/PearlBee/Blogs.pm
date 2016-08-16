@@ -32,10 +32,9 @@ get '/users/:username' => sub {
   redirect "/blogs/user/$username/slug/$slug"
 };
 
-get '/blogs/user/:username/slug/:slug/name/:name/page/:page' => sub {
+get '/blogs/user/:username/blogname/:name/page/:page' => sub {
 
   my $num_user_posts =  10;
-  my $slug        = route_parameters->{'slug'};
   my $blog_name   = route_parameters->{'name'};
   $blog_name =~ s/%20/ /g;
   my $username    = route_parameters->{'username'};
@@ -71,7 +70,7 @@ get '/blogs/user/:username/slug/:slug/name/:name/page/:page' => sub {
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
   my ($previous_link, $next_link) = get_previous_next_link
-  (1, $total_pages, '/blogs/user/' . $username .'/slug/'.$slug.'/name/'.$blog_name);
+  (1, $total_pages, '/blogs/user/' . $username .'/blogname/'.$blog_name);
   
   my @aux_authors    = $searched_blog->contributors;
   $searched_blog     = $searched_blog->as_hashref_sanitized if $searched_blog;
