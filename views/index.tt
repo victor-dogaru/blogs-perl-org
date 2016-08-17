@@ -36,18 +36,12 @@
            <div class="posts listings">
               <div class="col-xs-2">
               </div>
-              <div class="col-xs-10 no-padding">
-                <h2 id="latest_posts" class="page-heading">Latest posts</h2>
-                [% IF tag.name %]
-                	<h2 class="page-heading"> Posts tagged as <a href="/posts/tag/[% tag.slug %]">[% tag.name %]</a></h2>
-          		[% END %]
-          		[% IF category %]
-              		<h2 class="page-heading"> Category Name <a href="/posts/category/[% category.slug %]">[% category.name %]</a></h2>
-          		[% END %]
-          		[% IF posts_for_user %]
-              		<h2 class="page-heading"> User </i> <a href="/profile/author/[% posts_for_user | uri %]">[% posts_for_user %]</a></h2>
-          		[% END %]
-              </div>
+							<div class="col-xs-10 no-padding">
+								<h2 id="latest_posts" class="page-heading">Latest posts</h2> [% IF tag.name %]
+								<h2 class="page-heading"> Posts tagged as <a href="/posts/tag/[% tag.slug %]">[% tag.name %]</a></h2> [% END %] [% IF category %]
+								<h2 class="page-heading"> Category Name <a href="/posts/category/[% category.slug %]">[% category.name %]</a></h2> [% END %] [% IF posts_for_user %]
+								<h2 class="page-heading"> User </i> <a href="/profile/author/[% posts_for_user | uri %]">[% posts_for_user %]</a></h2> [% END %]
+							</div>
 
               [% FOREACH post in posts %]
         
@@ -66,7 +60,7 @@
                            <div class="user">
                              <a class="user-name" href="/profile/author/[% post.user.username %]">[% post.user.name %]</a>
                                <span>in</span>
-                             <a class="blog-name" href="/blogs/user/[% post.blog.blog_creator.username  | uri %]/slug/[% post.blog.slug %]/name/[%post.blog.name%]" >[% post.blog.name %]</a>
+                             <a class="blog-name" href="/blogs/user/[% post.blog.blog_creator.username  | uri %]/blogname/[%post.blog.name%]" >[% post.blog.name %]</a>
                            </div>
                            <div class="date">
                              [% post.created_date_human %]
