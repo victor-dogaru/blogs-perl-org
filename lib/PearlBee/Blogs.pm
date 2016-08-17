@@ -32,6 +32,66 @@ get '/users/:username' => sub {
   redirect "/blogs/user/$username/slug/$slug"
 };
 
+=head2 /blogs/user/:username/blogname/:name;
+
+First page onto which we concatanate new jsons.
+
+=cut
+
+get '/blogs/user/:username/blogname/:name' => sub{
+  my $num_user_posts =  10;
+  my $blog_name   = route_parameters->{'name'};
+  $blog_name =~ s/%20/ /g;
+  my $username    = route_parameters->{'username'};
+  my ( $user )    = resultset('Users')->match_lc( $username );
+  my @blog_ids;
+  my @posts;
+  unless ($user) {
+    return error "No such user '$username'";
+  }
+  my ( $searched_blog ) = resultset('Blog')->find_by_name_uid({
+    name => $blog_name, user_id => $user->id
+  });
+
+  push @blog_ids, resultset('BlogPost')->search({ blog_id => $searched_blog->id });
+
+  foreach my $iterator (@blog_ids){
+    push @posts, resultset('Post')->search ({ 
+      id => $iterator->post_id
+      });
+  }
+
+  my $nr_of_posts = scalar @posts;
+  # extract demo posts info
+  my @sorted_posts = sort {$b->created_date <=> $a->created_date}@posts;
+
+
+  
+  my @aux_authors    = $searched_blog->contributors;
+  $searched_blog     = $searched_blog->as_hashref_sanitized if $searched_blog;
+  my @authors        = map { $_->as_hashref_sanitized } @aux_authors;
+  my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
+
+  #the map_posts method must be investigated and refined, so, for the moment, 
+  #we'll make the splice on the sorted_posts array, NOT on the mapped_posts one
+  my @actual_posts   = splice(@sorted_posts,0*$num_user_posts,$num_user_posts);
+
+
+  my $template_data = 
+      { 
+        posts          => \@actual_posts,
+        total_pages    => $total_pages,
+        posts_for_user => $username,
+        user           => $user,
+        authors        => \@authors,
+        searched_blog  => $searched_blog,
+        nr_of_posts    => $nr_of_posts
+    };
+
+  template 'blogs', $template_data;
+
+};
+
 get '/blogs/user/:username/blogname/:name/page/:page' => sub {
 
   my $num_user_posts =  10;
@@ -79,10 +139,11 @@ get '/blogs/user/:username/blogname/:name/page/:page' => sub {
   #the map_posts method must be investigated and refined, so, for the moment, 
   #we'll make the splice on the sorted_posts array, NOT on the mapped_posts one
   my @actual_posts   = splice(@sorted_posts,($page-1)*$num_user_posts,$num_user_posts);
+  my @mapped_posts = map_posts(@actual_posts);
 
   my $template_data = 
       {
-        posts          => \@actual_posts,
+        posts          => \@mapped_posts,
         page           => $page,
         total_pages    => $total_pages,
         next_link      => $next_link,
