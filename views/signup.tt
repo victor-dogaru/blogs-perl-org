@@ -1,110 +1,114 @@
 <link href="/blog/css/register.css" rel="stylesheet">
 
 <div class="blog">
-    <div class="register sign-up">
-        <div class="container">
-            [% INCLUDE components/alerts.tt %]
-            <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 text-center">
+	<div class="register sign-up">
+		<div class="container">
+			[% INCLUDE components/alerts.tt %]
+			<div class="row">
+				<div class="col-sm-6 col-sm-offset-3 text-center">
 
-                    <h3>Welcome back!</h3>
-                    <h4>Please enter your credentials:</h4>
+					<h3>Welcome back!</h3>
+					<h4>Please enter your credentials:</h4>
 
-                    <div class="register-wrapper">
-                        <form id="signin_form" action="/login" method="post">
-                            <input type="hidden" name="redirect" value="[% redirect %]" />
+					<div class="register-wrapper">
+						<form id="signin_form" action="/login" method="post">
+							<input type="hidden" name="redirect" value="[% redirect %]" />
 
-                            <div class="form-group">
-                                <input type="text" class="form-control" id="usernameSingin" placeholder="Username" name="username" required>
-                            </div>
+							<div class="form-group">
+								<input type="text" class="form-control" id="usernameSingin" placeholder="Username" name="username" required>
+							</div>
 
-                            <div class="form-group">
-                                <input type="password" class="form-control" id="passwordSignin" placeholder="Password" name="password" required>
-                            </div>
+							<div class="form-group">
+								<input type="password" class="form-control" id="passwordSignin" placeholder="Password" name="password" required>
+							</div>
 
-                            <div class="form-group">
-                                <label>
-                                    <a href="/password_recovery" style="color:currentColor">Forgot your password?</a>
-                                </label>
-                            </div>
+							<div class="form-group">
+								<label>
+									<a href="/password_recovery" style="color:currentColor">Forgot your password?</a>
+								</label>
+							</div>
 
-                            <button type="submit" class="submitRegister" id="submitRegister">Log in</button>
-                        </form>
+							<button type="submit" class="submitRegister" id="submitRegister">Log in</button>
+						</form>
 
-                        <div class="margin-top-5" style="font-weight:bold">
-                            - or -
-                        </div>
+						<div class="margin-top-5" style="font-weight:bold">
+							- or -
+						</div>
 
-                        <div class="social_register">
-                            <div class="row">
-                                <div class="col-md-5 col-md-offset-1">
-                                  <a href="/smlogin?socialMediaService=facebook" class="btn btn-block btn-social btn-facebook">
+						<div class="social_register">
+							<div class="row">
+								<div class="col-md-5 col-md-offset-1">
+									<a href="/smlogin?socialMediaService=facebook" class="btn btn-block btn-social btn-facebook">
 
-                                    <span class="fa fa-facebook"></span>
-                                    <span>Sign in with Facebook</span>
-                                  </a>
-                                </div>
-                                <div class="col-md-5">
-                                  <a href="/smlogin?socialMediaService=twitter" class="btn btn-block btn-social btn-twitter">
-                                    <span class="fa fa-twitter"></span>
-                                    <span>Sign in with Twitter</span>
-                                  </a>
-                              </div>
-                          </div>
-                          <div class="row">
-                            <div class="col-md-5 col-md-offset-1">
-                              <a href="/smlogin?socialMediaService=linkedin" class="btn btn-block btn-social btn-linkedin">
-                                <span class="fa fa-linkedin"></span>
-                                <span>Sign in with LinkedIn</span>
-                              </a>
-                          </div>
-                          <div class="col-md-5">
-                            <a href="/smlogin?socialMediaService=google" class="btn btn-block btn-social btn-google">
-                              <span class="fa fa-google"></span>
-                              <span> Sign in with Google</span>
-                            </a>
-                        </div>
-                      </div>
-                      <div class="row">
-                        <div class="col-md-5 col-md-offset-1">
-                          <a href="/smlogin?socialMediaService=github" class="btn btn-block btn-social btn-github">
-                            <span class="fa fa-github"></span>
-                            <span> Sign in with GitHub</span>
-                          </a>
+										<span class="fa fa-facebook"></span>
+										<span>Sign in with Facebook</span>
+									</a>
+								</div>
+<!--
+								<div class="col-md-5">
+									<a href="/smlogin?socialMediaService=twitter" class="btn btn-block btn-social btn-twitter">
+										<span class="fa fa-twitter"></span>
+										<span>Sign in with Twitter</span>
+									</a>
+								</div>
+-->
+							</div>
+							<div class="row">
+<!--
+								<div class="col-md-5 col-md-offset-1">
+									<a href="/smlogin?socialMediaService=linkedin" class="btn btn-block btn-social btn-linkedin">
+										<span class="fa fa-linkedin"></span>
+										<span>Sign in with LinkedIn</span>
+									</a>
+								</div>
+								<div class="col-md-5">
+									<a href="/smlogin?socialMediaService=google" class="btn btn-block btn-social btn-google">
+										<span class="fa fa-google"></span>
+										<span> Sign in with Google</span>
+									</a>
+								</div>
+-->
+							</div>
+							<div class="row">
+<!--
+								<div class="col-md-5 col-md-offset-1">
+									<a href="/smlogin?socialMediaService=github" class="btn btn-block btn-social btn-github">
+										<span class="fa fa-github"></span>
+										<span> Sign in with GitHub</span>
+									</a>
 
-                        </div>
+								</div>
+-->
 
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-        </div>
-    </div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<script src= "/js/jquery.js"> </script>
-<script src= "/js/oauth.min.js"> </script>
-<script> 
-$(document).ready(function(){
-  $(".btn-facebook").click(function(){
-    alert("Are you sure you want to connect your facebook account with BPO?"");
-    OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
-    OAuth.popup('facebook').done(function(result) {
-        result.me().done(function(data) {
-        console.log(data);
-        data.type = "facebook";
-        $.post("/api_login",data, function(resp){
-          window.location.href = resp.location;
-        },"json");
-        // similar behavior as clicking on a link
+<script src="/js/jquery.js">
+</script>
+<script src="/js/oauth.min.js">
+</script>
+<script>
+	$(document).ready(function () {
+				$(".btn-facebook").click(function () {
+						alert("Are you sure you want to connect your facebook account with BPO?"
+							");
+							OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY'); OAuth.popup('facebook').done(function (result) {
+								result.me().done(function (data) {
+									console.log(data);
+									data.type = "facebook";
+									$.post("/api_login", data, function (resp) {
+										window.location.href = resp.location;
+									}, "json");
+									// similar behavior as clicking on a link
 
-    })
-    })
-    return false;
-  });
+								})
+							}) return false;
+						});
 
-});
-
-
-
+				});
 </script>

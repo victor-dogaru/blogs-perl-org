@@ -411,5 +411,4 @@ $(document).ready(function() {
                 }
             });
     });
-
 });
