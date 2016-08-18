@@ -166,7 +166,7 @@
 
 
 					<!-- Connected Accounts -->
-					<h2>Connected Accounts</h2>
+					<!-- <h2>Connected Accounts</h2>
 					<div class="row connected-accounts">
 						<div class="col-sm-6 col-sm-offset-1">
 							<h3>Facebook</h3>
@@ -250,7 +250,7 @@
 							<span class="fa fa-github">  Connect Github</span>
 						</button>
 					[% END %]
-			</div>
+			</div> -->
 		</div>
 
 	</div>
