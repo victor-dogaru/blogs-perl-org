@@ -358,13 +358,22 @@ post '/api_login' => sub {
       session user    => $user->as_hashref;
       session user_id => $user->id;
       setConnectedAccountsOntoSession();
- 
+
     }    
   
   elsif($flag_oauth == 0 && $flag_users!=0){
-    template 'index',
-    warning {warning => "It seems that the provided email is already in use!"};
-  }
+      my $user = resultset('Users')->find ({ email=> params->{email}});
+
+      my $oauth_entry = resultset('UserOauth')->create ({ 
+                                                user_id => $user->id,
+                                                service_id =>params->{id},
+                                                name => 'Facebook'
+                                                });
+      session user    => $user->as_hashref;
+      session user_id => $user->id;
+      setConnectedAccountsOntoSession();
+
+    }
     my $json = JSON->new;
     $json->allow_blessed(1);
     $json->convert_blessed(1);
