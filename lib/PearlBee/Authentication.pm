@@ -95,7 +95,7 @@ post '/recover-password' => sub {
           config    => config,
           name      => $user->name,
           username  => $user->username,
-          mail_body => "/activation?token=$token",
+          mail_body => "activation?token=$token",
         }
       });
     }
