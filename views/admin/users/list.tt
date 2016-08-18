@@ -128,7 +128,7 @@
 
 							<td> [% user.email %] </td>
 
-							<td> <a href="/blogs/user/[% user.blog_creator %]/slug/[% user.blog_slug %]/name/[% user.blog_name %]">[% user.blog_name %] </a></td>
+							<td> <a href="/blogs/user/[% user.blog_creator %]/blogname/[% user.blog_name %]">[% user.blog_name %] </a></td>
 
 							<td> [% user.register_date %] </td>
 
