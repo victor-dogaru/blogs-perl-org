@@ -403,7 +403,7 @@ post '/connect_account' => sub {
   if ($flag_oauth == 0){
       my $oauth_entry = resultset('UserOauth')->create ({ 
                                                 user_id => $user->id,
-                                                service_id =>params->{id},
+                                                service_id =>params->id,
                                                 name => 'Facebook'
                                                 });
       session user    => $user->as_hashref;
@@ -412,7 +412,7 @@ post '/connect_account' => sub {
   else {
     resultset('UserOauth')->find({
         name    => "Facebook",
-        user_id => $user->{id}
+        user_id => $user->id
       })->delete();
     session user    => $user->as_hashref;
     setConnectedAccountsOntoSession();
