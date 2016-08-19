@@ -1,5 +1,6 @@
 [% SET global.template_name = 'profile' %]
 [% connectedAccounts = session.connectedAccounts %]
+[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 
 [% facebook = 0 %]
 [% twitter = 0 %]
@@ -94,7 +95,7 @@
 					<h5>Edit your profile</h5>
 				</div>
 				<div class="col-sm-3 col-sm-offset-3 links-group">
-					<a href="/author/posts/add" class="write_post"><button class="write-post dark-button">Write a post</button></a>
+					<a href="/[%role%]/posts/add" class="write_post"><button class="write-post dark-button">Write a post</button></a>
 				</div>
 			</div>
 

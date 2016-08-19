@@ -195,17 +195,15 @@ post '/admin/posts/add' => sub {
           #
           my $user             = session('user');
           my $user_obj         = resultset('Users')->find_by_session(session);
+          my $blog_name        = params->{'posts_blog_name'};
+          my $blog = resultset('Blog')->find ({
+                                        name => $blog_name
+            });
+
           my ($slug, $changed) = resultset('Post')->check_slug( params->{slug} );             
           my $cover_filename;
-          my @blog_owners      = resultset('BlogOwner')->search({ user_id => $user_obj->id});
-          my @blogs; 
-          my $blog;
-          for my $blog_owner ( @blog_owners ) {
-		  push @blogs, map { $_->as_hashref }
-                   resultset('Blog')->search({ id => $blog_owner->blog_id });
-	 }
-          $blog = $blogs[0];     
-          session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
+          
+         session warning => 'The slug was already taken but we generated a similar slug for you! Feel free to change it as you wish.' if ($changed);
 
           # Upload the cover image first so we'll have the generated filename ( if exists )
           if ( upload('cover') ) {
@@ -227,7 +225,7 @@ post '/admin/posts/add' => sub {
               status  => params->{status},
               cover   => ( $cover_filename ) ? $cover_filename : '',
               type    => params->{type} || 'HTML',
-              blog_id => $blog->{id},
+              blog_id => $blog->id,
           };
           $post = resultset('Post')->can_create($params);
   
@@ -239,7 +237,8 @@ post '/admin/posts/add' => sub {
     }
     catch {
       info $_;
-      error "Could not addd post";
+
+      error "Could not addd post".$_;
     };
 
     # If the post was added successfully, store a success message to show on the view
