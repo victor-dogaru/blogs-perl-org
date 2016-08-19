@@ -374,10 +374,45 @@ post '/api_login' => sub {
       setConnectedAccountsOntoSession();
 
     }
+    else {
+    my $oauth_entry = resultset('UserOauth')->find({ service_id => params->{id}});
+    my $user        = resultset('Users')->find ({ id=>$oauth_entry->user_id});
+
+    session user    => $user->as_hashref;
+    session user_id => $user->id;
+    setConnectedAccountsOntoSession();
+    }
+
     my $json = JSON->new;
     $json->allow_blessed(1);
     $json->convert_blessed(1);
     $json->encode( {location => '/'} );
+};
+
+=head2 /connect_account route
+
+method to connect a BPO account to a facebook, twitter etc account,
+even if the mails are different
+
+=cut
+
+post '/connect_account' => sub {
+
+  my $user       = resultset('Users')->find_by_session(session);
+  my $flag_oauth = resultset('UserOauth')->search({ service_id => params->{id}})->count;
+  if ($flag_oauth == 0){
+      my $oauth_entry = resultset('UserOauth')->create ({ 
+                                                user_id => $user->id,
+                                                service_id =>params->{id},
+                                                name => 'Facebook'
+                                                });
+  }
+  else {
+    resultset('UserOauth')->find({
+        name    => "Facebook",
+        user_id => $user->{id}
+      })->delete();
+  }
 };
 
 =head2 /logout route

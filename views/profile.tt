@@ -166,7 +166,7 @@
 
 
 					<!-- Connected Accounts -->
-					<!-- <h2>Connected Accounts</h2>
+					<h2>Connected Accounts</h2>
 					<div class="row connected-accounts">
 						<div class="col-sm-6 col-sm-offset-1">
 							<h3>Facebook</h3>
@@ -184,7 +184,7 @@
 							[% END %]
 					</div>
 				</div>
-				<div class="row connected-accounts">
+				<!--<div class="row connected-accounts">
 					<div class="col-sm-6 col-sm-offset-1">
 						<h3>Twitter</h3>
 						<p>We will never post to Twitter or message your friends without your permission</p>
@@ -259,3 +259,28 @@
 	</div>
  </div>
 </div>
+
+<script src= "/js/jquery.js"> </script>
+<script src= "/js/oauth.min.js"> </script>
+<script> 
+$(document).ready(function(){
+  $(".btn-facebook").click(function(){
+    alert("Are you sure you want to connect your facebook account with BPO?");
+    OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
+    OAuth.popup('facebook').done(function(result) {
+        result.me().done(function(data) {
+        console.log(data);
+        data.type = "facebook";
+        $.post("/connect_account",data, function(resp){
+          window.location.href = resp.location;
+        },"json");
+        // similar behavior as clicking on a link
+
+    })
+    })
+    return false;
+  });
+
+});
+
+</script>
