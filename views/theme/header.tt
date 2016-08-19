@@ -1,3 +1,5 @@
+[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+
 <div class="cookies">
   <div class="container">
     <div class="cookie"><button type="button" class="closeCookie">×</button>This site uses cookies. By continuing to browse the site you are agreeing to our use of cookies.
@@ -47,13 +49,13 @@
             </div>
             <div class="dropdown-menu dropdown-login logged_in">
               <div class="links-group header-menu-links write-post">
-                <a href="/author/posts/add" class="pull-left">Write a post</a>
+                <a href="/[%role%]/posts/add" class="pull-left">Write a post</a>
               </div>
               <div class="links-group header-menu-links">
                 <a href="/profile" class="pull-left">Profile</a>
               </div>
               <div class="links-group header-menu-links">
-                <a href="/author/posts" class="pull-left">Dashboard</a>
+                <a href="/[%role%]/posts" class="pull-left">Dashboard</a>
               </div>
               <div class="links-group log-out">
                 <a href="/logout" class="pull-left">Log Out</a>
@@ -135,7 +137,7 @@
 <script> 
 $(document).ready(function(){
   $(".facebook-header").click(function(){
-    alert("Are you sure you want to log in with your facebook account on BPO?");
+    alert("Are you sure you want to connectyyyy your facebook account with BPO?");
     OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
     OAuth.popup('facebook').done(function(result) {
         result.me().done(function(data) {
@@ -155,4 +157,4 @@ $(document).ready(function(){
 
 
 
-</script>
+</script>s
