@@ -1,6 +1,7 @@
 [% SET global.template_name = 'notification' %]
 
 [% INCLUDE layouts/admin.tt %]
+[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 
    <div class="container">
       <div class="mainy">
@@ -17,8 +18,8 @@
       				<h3>&nbsp;<i class="fa fa-commenting" aria-hidden="true"></i> <b class="commentsNr"></b></h3>
       			</div>
             <div class="awidget-body">
-              <a href="/admin/comments">Go to comments Administration</a>
-              <a href="/admin/comments" class="pull-right"><i class="fa fa-arrow-circle-right custom-fonts" aria-hidden="true"></i></a>
+              <a href="/[%role%]/comments">Go to comments Administration</a>
+              <a href="/[%role%]/comments" class="pull-right"><i class="fa fa-arrow-circle-right custom-fonts" aria-hidden="true"></i></a>
             </div>
       		</div>
       	</div>

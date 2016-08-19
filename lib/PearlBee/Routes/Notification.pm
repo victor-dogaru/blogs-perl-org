@@ -24,7 +24,18 @@ get '/notification' => sub {
   my $res_user = resultset('Users')->find_by_session(session);
   my $counter  = resultset('Notification')->search({
   user_id      => $res_user->id,
-  name         => { '!=' => 'response'}
+  name         =>  'changed role'
+  })->count;
+   $counter   += resultset('Notification')->search({
+  user_id      => $res_user->id,
+  name         =>  'comment',
+  viewed       => 0
+  })->count;
+
+  $counter    += resultset('Notification')->search({
+  user_id      => $res_user->id,
+  name         =>  'invitation',
+  viewed       => 0
   })->count;
   $counter     += resultset('Notification')->search({
   sender_id    => $res_user->id,

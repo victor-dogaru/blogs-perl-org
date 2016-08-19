@@ -20,9 +20,9 @@
 					[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 					All ([% all %]) |
 					<!--
-              <a href="/admin/blogs/published/page/1"> Published </a>([% publish %]) | 
-              <a href="/admin/blogs/draft/page/1"> Draft </a>([% draft %]) | 
-              <a href="/admin/blogs/trash/page/1"> Trash </a>([% trash %])
+              <a href="/[%role%]/blogs/published/page/1"> Published </a>([% publish %]) | 
+              <a href="/[%role%]/blogs/draft/page/1"> Draft </a>([% draft %]) | 
+              <a href="/[%role%]/blogs/trash/page/1"> Trash </a>([% trash %])
 -->
 
 					<table class="table table-hover table-bordered ">
@@ -67,7 +67,7 @@
 
 								<td width="11%">
 									[% IF blog.role_in_blog == '1' %]
-									<a href="/blogs/user/[% blog.blog_creator.username %]/slug/[%blog.slug%]/name/[%blog.name%]	">
+									<a href="/blogs/user/[% blog.blog_creator.username %]/blogname/[%blog.name%]	">
 										<button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button>
 									</a>
 									<a href="/[% role %]/posts/edit/[% post.slug %]">
@@ -77,7 +77,7 @@
 										<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 									</a>
 									[% ELSE %]
-									<a href="/blogs/user/[% blog.blog_creator.username %]/slug/[%blog.slug%]/name/[%blog.name%]	">
+									<a href="/blogs/user/[% blog.blog_creator.username %]/blogname/[%blog.name%]	">
 										<button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button>
 									</a>
 									[% END %]
