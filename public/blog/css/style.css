@@ -469,6 +469,12 @@ strong{
    color: #0fa6bc;
    border: 1px solid #0fa6bc;
 }
+.links-group .social-media-btn {
+/*	cand o sa mearga toate social media buttons, lasa margin-left de 20px*/
+/*	margin-left: 20px;*/
+	margin-left: 5px;
+	float: left;
+}
 /*END header and logo*/
 
 /* Navigation */

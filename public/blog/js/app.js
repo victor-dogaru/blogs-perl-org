@@ -234,9 +234,13 @@ $(document).ready(function() {
         $('.blog-post').css('min-height', $(window).height()-$('.blog-comment').height()-$('footer').height()-80);
     });
     //Listing page
-    $('.blog').css('min-height', $(window).height()-$('footer').height()-45);
+    $('.blog').css('min-height', $(window).height()-$('header').height()-80);
     $(window).resize(function(){
-        $('.blog').css('min-height', $(window).height()-$('footer').height()-45);
+        $('.blog').css('min-height', $(window).height()-$('header').height()-80);
+    });
+    $('.listings').css('min-height', $(window).height()-$('header').height()-$('footer').height()-165);
+    $(window).resize(function(){
+        $('.listings').css('min-height', $(window).height()-$('header').height()-$('footer').height()-165);
     });
 
     //Pages page
