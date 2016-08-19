@@ -417,7 +417,7 @@ post '/connect_account' => sub {
     session user    => $user->as_hashref;
     setConnectedAccountsOntoSession();
   }
-  return template '/profile';
+  return template 'profile';
 };
 
 =head2 /logout route
