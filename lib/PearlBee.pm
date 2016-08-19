@@ -76,14 +76,26 @@ hook before => sub {
   if ( $user_obj ) {
     my $counter  = resultset('Notification')->search({
     user_id      => $user_obj->id,
-    name         => { '!=' => 'response'}
+    name         =>  'changed role'
+    })->count;
+     $counter   += resultset('Notification')->search({
+    user_id      => $user_obj->id,
+    name         =>  'comment',
+    viewed       => 0
+    })->count;
+
+    $counter    += resultset('Notification')->search({
+    user_id      => $user_obj->id,
+    name         =>  'invitation',
+    viewed       => 0
     })->count;
     $counter     += resultset('Notification')->search({
     sender_id    => $user_obj->id,
     name         => 'response'
     })->count;
+
     session total => $counter;
-    }
+  }
 };
 
 =head2 /theme

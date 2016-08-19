@@ -46,13 +46,16 @@ get '/api/notification/comment/user/:username/page/:page' => sub {
   my @notifications =
     resultset('Notification')->search(
       { user_id  => $user->id,
-        name     => 'comment' },
+        name     => 'comment',
+        viewed   => 0 },
       { rows     => config->{api}{notification}{comment}{max_rows},
         page     => $page,
         order_by => { -desc => 'created_date' } }
     );
   my $count_comments = resultset('Notification')->search({
-  user_id => $user->id, name => 'comment'
+                      user_id => $user->id, 
+                      name    => 'comment',
+                      viewed  => 0
   })->count;
 
   my %data;
