@@ -406,13 +406,18 @@ post '/connect_account' => sub {
                                                 service_id =>params->{id},
                                                 name => 'Facebook'
                                                 });
+      session user    => $user->as_hashref;
+      setConnectedAccountsOntoSession();
   }
   else {
     resultset('UserOauth')->find({
         name    => "Facebook",
         user_id => $user->{id}
       })->delete();
+    session user    => $user->as_hashref;
+    setConnectedAccountsOntoSession();
   }
+  return template '/profile';
 };
 
 =head2 /logout route
