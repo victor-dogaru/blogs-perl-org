@@ -238,9 +238,9 @@ $(document).ready(function() {
     $(window).resize(function(){
         $('.blog').css('min-height', $(window).height()-$('header').height()-80);
     });
-    $('.listings').css('min-height', $(window).height()-$('header').height()-$('footer').height()-165);
+    $('.blog.blogs .listings').css('min-height', $(window).height()-$('header').height()-$('footer').height()-165);
     $(window).resize(function(){
-        $('.listings').css('min-height', $(window).height()-$('header').height()-$('footer').height()-165);
+        $('.blog.blogs .listings').css('min-height', $(window).height()-$('header').height()-$('footer').height()-165);
     });
 
     //Pages page
