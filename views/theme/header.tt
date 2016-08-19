@@ -79,7 +79,7 @@
               <div class="row">
                   <div class="col-md-2 col-md-offset-1">
                     <a href="/smlogin?socialMediaService=facebook" class="btn btn-social btn-block btn-xs btn-social-icon btn-facebook">
-                      <span class="fa fa-facebook"></span>
+                      <span class="fa fa-facebook facebook-header"></span>
                     </a>
                   </div>
 <!--
@@ -134,8 +134,8 @@
 <script src= "/js/oauth.min.js"> </script>
 <script> 
 $(document).ready(function(){
-  $(".btn-facebook").click(function(){
-    alert("Are you sure you want to connect your facebook account with BPO?");
+  $(".facebook-header").click(function(){
+    alert("Are you sure you want to log in with your facebook account on BPO?");
     OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
     OAuth.popup('facebook').done(function(result) {
         result.me().done(function(data) {
