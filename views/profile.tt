@@ -184,7 +184,7 @@
 							[% END %]
 					</div>
 				</div>
-				<!--<div class="row connected-accounts">
+	<!-- 			<div class="row connected-accounts">
 					<div class="col-sm-6 col-sm-offset-1">
 						<h3>Twitter</h3>
 						<p>We will never post to Twitter or message your friends without your permission</p>
@@ -282,5 +282,7 @@ $(document).ready(function(){
   });
 
 });
+
+
 
 </script>
