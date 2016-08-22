@@ -399,25 +399,35 @@ even if the mails are different
 post '/connect_account' => sub {
 
   my $user       = resultset('Users')->find_by_session(session);
+   
   my $flag_oauth = resultset('UserOauth')->search({ service_id => params->{id}})->count;
+  my $message = "";
+  my $status = 0;
   if ($flag_oauth == 0){
       my $oauth_entry = resultset('UserOauth')->create ({ 
                                                 user_id => $user->id,
                                                 service_id =>params->{id},
                                                 name => 'Facebook'
                                                 });
-      session user    => $user->as_hashref;
-      setConnectedAccountsOntoSession();
+
+      $message = "Disconnect account";
+      $status = 1;
   }
   else {
+
     resultset('UserOauth')->find({
         name    => "Facebook",
         user_id => $user->id
       })->delete();
-    session user    => $user->as_hashref;
-    setConnectedAccountsOntoSession();
+
+    $message = "Connect account"; 
   }
-  return template 'profile';
+  setConnectedAccountsOntoSession();
+    my $json = JSON->new;
+    $json->allow_blessed(1);
+    $json->convert_blessed(1);
+    $json->encode( {message => $message, status => $status} );
+    
 };
 
 =head2 /logout route
