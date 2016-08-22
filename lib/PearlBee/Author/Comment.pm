@@ -19,16 +19,26 @@ get '/author/comments/page/:page' => sub {
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my @blogs;
-  my $user       = resultset('Users')->find_by_session(session);
-  my @comments   = resultset('View::UserComments')->search({}, { bind => [ $user->id ], order_by => \"comment_date DESC", rows => $nr_of_rows, page => $page });
-  my $count      = resultset('View::Count::StatusCommentAuthor')->search({}, { bind => [ $user->id ] })->first;
+  my $user        = resultset('Users')->find_by_session(session);
+  my @comments    = resultset('View::UserComments')->search({}, { bind => [ $user->id ], order_by => \"comment_date DESC", rows => $nr_of_rows, page => $page });
+  my $count       = resultset('View::Count::StatusCommentAuthor')->search({}, { bind => [ $user->id ] })->first;
   my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
   for my $blog_owner ( @blog_owners ) {
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });
   }
   my ($all, $approved, $trash, $spam, $pending) = $count->get_all_status_counts;
+  my $now = DateTime->now;
+  foreach my $iterator (@comments){
+    my $comment      = resultset('Comment')->find ({ id => $iterator->id });
 
+    my $notification = resultset('Notification')->search ({
+                              name        => 'comment',  
+                              generic_id  => $comment->id,
+                              user_id     => $user->id,
+                              viewed      => 0 })
+                                ->update({ viewed=>1, read_date=> $now });
+  }
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
   my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/comments');
