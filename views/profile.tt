@@ -95,7 +95,7 @@
 					<h5>Edit your profile</h5>
 				</div>
 				<div class="col-sm-3 col-sm-offset-3 links-group">
-					<a href="/[%role%]/posts/add" class="write_post"><button class="write-post dark-button">Write a post</button></a>
+					<a href="/[%%]/posts/add" class="write_post"><button class="write-post dark-button">Write a post</button></a>
 				</div>
 			</div>
 
@@ -174,15 +174,16 @@
 							<p>We will never post to Facebook or message your friends without your permission</p>
 						</div>
 						<div class="col-sm-4">
+						<button class="btn btn-facebook" type="button" id ='connect_acc' data-toggle="collapse"  aria-expanded="false" >
+						<span class="fa fa-facebook" id="msg">
+
 							[% IF facebook == 1 %]
-								<button class="btn btn-facebook" id ='connect_acc' type="button" data-toggle="collapse"  aria-expanded="false"">
-									<span class="fa fa-facebook">  Disconnect Facebook</span>
-								</button>
-							[% ELSE %]
-								<button class="btn btn-facebook" type="button" id ='connect_acc' data-toggle="collapse"  aria-expanded="false" >
-									<span class="fa fa-facebook">  Connect Facebook</span>
-								</button>
+									 Disconnect Facebook								
+							[% ELSE %]								
+									Connect Facebook
 							[% END %]
+							</span>
+							</button>
 					</div>
 				</div>
 	<!-- 			<div class="row connected-accounts">
@@ -263,24 +264,33 @@
 
 <script src= "/js/jquery.js"> </script>
 <script src= "/js/oauth.min.js"> </script>
-<script> 
+<script>
+ var client = client || {};
+client.status = [% facebook %];
 $(document).ready(function(){
 	 document.getElementById("connect_acc").onclick=
  (function(){
-    alert("Are you sure you want to connect your facebook account with BPO?");
+ 	if(client.status === 1){
+ 		alert("Are you sure you want to disconnect your facebook account with BPO?");
+ 	}else{
+ 		alert("Are you sure you want to connect your facebook account with BPO?");
+ 	}
+    
     OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
     OAuth.popup('facebook').done(function(result) {
         result.me().done(function(data) {
-        console.log(data);
         data.type = "facebook";
         $.post("/connect_account",data, function(resp){
-          window.location.href = resp.location;
+          $("#msg").text(resp.message);
+          client.status = resp.status;      
         },"json");
         // similar behavior as clicking on a link
-
+        // window.location.href = resp.location;
     })
     })
+    
     return false;
+
   });
 
 });
