@@ -252,7 +252,7 @@ post '/profile-image' => sub {
 =cut
 
 post '/blog-image/:size/blog/:blogname' => sub {
-
+  
   my $size        = route_parameters->{'size'};
   my $blogname    = route_parameters->{'blogname'};
   my $file        = params->{'file'};
@@ -260,33 +260,45 @@ post '/blog-image/:size/blog/:blogname' => sub {
   my $folder_path = config->{'blog_pics'};
   my $user        = resultset('Users')->find_by_session(session);
   my $params      = params;
-
+  
   my @timezones = DateTime::TimeZone->all_names;
   my $user_obj  = resultset('Users')->find_by_session(session);
+  
   my @blogs;
-  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
-  for my $blog_owner (@blog_owners){
-    push @blogs, resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
-  }
-  @blogs = map { $_->as_hashref } @blogs;
-
-  unless ( $user and $user->can_do( 'update blog' ) ) {
-    warn "***** Redirecting guest away from /blog-image/slug/:slug/user/:username'";
-    return template 'blog', {
-      warning => "You are not allowed to update this user"
-    }, { layout => 'admin' };
-  }
-
+  my $flag = 0;
   my $blog = resultset('Blog')-> find({
               name => $blogname
   });
+  if (!$user->is_admin){
 
-  my $flag = resultset('BlogOwner')-> find({
-              blog_id => $blog->id,
-              user_id => $user->id,
-              });
+    my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin => 1});
+    for my $blog_owner (@blog_owners){
+      push @blogs, resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
+    }
+    @blogs = map { $_->as_hashref } @blogs;
 
-  if ( $blog && $flag->is_admin) {
+    unless ( $user and $user->can_do( 'update blog' ) ) {
+      warn "***** Redirecting guest away from /blog-image/slug/:slug/user/:username'";
+      return template 'blog', {
+        warning => "You are not allowed to update this user"
+      }, { layout => 'admin' };
+    }
+    my $entry = resultset('BlogOwner')-> find({
+                blog_id => $blog->id,
+                user_id => $user->id,
+                });
+    if ($entry->is_admin) {
+      $flag = 1;
+    }
+   
+  }
+  else {
+
+    @blogs = resultset('Blog')->all();
+    $flag = 1;
+  }
+
+  if ( $blog && $flag )   {
     my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
                             $size,
@@ -336,7 +348,7 @@ post '/blog-image/:size/blog/:blogname' => sub {
       },
       { layout => 'admin' };
   }
-  elsif (!$flag->is_admin) {
+  elsif ( !($flag) ) {
     template 'admin/settings/index',
       {
         timezones => \@timezones,
