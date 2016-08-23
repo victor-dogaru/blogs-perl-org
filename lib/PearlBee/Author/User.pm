@@ -252,6 +252,17 @@ get '/author/users/blog/:blog/page/:page' => sub {
   my $is_admin   = defined params->{is_admin} ? params->{is_admin} : "all";
   
   my $user_obj   = resultset('Users')->find_by_session(session);
+  
+  if (!$user_obj->is_admin){
+    my $flag       = resultset ('BlogOwner')-> search ({ 
+                                          blog_id => $blog->id,
+                                          user_id =>$user_obj->id, 
+                                          is_admin=>1})->count();
+    if ($flag == 0) {
+      redirect ("/");
+    }
+  }
+  
   my @blogs;
   my @blogs_aux;
   my @users;
