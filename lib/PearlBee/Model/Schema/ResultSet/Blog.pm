@@ -23,10 +23,13 @@ sub create_with_slug {
   $slug      = $args->{slug} if $args->{slug} and $args->{slug} ne '';
 
   $schema->resultset('Blog')->create({
-    name        => $args->{name},
-    description => $args->{description},
-    timezone    => $args->{timezone},
-    slug        => $slug,
+    name            => $args->{name},
+    description     => $args->{description},
+    timezone        => $args->{timezone},
+    social_media    => $args->{social_media},
+    multiuser       => $args->{multiuser},
+    accept_comments => $args->{accept_comments},
+    slug            => $slug,
   });
 }
 

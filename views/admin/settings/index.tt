@@ -33,13 +33,13 @@
 							</div>
 							<h5>Blog name</h5>
 
-							<input class="form-control" required name="blog_name" type="text" placeholder="Name" value="[% setting.blog_name %]">
+							<input class="form-control"  name="blog_name" type="text" placeholder="Name" >
 
 							<hr />
 
 							<h5>Blog Description</h5>
 
-							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
+							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" ></textarea>
 
 
 							<hr />
