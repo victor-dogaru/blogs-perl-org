@@ -297,9 +297,9 @@ post '/create-blog' => sub{
         description     => $params->{blog_description},
         timezone        => $params->{timezone},
         slug            => $params->{blog_url},
-        social_media    => $params->{newblog_social_media},
-        multiuser       => $params->{newblog_multiuser},
-        accept_comments => $params->{newblog_comments},
+        social_media    => $params->{newblog_social_media} eq 'on' ? 1 : 0,
+        multiuser       => $params->{newblog_multiuser} eq 'on' ? 1 : 0 ,
+        accept_comments => $params->{newblog_comments} eq 'on' ? 1 : 0,
       });
 
       my $blog_owner = resultset('BlogOwner')->create({

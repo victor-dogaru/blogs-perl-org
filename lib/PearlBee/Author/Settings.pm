@@ -28,12 +28,27 @@ post '/blog/profile' => sub {
   my $new_columns = { };
   my @message;
   my $blog        = resultset('Blog')->find({ name => $params->{'current_name'} });
-  my $flag        = resultset('BlogOwner')->find ({
+  my $owner       = resultset('BlogOwner')->find ({
                       blog_id =>$blog->id,
                       user_id=>$res_user->id
                       });
+  my $flag = 0;
 
-  if ($flag->is_admin){
+  if ($res_user->is_admin){
+    $flag = 1;
+    @blogs = resultset('Blog')->all();
+  }
+  else{
+      my $owner       = resultset('BlogOwner')->find ({
+                      blog_id =>$blog->id,
+                      user_id=>$res_user->id
+                      });
+      if ($owner->is_admin) {
+        $flag = 1;
+      }
+  }
+
+  if ($flag){
 
     if ($params->{'blog_name'}){
 
@@ -44,27 +59,36 @@ post '/blog/profile' => sub {
       else {
         $new_columns->{'name'} = $params->{'blog_name'};
       }
-    }
+      }
 
       if ($params->{'blog_description'}){
 
         $new_columns->{'description'} = $params->{'blog_description'};
       }
 
-      if ($params->{'social_media'}){
+      if ($params->{'social_media'} eq 'on'){
             
-          $new_columns->{'social_media'} = $params->{'social_media'};
+          $new_columns->{'social_media'} = 1;
+      }
+      else{
+        $new_columns->{'social_media'} = 0;
       }
         
-      if ($params->{'multiuser'}){
+      if ($params->{'multiuser'} eq 'on'){
             
-          $new_columns->{'multiuser'} = $params->{'multiuser'};
+          $new_columns->{'multiuser'} = 1;
+      }
+      else{
+        $new_columns->{'multiuser'} = 0;
       }
          
-      if ($params->{'accept_comments'}){
+      if ($params->{'accepting_comments'} eq 'on'){
             
-          $new_columns->{'accept_comments'} = $params->{'accepting_comments'};
-      } 
+          $new_columns->{'accept_comments'} = 1;
+      }
+      else{
+        $new_columns->{'accept_comments'} = 0;
+      }
 
       if ($params->{'timezone'}){
             
@@ -76,14 +100,14 @@ post '/blog/profile' => sub {
         $blog->update( $new_columns );
 
         if ( !@message ) {
-
-          for my $blog_owner (@blog_owners){
-            push @blogs, resultset('Blog')->search({ 
-                          id => $blog_owner->get_column('blog_id')
-                          });
-          }
-          @blogs    = map { $_->as_hashref } @blogs;
-          
+            if (!$res_user->is_admin){
+              for my $blog_owner (@blog_owners){
+                push @blogs, resultset('Blog')->search({ 
+                              id => $blog_owner->get_column('blog_id')
+                              });
+              }
+              @blogs    = map { $_->as_hashref } @blogs;
+            }
           template 'admin/settings/index.tt', 
           {
           timezones => \@timezones,
@@ -94,13 +118,14 @@ post '/blog/profile' => sub {
         }
 
         else {
-
-          for my $blog_owner (@blog_owners){
-            push @blogs, resultset('Blog')->search({ 
-                        id => $blog_owner->get_column('blog_id')
-                        });
-          }
-          @blogs    = map { $_->as_hashref } @blogs;     
+          if (!$res_user->is_admin){
+            for my $blog_owner (@blog_owners){
+                push @blogs, resultset('Blog')->search({ 
+                            id => $blog_owner->get_column('blog_id')
+                            });
+              }          
+            @blogs    = map { $_->as_hashref } @blogs;
+          }     
           template 'admin/settings/index.tt', 
           {
           timezones => \@timezones,
@@ -112,13 +137,14 @@ post '/blog/profile' => sub {
       }
 
       else {
-
-        for my $blog_owner (@blog_owners){
-          push @blogs, resultset('Blog')->search({ 
-                       id => $blog_owner->get_column('blog_id')
-                       });
-        }
-        @blogs    = map { $_->as_hashref } @blogs;     
+        if (!$res_user->is_admin){
+          for my $blog_owner (@blog_owners){
+            push @blogs, resultset('Blog')->search({ 
+                         id => $blog_owner->get_column('blog_id')
+                         });
+          }
+          @blogs    = map { $_->as_hashref } @blogs;  
+        }   
         template 'admin/settings/index.tt', 
         {
         timezones => \@timezones,
@@ -130,13 +156,14 @@ post '/blog/profile' => sub {
 
   }
     else {
+      if (!$res_user->is_admin){
       for my $blog_owner (@blog_owners){
         push @blogs, resultset('Blog')->search({ 
                     id => $blog_owner->get_column('blog_id')
                     });
       }
       @blogs = map { $_->as_hashref } @blogs; 
-
+      }
       template 'admin/settings/index.tt', 
       {
       timezones => \@timezones,
