@@ -245,19 +245,12 @@ List all users grouped by blog's name, role and status.
 
 get '/author/users/blog/:blog/page/:page' => sub {
 
-
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $blog       = resultset('Blog')->find({ name => params->{blog} });
-  my $status     = params->{status};
-  my $role       = params->{role};
-  my $flag;
-  if ($role eq 'admin') {
-    $flag = 1;
-  }
-    else {
-     $flag = 0; 
-  }
+  my $status     = params->{status} || "active";
+  my $is_admin   = defined params->{is_admin} ? params->{is_admin} : "all";
+  
   my $user_obj   = resultset('Users')->find_by_session(session);
   my @blogs;
   my @blogs_aux;
@@ -294,15 +287,9 @@ get '/author/users/blog/:blog/page/:page' => sub {
   @blogs = map { $_->as_hashref } @blogs;
 
   my $filter = {};
-  foreach my $iterator ( "is_admin", "status"){
-      if (params->{$iterator} ne 'all'){
-        $filter->{$iterator} = params->{$iterator};
-      }
-  }
 
-  $filter->{"u.status"} = $filter->{status};
-  undef $filter->{status};
-  delete $filter->{status};
+  $filter->{is_admin} = $is_admin if($is_admin ne "all");
+  $filter->{"u.status"} = $status if($status ne "all");
 
   push @blogs_aux, 
                 resultset('BlogOwner')->search ({ 
@@ -343,11 +330,17 @@ get '/author/users/blog/:blog/page/:page' => sub {
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_users, $posts_per_page, $current_page, $pages_per_set);
   my @actual_users    = splice(@users,($page-1)*$nr_of_rows,$nr_of_rows);
-
+  my @all_blogs;
+  
+  foreach my $iterator (@blog_owners){
+    push @all_blogs, resultset('Blog')->search ({ id=>$iterator->get_column('blog_id') });
+  }
+ 
   template 'admin/users/list',
     {
       users         => \@actual_users,
       blogs         => \@blogs,
+      all_blogs     => \@all_blogs,
       all           => $all, 
       page          => $page,
       next_link     => $next_link,
