@@ -14,20 +14,21 @@
 				</div>
 				<div class="awidget-body">
 
-                  [% INCLUDE components/alerts.tt %]
+					[% INCLUDE components/alerts.tt %]
 
-                  <form class="form-horizontal" role="form" method="post" action='/add-contributor/blog'>
-                                  <div class="btn-group">
-                <!-- <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select time zone <span class="caret"></span></button> -->
-                <select name="blog_name" class="chosen-select">
-                    [% FOREACH blog IN blogs %]
-                    [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-                    <option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
-                    [% END %]
-                </select>
+					<form class="form-horizontal" role="form" method="post" action='/add-contributor/blog'>
 
-              </div>
-
+						<div class="form-group choose-blog">
+							<label class="col-lg-2 control-label">Blog</label>
+							<div class="options-drop col-lg-10">
+								<select id="comments_blogs" name="comments_blog_name" class="chosen-select" onChange="getBlog(this.value); window.location.href=this.value;">
+									<option value="" id="selected"> </option>
+									[% FOREACH blog IN blogs %] [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+									<option [% selected %] name="[% blog.name %]" value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> [% blog.name %] </option>
+									[% END %]
+								</select>
+							</div>
+						</div>
 
 						<div class="form-group">
 							<label class="col-lg-2 control-label">Email</label>
