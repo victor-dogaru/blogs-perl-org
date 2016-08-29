@@ -319,7 +319,8 @@ get '/admin/posts/edit/:slug' => sub {
       $params->{success} = session('success');
       session success => undef;
     }
-
+    delete $user->{password};
+    
     template 'admin/posts/edit', $params, { layout => 'admin' };
 
 };

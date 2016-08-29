@@ -384,15 +384,15 @@ get '/author/posts/edit/:slug' => sub {
   # Delete them after stored on the stash
   if ( session('warning') ) {
     $params->{warning} = session('warning');
-    #session warning => undef
-    delete session->{'warning'};    
+    session warning => undef
+    #delete session->{'warning'};    
   }
   elsif ( session('success') ) {
     $params->{success} = session('success');
-    #session success => undef;
-    delete session->{'success'};    
+    session success => undef;
+    #delete session->{'success'};    
   }
-
+  delete $user->{password};
   template 'admin/posts/edit', $params, { layout => 'admin' };
 
 };
