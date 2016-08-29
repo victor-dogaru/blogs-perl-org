@@ -94,9 +94,12 @@ sub create_hashed_with_blog {
   my $user   = $schema->resultset('Users')->create_hashed( $args );
 
   my $blog   = $schema->resultset('Blog')->create_with_slug({
-    name        => $args->{name},
-    description => $args->{description} // "My pretty blog",
-    timezone    => $args->{timezone} // strftime("%Z", localtime()),
+    name            => $args->{name},
+    social_media    => 1,
+    multiuser       => 1,
+    accept_comments => 1,
+    description     => $args->{description} // "My pretty blog",
+    timezone        => $args->{timezone} // strftime("%Z", localtime()),
   });
 
   $schema->resultset('BlogOwner')->create({
