@@ -21,10 +21,10 @@
 						<div class="form-group choose-blog">
 							<label class="col-lg-2 control-label">Blog</label>
 							<div class="options-drop col-lg-10">
-								<select id="comments_blogs" name="comments_blog_name" class="chosen-select" onChange="getBlog(this.value); window.location.href=this.value;">
+								<select id="blog_for_users" name="add_new_user" class="chosen-select">
 									<option value="" id="selected"> </option>
 									[% FOREACH blog IN blogs %] [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-									<option [% selected %] name="[% blog.name %]" value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> [% blog.name %] </option>
+									<option [% selected %] name="[% blog.name %]"> [% blog.name %] </option>
 									[% END %]
 								</select>
 							</div>
