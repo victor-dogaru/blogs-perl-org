@@ -255,6 +255,7 @@ post '/blog-image/:size/blog/:blogname' => sub {
   
   my $size        = route_parameters->{'size'};
   my $blogname    = route_parameters->{'blogname'};
+  utf8::decode($blogname);
   my $file        = params->{'file'};
   my $upload_dir  = "/" . config->{'blog-avatar'}{'path'};
   my $folder_path = config->{'blog_pics'};

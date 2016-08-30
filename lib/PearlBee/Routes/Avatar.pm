@@ -76,6 +76,7 @@ Avatar for each blog
 get '/blog_avatar/:blogname' => sub{
   my $blog_name = route_parameters->{'blogname'};
   my $avatar_config = config->{'blog-avatar'};
+  utf8::decode($blog_name);
   my $blog      = resultset('Blog')->find ({ name => $blog_name});
   my $avatar_path   = $avatar_config->{'default'}{'dark'}{'large'};
   my $theme         = session( 'theme' );

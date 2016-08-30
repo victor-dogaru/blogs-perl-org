@@ -21,6 +21,13 @@ sub create_with_slug {
   my $schema = $self->result_source->schema;
   my $slug   = string_to_slug( $args->{description} );
   $slug      = $args->{slug} if $args->{slug} and $args->{slug} ne '';
+  
+  #Just a provisory version, due to the fact that I believe that
+  # we need to set the utf8 flag because of html. 
+  #Even if it seems redundant, the utf8 decode function is necessary for now.
+  utf8::decode($args->{name});
+  utf8::decode($args->{description});
+  utf8::decode($slug);
 
   $schema->resultset('Blog')->create({
     name            => $args->{name},

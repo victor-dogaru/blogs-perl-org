@@ -27,6 +27,7 @@ post '/blog/profile' => sub {
  
   my $new_columns = { };
   my @message;
+  utf8::decode($params->{'current_name'});
   my $blog        = resultset('Blog')->find({ name => $params->{'current_name'} });
   my $owner       = resultset('BlogOwner')->find ({
                       blog_id =>$blog->id,
@@ -51,7 +52,7 @@ post '/blog/profile' => sub {
   if ($flag){
 
     if ($params->{'blog_name'}){
-
+      utf8::decode($params->{'blog_name'});
       my $existing_blog = resultset('Blog')->search({ name => $params->{'blog_name'} })->count;
       if ($existing_blog > 0){
         push @message, "A blog with this name already exists.";
@@ -62,7 +63,7 @@ post '/blog/profile' => sub {
       }
 
       if ($params->{'blog_description'}){
-
+        utf8::decode($params->{'blog_description'});
         $new_columns->{'description'} = $params->{'blog_description'};
       }
 
