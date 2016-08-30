@@ -137,27 +137,39 @@ delete method
 
 =cut
 
-get '/author/categories/delete/:id' => sub {
-
+any '/author/categories/delete/:id' => sub {
+ 
   my $id = params->{id};
   my $user       = resultset('Users')->find_by_session(session);
+  my $params = {};
+  my $category = resultset('Category')->find( $id ); 
 
-  try {
-    my $category = resultset('Category')->find( $id );
-
-    $category->safe_cascade_delete();
-  }
-  catch {
-    error $_;
+  if ($category->user_id == $user->id){
+    
+    my @post_categories = resultset('PostCategory')->search({
+      category_id => $category->id
+      })->delete();
+    
+    $category->delete();
     my @categories = resultset('Category')->user_categories($user->id);
+    $params->{success} = "The category was successfully deleted.";
     template 'admin/categories/list', {
       categories => \@categories,
-      warning => "Something went wrong."
+      %$params 
     }, { layout => 'admin' };
-  };
-
-  redirect "/author/categories";
+  }
+  else{
+    
+    my @categories = resultset('Category')->user_categories($user->id);
+    $params->{warning} = "You cannot delete that category";
+    template 'admin/categories/list', {
+      categories => \@categories,
+      %$params 
+    }, { layout => 'admin' };
+  }
+  
 };
+
 
 =head2 /author/categories/edit/:id
 
