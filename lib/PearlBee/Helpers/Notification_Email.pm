@@ -62,10 +62,10 @@ sub invite_contributor {
 
             template_params => {
                 config     => $config,
-                name       => $user->name,
-                username   => $user->username,
-                email      => $user->email,
-                added_user => $invitee->name
+                name       => $invitee->name,
+                username   => $invitee->username,
+                email      => $invitee->email,
+                inviter    => $user->name
                 #signature => config->{'email_signature'}
             }
         });
