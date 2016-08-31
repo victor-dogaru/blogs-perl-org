@@ -55,17 +55,17 @@ sub invite_contributor {
 
     try {
         PearlBee::Helpers::Email::send_email_complete({
-            template => 'invite_contributor.tt',
+            template => 'new_user.tt',
             from     => $config->{'default_email_sender'},
             to       => $invitee->email,
             subject  => 'You have been invited to join a blog',
 
             template_params => {
                 config     => $config,
-                name       => $user->name,
-                username   => $user->username,
-                email      => $user->email,
-                added_user => $invitee->name
+                name       => $invitee->name,
+                username   => $invitee->username,
+                email      => $invitee->email,
+                inviter    => $user->name
                 #signature => config->{'email_signature'}
             }
         });

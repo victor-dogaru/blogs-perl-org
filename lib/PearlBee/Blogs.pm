@@ -437,13 +437,14 @@ post '/add-contributor/blog' => sub {
             activation_key => $token,
         });
         my $notification = resultset('Notification')->create_invitation({
-            blog_id => $blog_id,
-            user_id => $invitee->id,
+            blog_id   => $blog_id,
+            user_id    => $invitee->id,
             old_status => 'unread',
-            sender_id => $user->id
+            sender_id  => $user->id,
+            role       => $role
         });
 
-        PearlBee::Helpers::Notification_Email->announce_contributor({
+        PearlBee::Helpers::Notification_Email->invite_contributor({
             user => $user,
             invitee => $invitee,
             config => config
