@@ -328,7 +328,7 @@ $(document).ready(function() {
 	$('#blog-select').on("change", function(e){
 		var blogName = e.target.value,
 			blogUsername = $("#sessionUsername").text(),
-			blogSlug = $(this).find("option[value="+ blogName + "]").attr("data-slug"),
+			blogSlug = $(this).find("option[value='"+ blogName + "']").attr("data-slug"),
 			blogSrc = "/blog_avatar/" + blogName;
 
 		$('#upload_blog_img').attr('action', '/blog-image/large/blog/' + blogName);
