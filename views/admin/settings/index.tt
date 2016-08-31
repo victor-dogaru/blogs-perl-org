@@ -151,7 +151,7 @@
 					<div class="col-xs-12 col-sm-6 picture-btn">
 						<span class="file-input btn btn-file light-button buttons-group change-pic">
 							<p>Choose picture</p> <!-- <input type="file" name="file"> -->
-							<form enctype="multipart/form-data" method="post" id="upload_blog_img">
+							<form enctype="multipart/form-data" method="post" id="upload_blog_img" action="/blog-image/large/blog/[% blogs.0.name %]">
 								<input type="file" id="file-upload-blog" class="form-control" name="file">
 								<input type="text" class="form-control hidden" name="width">
 								<input type="text" class="form-control hidden" name="height">

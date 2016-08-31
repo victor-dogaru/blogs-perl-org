@@ -85,7 +85,7 @@
 									<a href="/[% role %]/posts/edit/[% post.slug %]">
 										<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 									</a>
-									<a href="/admin/categories/delete/[% category.id %]">
+									<a href="/[% role %]/posts/trash/[% post.id %]">
 										<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 									</a>
 								</td>
@@ -107,5 +107,4 @@
 
 		</div>
 	</div>
-</div>
 </div>
