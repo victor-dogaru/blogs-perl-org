@@ -188,6 +188,12 @@ strong{
    top: 0;
    z-index: 999;
 }
+#no-user-header{
+   background: #16cbe6;
+}
+#no-user-header h1 a{
+   text-decoration: none;
+}
 .header .logo h1{
    font-size:40px;
    margin:0px;

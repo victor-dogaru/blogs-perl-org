@@ -66,13 +66,13 @@
       <!-- Logo & Navigation ends -->
     [% ELSE %]
 
-      <div class="header">
+      <div id="no-user-header" class="header">
          <div class="container">
             <div class="row">
                <div class="col-md-12">
                   <!-- Logo -->
                   <div class="logo text-center">
-                     <h1><a href="">[% session.blog_name %] [% session.user.role FILTER ucfirst %]</a></h1>
+                     <h1><a href="/">[% session.blog_name %] [% session.user.role FILTER ucfirst %]</a></h1>
                   </div>
                </div>
             </div>
@@ -118,7 +118,7 @@
 
       <!-- Javascript files -->
       <!-- jQuery -->
-      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
       <!-- Bootstrap JS -->
       <script src="/admin/js/bootstrap.min.js"></script>
       <!-- jQuery UI -->
@@ -167,6 +167,10 @@
     <script src="/admin/js/custom.js"></script>
     <!-- App JS -->
     <script src="/admin/js/app.js"></script>
+
+   [% IF global.template_name == "set_password" %]
+    <script src="/admin/js/set_password.js"></script>
+   [% END %]
 
    </body>
 </html>
