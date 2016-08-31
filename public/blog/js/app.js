@@ -276,6 +276,13 @@ $(document).ready(function() {
         $('.register').css('min-height',$(window).height()-80);
     });
 
+    // Login
+    $('.login-page').css('min-height',$(window).height()-137);
+    $(window).resize(function(){
+        $('.login').css('min-height',$(window).height()-137);
+    });
+
+
     //Back to top at refresh
     $(window).on('beforeunload', function() {
         $(window).scrollTop(0);

@@ -375,6 +375,10 @@ strong{
    margin: 0 auto;
    line-height: 50px;
 }
+/*login page*/
+.login-page .page-title h2{
+   margin-top: 120px;
+}
 
 /*Social Networks*/
 .btn-social {

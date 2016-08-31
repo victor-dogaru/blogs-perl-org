@@ -37,8 +37,8 @@
 
 						<div class="social_register">
 							<div class="row">
-								<div class="col-md-5 col-md-offset-1">
-									<a href="/smlogin?socialMediaService=facebook" class="btn btn-block btn-social btn-facebook">
+								<div class="container container-button">
+									<a href="/smlogin?socialMediaService=facebook" class="btn btn-block btn-social btn-facebook button-oath">
 
 										<span class="fa fa-facebook"></span>
 										<span>Sign in with Facebook</span>
@@ -88,27 +88,26 @@
 		</div>
 	</div>
 </div>
-<script src="/js/jquery.js">
-</script>
-<script src="/js/oauth.min.js">
-</script>
+
+<!--for facebook button sing-up-->
+<script src="js/jquery.js"></script>
+<script src="js/oauth.min.js"></script>
 <script>
-	$(document).ready(function () {
-				$(".btn-facebook").click(function () {
-						alert("Are you sure you want to connect your facebook account with BPO?"
-							");
-							OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY'); OAuth.popup('facebook').done(function (result) {
-								result.me().done(function (data) {
-									console.log(data);
-									data.type = "facebook";
-									$.post("/api_login", data, function (resp) {
-										window.location.href = resp.location;
-									}, "json");
-									// similar behavior as clicking on a link
+	$(document).ready(function(){
+		$(".button-oath").click(function(){
+			alert("Are you sure you want to log in with  your facebook account on BPO?");
+			OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
+			OAuth.popup('facebook').done(function(result) {
+				result.me().done(function(data) {
+					console.log(data);
+					data.type = "facebook";
+					$.post("/api_login",data, function(resp){
+						window.location.href = resp.location;
+					},"json");
 
-								})
-							}) return false;
-						});
-
-				});
+				})
+			});
+			return false;
+		});
+	});
 </script>

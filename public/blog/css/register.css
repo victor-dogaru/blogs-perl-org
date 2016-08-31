@@ -58,9 +58,9 @@
     height: 14px;
     width: 14px;
 }
-.register .social_register{
-    margin-top: 35px;
-}
+/*.register .social_register{*/
+    /*margin-top: 35px;*/
+/*}*/
 .register .separator {
     width: 50%;
 }
@@ -117,8 +117,12 @@
 /*END style Register.tt*/
 
 /*START Sing in form*/
-.sign-up {
-    /* top:inherit;*/
+.register .container-button{
+    max-width: 100%;
+    margin: auto;
+}
+.blog .sign-up {
+    top:inherit;
     background: url('../img/camila-gri.jpg') center center no-repeat;
     -webkit-background-size: cover;
     -moz-background-size: cover;
