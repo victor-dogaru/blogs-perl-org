@@ -143,4 +143,32 @@ __PACKAGE__->belongs_to(
 
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
+
+sub as_hashref {
+  my ($self)   = @_;
+  my $blog_owner_obj = {
+    blog_id        => $self->blog_id,
+    user_id        => $self->user_id,
+    is_admin       => $self->is_admin,
+    created_date   => $self->created_date,
+    activation_key => $self->activation_key,
+    status         => $self->status,
+    blog_info      => $self->blog_info,
+
+  };
+
+  return $blog_owner_obj;
+
+}
+
+sub blog_info {
+  my ($self)       = @_;
+  my $schema       = $self->result_source->schema;
+  my $blog         = $schema->resultset('Blog')->search({
+    id => $self->blog_id
+  });
+
+  return $blog;
+}
+
 1;
