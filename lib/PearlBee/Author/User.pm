@@ -247,19 +247,20 @@ get '/author/users/blog/:blog/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
-  my $blog       = resultset('Blog')->find({ name => params->{blog} });
   my $status     = params->{status} || "active";
   my $is_admin   = defined params->{is_admin} ? params->{is_admin} : "all";
-  
   my $user_obj   = resultset('Users')->find_by_session(session);
-  
-  if (!$user_obj->is_admin){
-    my $flag       = resultset ('BlogOwner')-> search ({ 
-                                          blog_id => $blog->id,
-                                          user_id =>$user_obj->id, 
-                                          is_admin=>1})->count();
-    if ($flag == 0) {
-      redirect ("/");
+  my $blog       = params->{blog};
+  if (params->{blog} ne 'all'){
+      $blog       = resultset('Blog')->find({ name => params->{blog} });
+      if (!$user_obj->is_admin){
+          my $flag       = resultset ('BlogOwner')-> search ({ 
+                                            blog_id => $blog->id,
+                                            user_id =>$user_obj->id, 
+                                            is_admin=>1})->count();
+      if ($flag == 0) {
+        redirect ("/");
+      }
     }
   }
   
@@ -287,22 +288,25 @@ get '/author/users/blog/:blog/page/:page' => sub {
   }
 
   for my $blog (@blogs){
-    my @tmp_blogs      = resultset('BlogOwner')->search (
+    my @tmp_blogs      =  resultset('BlogOwner')->search (
     { blog_id => $blog->get_column('id') });  
+    
     $_->{blog_name}    = $blog->name for @tmp_blogs;
+    
     $_->{blog_slug}    = $blog->slug for @tmp_blogs;
     $_->{blog_creator} = $blog->blog_creator->username for @tmp_blogs;
     push @blogs_aux, @tmp_blogs;
   }
+  
+  @blogs = map { $_->as_hashref } @blogs;my $stop = scalar @blogs_aux;
 
-  @blogs = map { $_->as_hashref } @blogs;
-
+  
   my $filter = {};
 
   $filter->{is_admin} = $is_admin if($is_admin ne "all");
   $filter->{"u.status"} = $status if($status ne "all");
-
-  push @blogs_aux, 
+  
+  push @blogs_aux, map {$_->as_hashref}
                 resultset('BlogOwner')->search ({ 
                           blog_id => [map {$_->{id}} @blogs ],
                           %$filter
@@ -310,19 +314,19 @@ get '/author/users/blog/:blog/page/:page' => sub {
                         {
                           columns => [qw/blog_id user_id u.status is_admin /],
                           join => 'u',
-                          result_class => 'DBIx::Class::ResultClass::HashRefInflator',
                           
                         }
-                      );
+                  );
 
+ 
+  for my $iterator (@blogs_aux){
 
-  foreach my $iterator (@blogs_aux){
     my @tmp_users       = map {$_->as_hashref_sanitized}
-              resultset('Users')->search({ id => $iterator->{user_id} });      
+              resultset('Users')->search({ id => $iterator->{user_id} });    
+    $_->{blog_name }   = $iterator->{blog_name} for @tmp_users;
+    $_->{blog_slug }   = $iterator->{blog_slug} for @tmp_users;
+    $_->{blog_creator} = $iterator->{blog_creator} for @tmp_users;
     $_->{role_in_blog}  = $iterator->{is_admin} for @tmp_users;
-    $_->{blog_name }    = $iterator->{blog_name} for @tmp_users;
-    $_->{blog_slug }    = $iterator->{blog_slug} for @tmp_users;
-    $_->{blog_creator } = $iterator->{blog_creator} for @tmp_users;
     $_->{can_change}    = resultset('BlogOwner')->find(
     { blog_id => $iterator->{blog_id}, user_id =>$user_obj->id})->is_admin for @tmp_users; 
     push @users, @tmp_users;
@@ -358,7 +362,7 @@ get '/author/users/blog/:blog/page/:page' => sub {
       previous_link => $previous_link,
       action_url    => 'author/users/blog/' . params->{blog} . '/page',
       pages         => $pagination->pages_in_set,
-      blog          => $blog->name
+      blog          => params->{blog} ne 'all' ? $blog->name:'all'
     },
     { layout => 'admin' };
 
