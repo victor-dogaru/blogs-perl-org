@@ -101,7 +101,7 @@
 						<div class="col-lg-3 profile-pic blog-pic">
 							<div class="bubble">
 								[% IF blogs.0.large_avatar_path %]
-								<img id="blog_img_preview" class="user-image" src="/blog_avatar/[% blogs.0.name %]"/>
+								<img id="blog_img_preview" class="user-image preview-avatar" src="/blog_avatar/[% blogs.0.name %]"/>
 								[% ELSE %]
 								<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
 								[% END %]
