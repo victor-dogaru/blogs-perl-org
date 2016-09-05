@@ -290,11 +290,6 @@ get '/author/users/blog/:blog/page/:page' => sub {
   for my $blog (@blogs){
     my @tmp_blogs      =  resultset('BlogOwner')->search (
     { blog_id => $blog->get_column('id') });  
-    
-    $_->{blog_name}    = $blog->name for @tmp_blogs;
-    
-    $_->{blog_slug}    = $blog->slug for @tmp_blogs;
-    $_->{blog_creator} = $blog->blog_creator->username for @tmp_blogs;
     push @blogs_aux, @tmp_blogs;
   }
   
@@ -323,9 +318,10 @@ get '/author/users/blog/:blog/page/:page' => sub {
 
     my @tmp_users       = map {$_->as_hashref_sanitized}
               resultset('Users')->search({ id => $iterator->{user_id} });    
-    $_->{blog_name }   = $iterator->{blog_name} for @tmp_users;
-    $_->{blog_slug }   = $iterator->{blog_slug} for @tmp_users;
-    $_->{blog_creator} = $iterator->{blog_creator} for @tmp_users;
+    my $blog   = resultset('Blog')->find({ id => $iterator->{blog_id} });
+    if (defined $blog) {
+      $_->{blog_name} =$blog->get_column('name') for @tmp_users;
+    }
     $_->{role_in_blog}  = $iterator->{is_admin} for @tmp_users;
     $_->{can_change}    = resultset('BlogOwner')->find(
     { blog_id => $iterator->{blog_id}, user_id =>$user_obj->id})->is_admin for @tmp_users; 
