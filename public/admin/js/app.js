@@ -113,6 +113,16 @@ $(document).ready(function(){
 });
 
 //----------------------------
+
+/* hide side menu when 500 error appears */
+$(document).ready(function(){
+	if($(".err-500") && $(".err-500").length > 0){
+		$(".sidey").remove();
+		$(".sidebar-dropdown").hide();
+	}
+});
+
+
 //Croppie avatars for the creation of the blog avatars
 
 $(document).ready(function() {
