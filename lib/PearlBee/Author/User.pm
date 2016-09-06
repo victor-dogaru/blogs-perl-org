@@ -237,28 +237,31 @@ get '/author/users/role/:role/page/:page' => sub {
 
 };
 
-=head2 /author/users/blog/:blog/page/:page
+=head2 /author/users/blog/:blog/role/:role/status/:status/page/:page
 
 List all users grouped by blog's name, role and status.
 
 =cut
 
-get '/author/users/blog/:blog/page/:page' => sub {
+get '/author/users/blog/:blog/role/:role/status/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $status     = params->{status} || "active";
-  my $is_admin   = defined params->{is_admin} ? params->{is_admin} : "all";
+  my $is_admin   = defined params->{role} ? params->{role} : "all";
   my $user_obj   = resultset('Users')->find_by_session(session);
   my $blog       = params->{blog};
   if (params->{blog} ne 'all'){
       $blog       = resultset('Blog')->find({ name => params->{blog} });
-      if (!$user_obj->is_admin){
+      if (!defined $blog){
+        redirect ("/");
+      }
+      if (!$user_obj->is_admin ){
           my $flag       = resultset ('BlogOwner')-> search ({ 
                                             blog_id => $blog->id,
                                             user_id =>$user_obj->id, 
                                             is_admin=>1})->count();
-      if ($flag == 0) {
+      if ($flag == 0 ) {
         redirect ("/");
       }
     }
@@ -329,10 +332,42 @@ get '/author/users/blog/:blog/page/:page' => sub {
   }
 
   my $all = scalar @users;
+  my $active        = 0;
+  my $pending       = 0;
+  my $inactive      = 0;
+  my $suspended     = 0;
+  my $nr_of_admins  = 0;
+  my $nr_of_authors = 0;
+  
+  foreach my $iterator(@users){
+    if ($iterator->{status} eq 'active')
+    {
+      $active ++;
+    }
+    elsif ($iterator->{status} eq 'pending'){
+      $pending++;
+    }
+    elsif ($iterator->{status} eq 'inactive'){
+      $inactive++;
+    }
+    else{
+      $suspended++;
+    }
+  }
+
+  foreach my $iterator(@users){
+    if ($iterator->{role_in_blog} == 1)
+    {
+      $nr_of_admins ++;
+    }
+    else{
+      $nr_of_authors++;
+    }
+  }
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/blog/' . $blog);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/blog/' . $blog.'/role/'.$is_admin.'/status/'.$status);
 
   # Generating the pagination navigation
   my $total_users     = $all;
@@ -353,16 +388,23 @@ get '/author/users/blog/:blog/page/:page' => sub {
       blogs         => \@blogs,
       all_blogs     => \@all_blogs,
       all           => $all, 
+      active        => $active,
+      pending       => $pending,
+      inactive      => $inactive,
+      suspended     => $suspended,
+      nr_admins     => $nr_admins,
+      nr_authors    => $nr_authors,
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'author/users/blog/' . params->{blog} . '/page',
+      action_url    => 'author/users/blog/' . params->{blog} . '/role/'.params->{role}.'/status/'.params->{status}.'/page',
       pages         => $pagination->pages_in_set,
       blog          => params->{blog} ne 'all' ? $blog->name:'all'
     },
     { layout => 'admin' };
 
 };
+
 
 =head2 /author/users/activate/:id
 

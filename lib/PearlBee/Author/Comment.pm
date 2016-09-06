@@ -128,17 +128,30 @@ List all comments grouped by blog.
 
 =cut
 
-get '/author/comments/blog/:blog/:status/page/:page' => sub {
+et '/author/comments/blog/:blog/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $blog       = params->{blog};
   my $status     = params->{status};
-  my $blog_ref   =resultset('Blog')->find({name => params->{blog}});
+  my $blog_ref;
+  my @blog_posts;
   my $user       = resultset('Users')->find_by_session(session);
-  my @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
-  my @comments_aux;
   my @blog_owners = resultset('BlogOwner')->search({ user_id => $user->id });
+  if (params->{blog} ne 'all'){
+     $blog_ref   =resultset('Blog')->find({name => params->{blog}});
+     @blog_posts = resultset('BlogPost')->search({ blog_id => $blog_ref->get_column('id')});
+  }
+  else
+  {
+    foreach my $iterator (@blog_owners){
+      push @blog_posts, resultset('BlogPost')->search({ blog_id => $iterator->get_column('blog_id')});
+    }
+  }
+  
+  
+  my @comments_aux;
+  
   my @posts; 
   my @ids;
 
@@ -165,20 +178,39 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
     }
   }
   
-  my $flag         = resultset('BlogOwner')->find({blog_id => $blog_ref->id, user_id=>$user->id});
+  my $flag   ;     
 
 
   my @comments;
-  if ($flag->is_admin == 0){
-  foreach (@comments_aux) {
-    my $found_id = $_->post_id;
-    if (( grep /$found_id/, @ids ) or  ($_->get_column('uid') == $user->id)){ 
-      push @comments, $_;
+  if (params->{blog} ne 'all'){
+    $flag = resultset('BlogOwner')->find({blog_id => $blog_ref->id, user_id=>$user->id});
+    if ($flag->is_admin == 0){
+      foreach (@comments_aux) {
+        my $found_id = $_->post_id;
+        if (( grep /$found_id/, @ids ) or  ($_->get_column('uid') == $user->id)){ 
+          push @comments, $_;
+        }
       }
+    }
+    else{
+      @comments = @comments_aux;
     }
   }
   else{
-   @comments = @comments_aux;
+    foreach my $iterator (@blog_owners){
+    $flag = resultset('BlogOwner')->find({blog_id => $iterator->get_column('blog_id'), user_id=>$user->id});
+    if ($flag->is_admin == 0){
+      foreach (@comments_aux) {
+        my $found_id = $_->post_id;
+          if (( grep /$found_id/, @ids ) or  ($_->get_column('uid') == $user->id)){ 
+            push @comments, $_;
+            }
+        }
+    }
+    else{
+     @comments = @comments_aux;
+     }
+    }
   }
 
   my $all       = scalar @comments;
