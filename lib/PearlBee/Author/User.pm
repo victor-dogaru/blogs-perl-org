@@ -237,28 +237,31 @@ get '/author/users/role/:role/page/:page' => sub {
 
 };
 
-=head2 /author/users/blog/:blog/page/:page
+=head2 /author/users/blog/:blog/role/:role/status/:status/page/:page
 
 List all users grouped by blog's name, role and status.
 
 =cut
 
-get '/author/users/blog/:blog/page/:page' => sub {
+get '/author/users/blog/:blog/role/:role/status/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
   my $status     = params->{status} || "active";
-  my $is_admin   = defined params->{is_admin} ? params->{is_admin} : "all";
+  my $is_admin   = defined params->{role} ? params->{role} : "all";
   my $user_obj   = resultset('Users')->find_by_session(session);
   my $blog       = params->{blog};
   if (params->{blog} ne 'all'){
       $blog       = resultset('Blog')->find({ name => params->{blog} });
-      if (!$user_obj->is_admin){
+      if (!defined $blog){
+        redirect ("/");
+      }
+      if (!$user_obj->is_admin ){
           my $flag       = resultset ('BlogOwner')-> search ({ 
                                             blog_id => $blog->id,
                                             user_id =>$user_obj->id, 
                                             is_admin=>1})->count();
-      if ($flag == 0) {
+      if ($flag == 0 ) {
         redirect ("/");
       }
     }
@@ -332,7 +335,7 @@ get '/author/users/blog/:blog/page/:page' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/blog/' . $blog);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/users/blog/' . $blog.'/role/'.$is_admin.'/status/'.$status);
 
   # Generating the pagination navigation
   my $total_users     = $all;
@@ -356,13 +359,14 @@ get '/author/users/blog/:blog/page/:page' => sub {
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
-      action_url    => 'author/users/blog/' . params->{blog} . '/page',
+      action_url    => 'author/users/blog/' . params->{blog} . '/role/'.params->{role}.'/status/'.params->{status}.'/page',
       pages         => $pagination->pages_in_set,
       blog          => params->{blog} ne 'all' ? $blog->name:'all'
     },
     { layout => 'admin' };
 
 };
+
 
 =head2 /author/users/activate/:id
 
