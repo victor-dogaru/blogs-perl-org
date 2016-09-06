@@ -193,7 +193,12 @@ $(document).ready(function(){
 });
 // END - Admin dashboard - User section
 
-
+$(document).ready(function(){
+ 	if($(".err-500") && $(".err-500").length > 0){
+ 		$(".sidey").remove();
+ 		$(".sidebar-dropdown").hide();
+ 	}
+ });
 
 
 //----------------------------
