@@ -22,51 +22,46 @@
 
 					<div class="form-group pull-left">
 						<label class="control-label">Blog</label>
-						<div class="options-drop">
-							<select name="users_blogs_list" class="chosen-select" onChange="window.location.href=this.value">
-								<option value=""> All </option>
+						<div class="options-drop" id="blog_dropdown">
+							<select name="users_blogs_list" id="users_blogs_list" class="chosen-select">
+								<option value="all"> All </option>
 								[% FOREACH blog IN blogs %]
+								[% blog.name %]
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-								<option [% selected %] value="/author/users/blog/[% blog.name %]/all/all/page/1"> [% blog.name %] </option>
+								<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
 								[% END %] 
 							</select>
 						</div>
 					</div>
 					
-<!--
 					<div class="form-group pull-left">
 						<label class="control-label">Role</label>
-						<div class="options-drop">
-							<select name="timezone" class="chosen-select">
-								<option value=""> All </option>
-								<option value=""> Admin </option>
-								<option value=""> Author </option>
+						<div class="options-drop" id="role_dropdown">
+							<select name="users_role" id="users_role" class="chosen-select">
+								<option value="all"> All </option>
+								<option value="1"> Admin </option>
+								<option value="0"> Author </option>
 							</select>
 						</div>
 					</div>
--->
 					
-<!--
 					<div class="form-group pull-left">
 						<label class="control-label">Status</label>
-						<div class="options-drop">
-							<select name="timezone" class="chosen-select" onChange="window.location.href=this.value">
+						<div class="options-drop" id="status_dropdown">
+							<select name="users_status" id="users_status" class="chosen-select">
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-								<option value="/[% role %]/users/page/1"> All </option>
-								<option value="/[% role %]/users/active/page/1"> Active </option>
-								<option value="/[% role %]/users/pending/page/1"> Pending </option>
-								<option value="/[% role %]/users/inactive/page/1"> Inactive </option>
-								<option value="/[% role %]/users/suspended/page/1"> Suspended </option>
+								<option value="all"> All </option>
+								<option value="active"> Active </option>
+								<option value="pending"> Pending </option>
+								<option value="inactive"> Inactive </option>
+								<option value="suspended"> Suspended </option>
 							</select>
 						</div>
 					</div>
--->
-<!--
 					<div class="form-group pull-right">
-						<button type="submit" class="btn btn-default">Apply</button>
-						<button type="button" class="btn btn-danger">Reset</button>
+						<button type="submit" class="btn btn-success" id="apply-filter" onclick="Javascript:CreateURL();" onChange="Javascript:getFilterOptions();" >Apply</button>
+<!--						<button type="button" class="btn btn-danger">Reset</button>-->
 					</div>
--->
 				</div>
 
 
@@ -157,7 +152,7 @@
 					</tbody>
 				</table>
 
-				<ul class="pagination pull-right">
+				<ul class="pagination pull-right user-list-pagination">
 					[% INCLUDE components/pagination.tt %]
 				</ul>
 

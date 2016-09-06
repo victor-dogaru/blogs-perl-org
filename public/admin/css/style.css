@@ -1352,3 +1352,8 @@ span.header-badge {
     margin-left: 5px;
     border: 2px solid #16CBE6;
  }
+/*START - Comments section*/
+.comments-filter .status-drop a.chosen-single span::first-letter {
+	text-transform: uppercase;
+}
+/*END - Comments section*/

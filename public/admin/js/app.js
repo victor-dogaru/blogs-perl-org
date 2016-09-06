@@ -85,44 +85,123 @@ $(document).ready(function() {
 	// 	});
 	// }
 
-
-
-function getBlog(gb) {
-	var location = gb;
-	var pageURL = location.split('/');
-	var blogName = pageURL[4];
-	sessionStorage.selectedBlog = blogName;
+ 
+// START - Admin dashboard - Comments section
+function getBlog() {
+	var pageLocation = window.location.href;
+	var pageURL = pageLocation.split('/');
+	var blogName = pageURL[6];
+	return blogName;
+//	sessionStorage.selectedBlog = blogName;
+}
+function getStatus() {
+	var pageLocation = window.location.href;
+	var pageURL = pageLocation.split('/');
+	var statusName = pageURL[7];
+	return statusName;
+//	sessionStorage.selectedStatus = statusName;
+}
+function getCommentsFilter() {
+	sessionStorage.commentsFilter = getStatus() + " " + getBlog();
+	return sessionStorage.commentsFilter;
 }
 $(document).ready(function () {
-	var blogName = sessionStorage.selectedBlog;
-	$("#comments_blogs_chosen > .chosen-single.chosen-default > span").html(blogName);
-});
+	var pageLocation = window.location.href;
+	var pageURL = pageLocation.split('/');
+	var blogName = pageURL[6];
+	var statusName = pageURL[7];
 
-function getStatus(gs) {
-	var location = gs;
-	var pageURL = location.split('/');
-	var statusName = pageURL[5];
-	sessionStorage.selectedStatus = statusName;
-}
-$(document).ready(function(){
-	var statusName = sessionStorage.selectedStatus;
-	$(".chosen-container-single-nosearch > a.chosen-single > span").html(statusName);
+	
+	
+//	var commentsFilter = sessionStorage.commentsFilter;
+//	var eachValue = commentsFilter.split(' ');
+//	var statusName = eachValue[0];
+//	var blogName = eachValue[1];
+	$(".comments-filter .blogs-drop a.chosen-single span").html(blogName);
+	$(".comments-filter .status-drop a.chosen-single span").html(statusName);
 	$(".sidey .nav").click(function(){
 		sessionStorage.clear();
 	});
 });
 
-//----------------------------
 
-/* hide side menu when 500 error appears */
+//$(document).ready(function(){
+//	var statusName = sessionStorage.selectedStatus;
+//	$(".chosen-container-single-nosearch > a.chosen-single > span").html(statusName);
+//	$(".sidey .nav").click(function(){
+//		sessionStorage.clear();
+//	});
+//});
+// END - Admin dashboard - Comments section
+
+
+// START - Admin dashboard - User section
+function CreateURL() {
+	var pageNumber = 1;
+	window.location.href = "/author/users/blog/" + getBlogValue() + "/page/" + pageNumber + "?is_admin=" + getRoleValue() + "&status=" + getStatusValue();
+}
+
+function getBlogValue() {
+	var e = document.getElementById("users_blogs_list");
+	var blogOption = e.options[e.selectedIndex].value;
+	return blogOption;
+}
+
+function getRoleValue() {
+	var e = document.getElementById("users_role");
+	var roleOption = e.options[e.selectedIndex].value;
+	return roleOption;
+}
+
+function getStatusValue() {
+	var e = document.getElementById("users_status");
+	var strOptions = e.options[e.selectedIndex].value;
+	return strOptions;
+}
+
+function getBlogName() {
+	var e = document.getElementById("users_blogs_list");
+	var selectedBlog = e.options[e.selectedIndex].text;
+	return selectedBlog;
+}
+
+function getRoleName() {
+	var e = document.getElementById("users_role");
+	var selectedRole = e.options[e.selectedIndex].text;
+	return selectedRole;
+}
+
+function getStatusName() {
+	var e = document.getElementById("users_status");
+	var selectedStatus = e.options[e.selectedIndex].text;
+	return selectedStatus;
+}
+
+function getFilterOptions() {
+//	alert(FilterOptions);
+	sessionStorage.filterOptions = getBlogName() + " " + getRoleName() + " " + getStatusName();
+	alert(sessionStorage.filterOptions);
+}
+
 $(document).ready(function(){
-	if($(".err-500") && $(".err-500").length > 0){
-		$(".sidey").remove();
-		$(".sidebar-dropdown").hide();
-	}
+//	alert("isi face document ready");
+	var filter = sessionStorage.filterOptions.split(" ");
+	$("#blog_dropdown a.chosen-single span").html(filter[0]);
+	$("#role_dropdown a.chosen-single span").html(filter[1]);
+	$("#status_dropdown a.chosen-single span").html(filter[2]);
+	sessionStorage.clear();
 });
+// END - Admin dashboard - User section
+
+$(document).ready(function(){
+ 	if($(".err-500") && $(".err-500").length > 0){
+ 		$(".sidey").remove();
+ 		$(".sidebar-dropdown").hide();
+ 	}
+ });
 
 
+//----------------------------
 //Croppie avatars for the creation of the blog avatars
 
 $(document).ready(function() {
