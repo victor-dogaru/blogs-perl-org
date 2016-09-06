@@ -29,7 +29,7 @@
                 </ul>
             </li>
 
-            <li><a href="/[% role %]/comments"><i class="icon-comment"></i> Comments</a></li>
+            <li><a href="/[% role %]/comments/blog/all/all/page/1"><i class="icon-comment"></i> Comments</a></li>
 
             
 
