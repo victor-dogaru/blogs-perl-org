@@ -332,6 +332,38 @@ get '/author/users/blog/:blog/role/:role/status/:status/page/:page' => sub {
   }
 
   my $all = scalar @users;
+  my $active        = 0;
+  my $pending       = 0;
+  my $inactive      = 0;
+  my $suspended     = 0;
+  my $nr_of_admins  = 0;
+  my $nr_of_authors = 0;
+  
+  foreach my $iterator(@users){
+    if ($iterator->{status} eq 'active')
+    {
+      $active ++;
+    }
+    elsif ($iterator->{status} eq 'pending'){
+      $pending++;
+    }
+    elsif ($iterator->{status} eq 'inactive'){
+      $inactive++;
+    }
+    else{
+      $suspended++;
+    }
+  }
+
+  foreach my $iterator(@users){
+    if ($iterator->{role_in_blog} == 1)
+    {
+      $nr_of_admins ++;
+    }
+    else{
+      $nr_of_authors++;
+    }
+  }
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
@@ -356,6 +388,12 @@ get '/author/users/blog/:blog/role/:role/status/:status/page/:page' => sub {
       blogs         => \@blogs,
       all_blogs     => \@all_blogs,
       all           => $all, 
+      active        => $active,
+      pending       => $pending,
+      inactive      => $inactive,
+      suspended     => $suspended,
+      nr_admins     => $nr_admins,
+      nr_authors    => $nr_authors,
       page          => $page,
       next_link     => $next_link,
       previous_link => $previous_link,
