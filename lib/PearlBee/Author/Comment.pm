@@ -128,7 +128,7 @@ List all comments grouped by blog.
 
 =cut
 
-et '/author/comments/blog/:blog/:status/page/:page' => sub {
+get '/author/comments/blog/:blog/:status/page/:page' => sub {
 
   my $nr_of_rows = 5; # Number of posts per page
   my $page       = params->{page} || 1;
@@ -210,7 +210,7 @@ et '/author/comments/blog/:blog/:status/page/:page' => sub {
     else{
      @comments = @comments_aux;
      }
-    }
+    } 
   }
 
   my $all       = scalar @comments;
