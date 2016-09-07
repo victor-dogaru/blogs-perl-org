@@ -18,10 +18,11 @@
 					<div class="form-group pull-left choose-blog">
 						<label class="control-label">Blog</label>
 						<div class="options-drop blogs-drop">
-							<select id="comments_blogs" name="comments_blog_name" class="chosen-select" onClick="Javascript:getBlog();" onChange="window.location.href=this.value;">
-								<option value="" id="selected">All</option>
-								[% FOREACH blog IN blogs %] [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-								<option [% selected %] name="[% blog.name %]" value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> [% blog.name %] </option>
+							<select id="comments_blogs" name="comments_blog_name" class="chosen-select" onChange="window.location.href=this.value;">
+								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+								<option name="All" value="/[% role %]/comments/blog/all/all/page/1">All</option>
+								[% FOREACH blog IN blogs %]
+								<option name="[% blog.name %]" value="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> [% blog.name %] </option>
 								[% END %]
 							</select>
 						</div>
@@ -50,11 +51,11 @@
 				</div>
 
 				<div class="pull-left">
-					<a href="/[% role %]/comments/blog/[% blog.name %]/all/page/1"> All </a>([% all %]) | 
-					<a href="/[% role %]/comments/blog/[% blog.name %]/approved/page/1"> Approved </a>([% approved %]) | 
-					<a href="/[% role %]/comments/blog/[% blog.name %]/pending/page/1"> Pending </a>([% pending %]) | 
-					<a href="/[% role %]/comments/blog/[% blog.name %]/trash/page/1"> Trash </a>([% trash %]) | 
-					<a href="/[% role %]/comments/blog/[% blog.name %]/spam/page/1"> Spam </a>([% spam %])
+					 All ([% all %]) | 
+					 Approved ([% approved %]) | 
+					 Pending ([% pending %]) | 
+					 Trash ([% trash %]) | 
+					 Spam ([% spam %])
 				</div>
 				<table class="table table-hover table-bordered">
 					<thead>

@@ -44,7 +44,7 @@
                      </a>
                      <!-- Sub menu -->
                      <ul>
-                        <li><a href="/[% role %]/users">All</a></li>
+                        <li><a href="/[% role %]/users/blog/all/role/all/status/all/page/1">All</a></li>
                         <li><a href="/[% role %]/users/add">Add user</a></li>
                     </ul>
                 </li>
