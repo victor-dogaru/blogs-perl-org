@@ -78,7 +78,7 @@ var InvitationSection = function() {
         $('.modal-accept').on('click', function() {
           ModalApproveClick = true;
           $.ajax({
-            url:  '/notification/invitation/' + InvitationData.notifications[idx].generic_id  + '/user/' + InvitationData.username + '/mark-read/true',
+            url:  '/notification/invitation/'  + 'blog/' + InvitationData.notifications[idx].blog.name + '/mark-read/true',
             type: 'GET'
           });
           $(invitation).remove();
@@ -88,7 +88,7 @@ var InvitationSection = function() {
         $('.modal-reject').on('click', function() {
           ModalApproveClick = true;
           $.ajax({
-            url:  '/notification/invitation/' + InvitationData.notifications[idx].generic_id  + '/user/' + InvitationData.username + '/mark-read/false',
+            url:  '/notification/invitation/'  + 'blog/' + InvitationData.notifications[idx].blog.name + '/mark-read/false',
             type: 'GET'
           });
           $(invitation).remove();
