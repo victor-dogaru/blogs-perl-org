@@ -246,21 +246,12 @@ post '/register_success' => sub {
       error $_;
   };
   if ($flag){
-      
-    my $blog_owner = resultset('BlogOwner')->create({
-      user_id        => $invitee->id,
-      blog_id        => $flag->generic_id,
-      is_admin       => $flag->role eq 'admin' ? 1 : "0",
-      status         => 'inactive',
-      activation_key => $token,
-    });
 
     $flag ->update ({ 
-      user_id    => $invitee->id,
-      old_status =>'read'
+      user_id    => $invitee->id
     });
     my $user = resultset('Users')->find ({ id => $flag->sender_id });
-      
+
     PearlBee::Helpers::Notification_Email->announce_contributor({
       user    => $user,
       invitee => $invitee,
@@ -271,6 +262,7 @@ post '/register_success' => sub {
 
   template 'register_success';
 };
+
 
 
 =head2 /login route
