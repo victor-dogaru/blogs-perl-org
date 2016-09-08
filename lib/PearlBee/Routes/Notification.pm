@@ -106,15 +106,25 @@ get '/notification/invitation/blog/:blogname/mark-read/:status' => sub {
     my $new_entry = resultset('BlogOwner')->create({
      blog_id  => $blog->id,
      user_id  => $res_user->id,
-     is_admin => $role_flag,
+     is_admin =>  $role_flag,
      status         => 'active',
      activation_key => '',
      });
   }
-
+  my $invitation = resultset('Notification')->find({
+    generic_id => $blog->id,
+    user_id => $res_user->id,
+    });
+  my $new_notification = resultset('Notification')->create ({
+      name => 'response',
+      user_id => $res_user->id,
+      sender_id => $invitation->sender_id,
+      created_date =>DateTime->now(),
+      accepted => $status eq 'true'? 1 : 0,
+      generic_id => $blog->id,
+    });
   redirect '/notification'
 };
-
 
 =head2 /notification/response/:id/user/:username/mark-read
 
