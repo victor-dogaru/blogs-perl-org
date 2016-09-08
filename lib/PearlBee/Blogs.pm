@@ -401,7 +401,7 @@ post '/add-contributor/blog' => sub {
 
     if ($invitee){
       my $flag    = 0;
-      my $message = '';  p $blog->id;
+      my $message = '';
       my $check   = resultset('BlogOwner')->search ({ 
                       user_id  => $user->id,
                       blog_id  => $blog->id,
