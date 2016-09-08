@@ -428,14 +428,6 @@ post '/add-contributor/blog' => sub {
         my $blog_id = $blog->id;
         my $user_id = $user->id;
 
-        my $blog_owner = resultset('BlogOwner')->create({
-            user_id        => $invitee->id,
-            blog_id        => $blog_id,
-            is_admin       => $role eq 'admin' ? 1 : 0,
-            status         => 'inactive', #
-            # created_date defaults cleanly
-            activation_key => $token,
-        });
         my $notification = resultset('Notification')->create_invitation({
             blog_id => $blog_id,
             user_id => $invitee->id,
