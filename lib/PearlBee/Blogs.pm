@@ -401,7 +401,7 @@ post '/add-contributor/blog' => sub {
 
     if ($invitee){
       my $flag    = 0;
-      my $message = '';
+      my $message = '';  p $blog->id;
       my $check   = resultset('BlogOwner')->search ({ 
                       user_id  => $user->id,
                       blog_id  => $blog->id,
@@ -437,11 +437,11 @@ post '/add-contributor/blog' => sub {
             activation_key => $token,
         });
         my $notification = resultset('Notification')->create_invitation({
-            blog_id   => $blog_id,
-            user_id    => $invitee->id,
+            blog_id => $blog_id,
+            user_id => $invitee->id,
             old_status => 'unread',
-            sender_id  => $user->id,
-            role       => $role
+            sender_id => $user->id,
+            role     => $role
         });
 
         PearlBee::Helpers::Notification_Email->invite_contributor({
@@ -474,6 +474,20 @@ post '/add-contributor/blog' => sub {
     sender_id => $user->id,
     user_id   => '1'
     });
+
+    PearlBee::Helpers::Email::send_email_complete({
+       template => 'new_user.tt',
+       from     => config->{default_email_sender},
+       to       => $email,
+       subject  => 'You have been invited on BPO',
+
+       template_params => {
+          config    => config,
+          role      =>$role,
+          blog      => $blog->name
+       }
+     });
+
     template 'admin/users/add', {
       warning => 'The user does not have an account. An  invitation mail has been sent to that address',
       blogs   => \@blogs

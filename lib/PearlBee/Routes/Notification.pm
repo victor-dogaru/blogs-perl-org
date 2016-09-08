@@ -74,24 +74,22 @@ get '/notification/comment/:id/user/:username/mark-read/:status' => sub {
 };
 
 
-=head2 /notification/invitation/:id/user/:username/mark-read
+=head2 /notification/invitation/blog/:blogname/mark-read/:status
 
 View all notifications
 
 =cut
 
-get '/notification/invitation/:id/user/:username/mark-read/:status' => sub {
+get '/notification/invitation/blog/:blogname/mark-read/:status' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
-  my $username        = route_parameters->{'username'};
-  my $id              = route_parameters->{'id'};
-  my $invitation_user = resultset('Users')->find({ username => $username });
-  my $user_id         = $invitation_user->id;
+  my $blog_name       = route_parameters->{'blogname'};
+  my $blog            = resultset('Blog')->find ({ name => $blog_name });
   my $status          = route_parameters->{'status'};
 
   my $notification    = resultset('Notification')->read_invitation({
-    blog_id => $id,
-    user_id => $user_id,
+    blog_id => $blog->id,
+    user_id => $res_user->id,
     status  => $status
   });
 
@@ -106,9 +104,11 @@ get '/notification/invitation/:id/user/:username/mark-read/:status' => sub {
 
   if  ($status eq 'true'){
     my $new_entry = resultset('BlogOwner')->create({
-     blog_id  => $id,
-     user_id  => $user_id,
+     blog_id  => $blog->id,
+     user_id  => $res_user->id,
      is_admin => $role_flag,
+     status         => 'active',
+     activation_key => '',
      });
   }
 
