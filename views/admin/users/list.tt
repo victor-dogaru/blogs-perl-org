@@ -66,16 +66,16 @@
 
 
 				<div class="pull-left">
-					<a href="/[% role %]/users/page/1"> All </a>([% all %]) |
-					<a href="/[% role %]/users/active/page/1"> Active </a>([% active %]) |
-					<a href="/[% role %]/users/pending/page/1"> Pending </a>([% pending %]) |
-					<a href="/[% role %]/users/inactive/page/1"> Inactive </a>([% inactive %]) |
-					<a href="/[% role %]/users/suspended/page/1"> Suspended </a>([% suspended %])
+					 All ([% all %]) |
+					 Active ([% active %]) |
+					 Pending ([% pending %]) |
+					 Inactive ([% inactive %]) |
+					 Suspended ([% suspended %])
 				</div>
 
 				<div class="pull-right">
-					<a href="/[% role %]/users/page/1"> Admin </a>([% nr_of_admins %]) |
-					<a href="/[% role %]/users/page/1"> Author </a>([% nr_of_authors %])
+					 Admin ([% nr_of_admins %]) |
+					 Author ([% nr_of_authors %])
 				</div>
 	
 				<table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="example">
