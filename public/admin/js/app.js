@@ -135,27 +135,23 @@ function getStatusValue() {
 function getBlogName() {
 	var e = document.getElementById("users_blogs_list");
 	var selectedBlog = e.options[e.selectedIndex].text;
-	alert(selectedBlog);
 	return selectedBlog;
 }
 
 function getRoleName() {
 	var e = document.getElementById("users_role");
 	var selectedRole = e.options[e.selectedIndex].text;
-	alert(selectedRole);
 	return selectedRole;
 }
 
 function getStatusName() {
 	var e = document.getElementById("users_status");
 	var selectedStatus = e.options[e.selectedIndex].text;
-	alert(selectedStatus);
 	return selectedStatus;
 }
 
 function getFilterOptions() {
 	sessionStorage.filterOptions = getBlogName() + "***" + getRoleValue() + "***" + getStatusValue();
-	alert(sessionStorage.filterOptions);
 }
 
 $(document).ready(function () {
