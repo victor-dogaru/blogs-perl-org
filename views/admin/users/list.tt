@@ -25,7 +25,7 @@
 						<div class="users-dropdown" id="blog_dropdown">
 							<select name="users_blogs_list" id="users_blogs_list" class="chosen-select" onchange="getBlogName()">
 								<option value="all"> All </option>
-								[% FOREACH blog IN blogs %]
+								[% FOREACH blog IN all_blogs %]
 <!--								[% blog.name %]-->
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 								<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
