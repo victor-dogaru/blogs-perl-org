@@ -33,11 +33,19 @@
 						<div class="options-drop status-drop">
 							<select name="comments_status" class="chosen-select" onClick="Javascript:getStatus();" onChange="window.location.href=this.value;">
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+								[% IF (searched_blog.name == "") %]
+								<option value="/[% role %]/comments/blog/all/all/page/1"> All </option>
+								<option value="/[% role %]/comments/blog/all/approved/page/1"> Approved </option>
+								<option value="/[% role %]/comments/blog/all/pending/page/1"> Pending </option>
+								<option value="/[% role %]/comments/blog/all/trash/page/1"> Trashed </option>
+								<option value="/[% role %]/comments/blog/all/spam/page/1"> Spam </option>
+								[% ELSE %]
 								<option value="/[% role %]/comments/blog/[% searched_blog.name %]/all/page/1"> All </option>
 								<option value="/[% role %]/comments/blog/[% searched_blog.name %]/approved/page/1"> Approved </option>
 								<option value="/[% role %]/comments/blog/[% searched_blog.name %]/pending/page/1"> Pending </option>
 								<option value="/[% role %]/comments/blog/[% searched_blog.name %]/trash/page/1"> Trashed </option>
 								<option value="/[% role %]/comments/blog/[% searched_blog.name %]/spam/page/1"> Spam </option>
+								[% END %]
 							</select>
 						</div>
 					</div>

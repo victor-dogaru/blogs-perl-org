@@ -91,72 +91,114 @@ $(document).ready(function () {
 	var blogName = window.location.href.split("/")[6];
 	var statusName = window.location.href.split("/")[7];
 	if(blogName == "all") {
-		$(".comments-filter .blogs-drop a.chosen-single span").html(All);
+		$(".comments-filter .blogs-drop a.chosen-single span").html("All");
 	} else {
 	$(".comments-filter .blogs-drop a.chosen-single span").html(blogName);
 	}
+	if(statusName == "all") {
+	$(".comments-filter .status-drop a.chosen-single span").html("All");
+	} else {
 	$(".comments-filter .status-drop a.chosen-single span").html(statusName);
+	}
 });
 // END - Admin dashboard - Comments section
 
 
 // START - Admin dashboard - User section
-//function CreateURL() {
-//	var pageLocation = window.location.href;
-//	var pageURL = pageLocation.split("/");
-//	var userRole = pageURL[3];
-//	window.location.href = "/" + userRole + "/users/blog/" + getBlogValue() + "/role/" + getRoleValue() + "/status/" + getStatusValue() + "/page/1";
-//}
-//
-//function getBlogValue() {
-//	var e = document.getElementById("users_blogs_list");
-//	var blogOption = e.options[e.selectedIndex].value;
-//	return blogOption;
-//}
-//
-//function getRoleValue() {
-//	var e = document.getElementById("users_role");
-//	var roleOption = e.options[e.selectedIndex].value;
-//	return roleOption;
-//}
-//
-//function getStatusValue() {
-//	var e = document.getElementById("users_status");
-//	var strOptions = e.options[e.selectedIndex].value;
-//	return strOptions;
-//}
-//
-//function getBlogName() {
-//	var e = document.getElementById("users_blogs_list");
-//	var selectedBlog = e.options[e.selectedIndex].text;
-//	return selectedBlog;
-//}
-//
-//function getRoleName() {
-//	var e = document.getElementById("users_role");
-//	var selectedRole = e.options[e.selectedIndex].text;
-//	return selectedRole;
-//}
-//
-//function getStatusName() {
-//	var e = document.getElementById("users_status");
-//	var selectedStatus = e.options[e.selectedIndex].text;
-//	return selectedStatus;
-//}
-//
-//function getFilterOptions() {
-//	sessionStorage.filterOptions = getBlogName() + "***" + getRoleName() + "***" + getStatusName();
-//	alert(sessionStorage.filterOptions);
-//}
-//
-//$(document).ready(function(){
-//	var filterOptionUsers = sessionStorage.filterOptions;
-//	var filter = filterOptionUsers.split("***")
-//	$("#blog_dropdown a.chosen-single span").html(filter[0]);
-//	$("#role_dropdown a.chosen-single span").html(filter[1]);
-//	$("#status_dropdown a.chosen-single span").html(filter[2]);
-//	sessionStorage.clear();
-//});
+function CreateURL() {
+	var pageLocation = window.location.href;
+	var pageURL = pageLocation.split("/");
+	var userRole = pageURL[3];
+	window.location.href = "/" + userRole + "/users/blog/" + getBlogValue() + "/role/" + getRoleValue() + "/status/" + getStatusValue() + "/page/1";
+}
+
+function getBlogValue() {
+	var e = document.getElementById("users_blogs_list");
+	var blogOption = e.options[e.selectedIndex].value;
+	return blogOption;
+}
+
+function getRoleValue() {
+	var e = document.getElementById("users_role");
+	var roleOption = e.options[e.selectedIndex].value;
+	return roleOption;
+}
+
+function getStatusValue() {
+	var e = document.getElementById("users_status");
+	var strOptions = e.options[e.selectedIndex].value;
+	return strOptions;
+}
+
+
+
+function getBlogName() {
+	var e = document.getElementById("users_blogs_list");
+	var selectedBlog = e.options[e.selectedIndex].text;
+	alert(selectedBlog);
+	return selectedBlog;
+}
+
+function getRoleName() {
+	var e = document.getElementById("users_role");
+	var selectedRole = e.options[e.selectedIndex].text;
+	alert(selectedRole);
+	return selectedRole;
+}
+
+function getStatusName() {
+	var e = document.getElementById("users_status");
+	var selectedStatus = e.options[e.selectedIndex].text;
+	alert(selectedStatus);
+	return selectedStatus;
+}
+
+function getFilterOptions() {
+	sessionStorage.filterOptions = getBlogName() + "***" + getRoleValue() + "***" + getStatusValue();
+	alert(sessionStorage.filterOptions);
+}
+
+$(document).ready(function () {
+	if (sessionStorage.filterOptions) {
+		var filterOptionUsers = sessionStorage.filterOptions;
+		var filter = filterOptionUsers.split("***")
+		var userBlogValue = filter[0];
+		var userRoleValue = filter[1];
+		var userStatusValue = filter[2];
+		var blogDropdown = document.getElementById("users_blogs_list");
+		var roleDropdown = document.getElementById("users_role");
+		var statusDropdown = document.getElementById("users_status");
+
+		function setSelectedOption(s, valsearch) {
+			// Search through dropdown for the option you need
+			for (i = 0; i < s.options.length; i++) {
+				if (s.options[i].value == valsearch) {
+					// Found the option you need 
+					// And add property selected
+					s.options[i].selected = true;
+					break;
+				}
+			}
+			return;
+		}
+
+		setSelectedOption(blogDropdown, userBlogValue);
+		setSelectedOption(roleDropdown, userRoleValue);
+		setSelectedOption(statusDropdown, userStatusValue);
+
+		$("#blog_dropdown a.chosen-single span").html(filter[0]);
+		if (userRoleValue == 1) {
+			$("#role_dropdown a.chosen-single span").html("Admin");
+		} else if (userRoleValue == 0) {
+			$("#role_dropdown a.chosen-single span").html("Author");
+		}
+		$("#status_dropdown a.chosen-single span").html(filter[2]);
+	}
+
+	$(".sidey").click(function () {
+		sessionStorage.clear();
+	});
+});
 // END - Admin dashboard - User section
 
 

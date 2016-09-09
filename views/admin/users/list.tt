@@ -22,11 +22,11 @@
 
 					<div class="form-group pull-left">
 						<label class="control-label">Blog</label>
-						<div class="options-drop" id="blog_dropdown">
-							<select name="users_blogs_list" id="users_blogs_list" class="chosen-select">
+						<div class="users-dropdown" id="blog_dropdown">
+							<select name="users_blogs_list" id="users_blogs_list" class="chosen-select" onchange="getBlogName()">
 								<option value="all"> All </option>
 								[% FOREACH blog IN blogs %]
-								[% blog.name %]
+<!--								[% blog.name %]-->
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 								<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
 								[% END %] 
@@ -36,8 +36,8 @@
 					
 					<div class="form-group pull-left">
 						<label class="control-label">Role</label>
-						<div class="options-drop" id="role_dropdown">
-							<select name="users_role" id="users_role" class="chosen-select">
+						<div class="users-dropdown" id="role_dropdown">
+							<select name="users_role" id="users_role" class="chosen-select" onchange="getRoleName()">
 								<option value="all"> All </option>
 								<option value="1"> Admin </option>
 								<option value="0"> Author </option>
@@ -47,8 +47,8 @@
 					
 					<div class="form-group pull-left">
 						<label class="control-label">Status</label>
-						<div class="options-drop" id="status_dropdown">
-							<select name="users_status" id="users_status" class="chosen-select">
+						<div class="users-dropdown" id="status_dropdown">
+							<select name="users_status" id="users_status" class="chosen-select" onchange="getStatusName()">
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 								<option value="all"> All </option>
 								<option value="active"> Active </option>
@@ -59,7 +59,7 @@
 						</div>
 					</div>
 					<div class="form-group pull-right">
-						<button type="submit" class="btn btn-success" id="apply-filter" onclick="Javascript:CreateURL();" onChange="Javascript:getFilterOptions();">Apply</button>
+						<button type="submit" class="btn btn-success" id="apply-filter" onclick="Javascript:getFilterOptions(); CreateURL();" >Apply</button>
 <!--						<button type="button" class="btn btn-danger">Reset</button>-->
 					</div>
 				</div>
