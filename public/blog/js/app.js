@@ -422,4 +422,23 @@ $(document).ready(function() {
                 }
             });
     });
+
+    setTimeout(computeRecaptchaWidth, 1000);
+    $(window).on('resize', function() {
+        computeRecaptchaWidth();
+    });
+
+    function computeRecaptchaWidth() {
+        var iframe = $(".captcha > div > div"),
+            ifrWidth = iframe.outerWidth(),
+            ratio = $('#confirmPasswordRegister').outerWidth() / ifrWidth;
+
+        if (ratio <  1) {
+            var margin = ((ratio - 1) * ifrWidth) / 2;
+            iframe.css({
+                transform: 'scale(' + ratio + ') translateX(' + margin +'px)'
+            });
+        }
+    }
+
 });

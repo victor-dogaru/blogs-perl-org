@@ -15,7 +15,7 @@
                               [% ELSE %]
                                 <img class="user-image defaultAvatar" src="/avatar/" />
                               [% END %]
-                        
+
                     </div>
                 [% IF comment.fullname %]
 
@@ -27,7 +27,7 @@
                          <a href="/profile/author/[% comment.uid.username | uri %]">[% comment.uid.name %]<b></b></a>
                     </div>
                 [% END %]
-                
+
                 <div class="cmeta">
              <span class="hours">[% comment.comment_date_human %]</span>
                 </div>
@@ -36,12 +36,12 @@
                 </p>
                 <div class="clearfix">
                 </div>
-                
+
                 </div>
             </li>
 
         [% FOREACH comment in comments %]
-            <li class="comment clearfix" id="comment_[% comment.id %]">
+            <li class="comment list-of-comment clearfix" id="comment_[% comment.id %]">
                 <div class="col-xs-2">
                 </div>
                 <div class="col-xs-10 content-comment">
@@ -61,18 +61,18 @@
                         <i class="icon-user"></i> <a href="/profile/author/[% comment.uid.username | uri %]" >[% comment.uid.username %]</a>
                     </div>
                 [% END %]
-                
+
                 <div class="cmeta">
-             <span class="hours">[% comment.comment_date_human %]</span>
+                    <span class="hours">[% comment.comment_date_human %]</span>
                 </div>
-                <p>
-                    [% comment.content %]
-                </p>
+                <div class="comment-text">
+                    <p>[% comment.content %]</p>
+                </div>
                 <div class="clearfix">
                 </div>
-                
+
                 </div>
             </li>
         [% END %]
     </ul>
-</div> 
+</div>

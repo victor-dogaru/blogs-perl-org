@@ -2831,6 +2831,11 @@ a:focus {
 .comments .comment {
    margin: 0;
 }
+.comments .list-of-comment{
+   position: relative;
+   overflow: hidden;
+   word-wrap: break-word;
+}
 .comments .comment .cmeta {
    font-style: normal;
 }
