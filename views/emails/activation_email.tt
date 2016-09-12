@@ -125,18 +125,18 @@
 														<tr>
 															<td valign="top" width="720" style="padding-top:0px;">
 																<p style="margin: 0 0 5px 10px;font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;color: #ffffff;">Having trouble? Just copy and paste this link into your browser:</p>
-																<p style="margin: 0 0 5px 10px; color:#43C8E7 !important; font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;"><a href="#" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">[% config.app_url %][% mail_body %]</a></p>
+																<p style="margin: 0 0 5px 10px; color:#43C8E7 !important; font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;"><a href="[% config.app_url %][% mail_body %]" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">[% config.app_url %][% mail_body %]</a></p>
 															</td>
 														</tr>
 														<tr>
 															<td valign="top" width="720" style="padding-top:0px;">
-																<p style="margin: 0 0 5px 10px;font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;color: #ffffff;">If you haven't registered for <a href="http://blogs.perl.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a>, feel free to ignore this message.</p>
+																<p style="margin: 0 0 5px 10px;font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;color: #ffffff;">If you haven't registered for <a href="http://blogsperlorg.pearlbee.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a>, feel free to ignore this message.</p>
 															</td>
 														</tr>
 														<tr>
 															<td valign="top" width="720" style="padding-top:0px;">
 																<p style="margin: 0 0 5px 10px;font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;color: #ffffff;">Almost there, blogger,</p>
-																<p style="margin: 0 0 5px 10px;font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;color: #ffffff;">the <a href="#" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a> team</p>
+																<p style="margin: 0 0 5px 10px;font-family: 'Montserrat', 'Open sans', sans-serif;font-size: 15px;text-align: justify;line-height: 16px;color: #ffffff;">the <a href="http://blogsperlorg.pearlbee.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a> team</p>
 															</td>
 														</tr>
 														<tr><!-- START: EMAIL GRAY-ISH LINE-->
