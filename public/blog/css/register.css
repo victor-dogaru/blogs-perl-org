@@ -10,7 +10,7 @@
     background-size: cover;
 }
 .register .container {
-    margin: 50px auto;
+    margin-bottom: 30px;
 }
 .register .container h3 {
     margin-bottom: 0;
@@ -58,9 +58,7 @@
     height: 14px;
     width: 14px;
 }
-/*.register .social_register{*/
-    /*margin-top: 35px;*/
-/*}*/
+
 .register .separator {
     width: 50%;
 }
@@ -102,6 +100,7 @@
     background-color: #19132D;
     color: #ffffff;
 }
+
 @media all and (max-width: 450px) {
     .register-done h1 {
         font-size: 38px;
@@ -156,3 +155,17 @@
 }
 
 /*END Sing in form*/
+
+
+
+/*.captcha > div > div {*/
+    /*width: 100% !important;*/
+/*}*/
+/*.captcha iframe {*/
+    /*width: 100% !important;*/
+/*}*/
+
+/*.rc-anchor-normal {*/
+    /*height: 74px;*/
+     /*width: 800px !important;*/
+/*}*/
