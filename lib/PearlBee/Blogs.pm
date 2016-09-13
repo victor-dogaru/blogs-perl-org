@@ -468,7 +468,7 @@ post '/add-contributor/blog' => sub {
     });
 
     PearlBee::Helpers::Email::send_email_complete({
-       template => 'new_user.tt',
+       template => 'newBPO-user.tt',
        from     => config->{default_email_sender},
        to       => $email,
        subject  => 'You have been invited on BPO',
