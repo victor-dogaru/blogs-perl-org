@@ -10,8 +10,12 @@
     background-size: cover;
 }
 .register .container {
-    margin-bottom: 30px;
+    margin: 50px auto;
 }
+.register:not(.sign-up):not(.myprofile) .container{
+    margin: 0px auto 30px;
+}
+
 .register .container h3 {
     margin-bottom: 0;
 }
@@ -155,17 +159,3 @@
 }
 
 /*END Sing in form*/
-
-
-
-/*.captcha > div > div {*/
-    /*width: 100% !important;*/
-/*}*/
-/*.captcha iframe {*/
-    /*width: 100% !important;*/
-/*}*/
-
-/*.rc-anchor-normal {*/
-    /*height: 74px;*/
-     /*width: 800px !important;*/
-/*}*/

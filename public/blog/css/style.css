@@ -1186,18 +1186,15 @@ strong{
 }
 .blog-start {
    z-index: 12;
-/*   background: url("../img/camila-blue.jpg") center center no-repeat;*/
+   background: url("../img/camila-blue.jpg") center center no-repeat;
    width: 100%;
    position: absolute;
-/*   background-size: cover;*/
+   background-size: cover;
    background-color: #43C8E7;
-   height: 37%;
    top: 0;
 }
 .blog-start .container {
    height: 100%;
-   background: url("../img/camila-blue.jpg") center center no-repeat;
-   background-size: cover;
 }
 .blog-start .row {
    height: 100%;
@@ -1657,6 +1654,10 @@ footer .fwidget #powered_by {
 
 /* Mobile phones */
 @media (max-width: 381px) {
+   .header .header-icon.bar:after {
+      right: 80px;
+   }
+
    .blog-start {
       height: 65vh;
    }
