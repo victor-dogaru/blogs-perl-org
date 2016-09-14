@@ -85,86 +85,56 @@ $(document).ready(function() {
 	// 	});
 	// }
 
- 
-// START - Admin dashboard - Comments section
-$(document).ready(function () {
-	var blogName = window.location.href.split("/")[6];
-	var statusName = window.location.href.split("/")[7];
-	if(blogName == "all") {
-		$(".comments-filter .blogs-drop a.chosen-single span").html("All");
-	} else {
-	$(".comments-filter .blogs-drop a.chosen-single span").html(blogName);
-	}
-	if(statusName == "all") {
-	$(".comments-filter .status-drop a.chosen-single span").html("All");
-	} else {
-	$(".comments-filter .status-drop a.chosen-single span").html(statusName);
-	}
-});
-// END - Admin dashboard - Comments section
-
-
-// START - Admin dashboard - User section
-function CreateURL() {
-	var pageLocation = window.location.href;
-	var pageURL = pageLocation.split("/");
-	var userRole = pageURL[3];
-	window.location.href = "/" + userRole + "/users/blog/" + getBlogValue() + "/role/" + getRoleValue() + "/status/" + getStatusValue() + "/page/1";
-}
-
+// START - Admin dashboard - Users section filter and persistence
+// START - Admin dashboard - Comments section filter and persistence
+// Author: Paul Mercean
 function getBlogValue() {
-	var e = document.getElementById("users_blogs_list");
+	if (window.location.href.split("/")[4] == "users") {
+		var e = document.getElementById("users_blogs_list");
+	} else if (window.location.href.split("/")[4] == "comments") {
+		var e = document.getElementById("comments_blogs_list");
+	}
 	var blogOption = e.options[e.selectedIndex].value;
 	return blogOption;
 }
 
 function getRoleValue() {
-	var e = document.getElementById("users_role");
+	var e = document.getElementById("users_role_list");
 	var roleOption = e.options[e.selectedIndex].value;
 	return roleOption;
 }
 
 function getStatusValue() {
-	var e = document.getElementById("users_status");
-	var strOptions = e.options[e.selectedIndex].value;
-	return strOptions;
+	if (window.location.href.split("/")[4] == "users") {
+		var e = document.getElementById("users_status_list");
+	} else if (window.location.href.split("/")[4] == "comments") {
+		var e = document.getElementById("comments_status_list");
+	}
+	var statusOptions = e.options[e.selectedIndex].value;
+	return statusOptions;
 }
 
-
-
-function getBlogName() {
-	var e = document.getElementById("users_blogs_list");
-	var selectedBlog = e.options[e.selectedIndex].text;
-	return selectedBlog;
-}
-
-function getRoleName() {
-	var e = document.getElementById("users_role");
-	var selectedRole = e.options[e.selectedIndex].text;
-	return selectedRole;
-}
-
-function getStatusName() {
-	var e = document.getElementById("users_status");
-	var selectedStatus = e.options[e.selectedIndex].text;
-	return selectedStatus;
+function createURL() {
+	var pageURL = window.location.href.split("/");
+	var userRole = pageURL[3];
+	if (pageURL[4] == "users") {
+		window.location.href = "/" + userRole + "/users/blog/" + getBlogValue() + "/role/" + getRoleValue() + "/status/" + getStatusValue() + "/page/1";
+	} else if (pageURL[4] == "comments") {
+		window.location.href = "/" + userRole + "/comments/blog/" + getBlogValue() + "/" + getStatusValue() + "/page/1";
+	}
 }
 
 function getFilterOptions() {
-	sessionStorage.filterOptions = getBlogName() + "***" + getRoleValue() + "***" + getStatusValue();
+	if (window.location.href.split("/")[4] == "users") {
+		sessionStorage.filterOptions = getBlogValue() + "***" + getRoleValue() + "***" + getStatusValue();
+	} else if (window.location.href.split("/")[4] == "comments") {
+		sessionStorage.filterOptions = getBlogValue() + "***" + getStatusValue();
+	}
 }
 
 $(document).ready(function () {
 	if (sessionStorage.filterOptions) {
-		var filterOptionUsers = sessionStorage.filterOptions;
-		var filter = filterOptionUsers.split("***")
-		var userBlogValue = filter[0];
-		var userRoleValue = filter[1];
-		var userStatusValue = filter[2];
-		var blogDropdown = document.getElementById("users_blogs_list");
-		var roleDropdown = document.getElementById("users_role");
-		var statusDropdown = document.getElementById("users_status");
-
+		var filter = sessionStorage.filterOptions.split("***");
 		function setSelectedOption(s, valsearch) {
 			// Search through dropdown for the option you need
 			for (i = 0; i < s.options.length; i++) {
@@ -178,27 +148,35 @@ $(document).ready(function () {
 			return;
 		}
 
-		setSelectedOption(blogDropdown, userBlogValue);
-		setSelectedOption(roleDropdown, userRoleValue);
-		setSelectedOption(statusDropdown, userStatusValue);
-
-		$("#blog_dropdown a.chosen-single span").html(filter[0]);
-		if (userRoleValue == 1) {
-			$("#role_dropdown a.chosen-single span").html("Admin");
-		} else if (userRoleValue == 0) {
-			$("#role_dropdown a.chosen-single span").html("Author");
+		if (window.location.href.split("/")[4] == "users") {
+			setSelectedOption(document.getElementById("users_blogs_list"), filter[0]);
+			setSelectedOption(document.getElementById("users_role_list"), filter[1]);
+			setSelectedOption(document.getElementById("users_status_list"), filter[2]);
+			
+			$("#users_blogs_dropdown a.chosen-single span").html(filter[0]);
+			if (filter[1] == 1) {
+				$("#users_role_dropdown a.chosen-single span").html("Admin");
+			} else if (filter[1] == 0) {
+				$("#users_role_dropdown a.chosen-single span").html("Author");
+			}
+			$("#users_status_dropdown a.chosen-single span").html(filter[2]);
+			
+		} else if (window.location.href.split("/")[4] == "comments") {
+			setSelectedOption(document.getElementById("comments_blogs_list"), filter[0]);
+			setSelectedOption(document.getElementById("comments_status_list"), filter[1]);
+			
+			$("#comments_blogs_dropdown a.chosen-single span").html(filter[0]);
+			$("#comments_status_dropdown a.chosen-single span").html(filter[1]);
 		}
-		$("#status_dropdown a.chosen-single span").html(filter[2]);
+		
 	}
-
+	
 	$(".sidey").click(function () {
 		sessionStorage.clear();
 	});
 });
-// END - Admin dashboard - User section
-
-
-
+// END - Admin dashboard - Users section filter and persistence
+// END - Admin dashboard - Comments section filter and persistence
 
 
 $(document).ready(function(){

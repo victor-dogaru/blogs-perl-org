@@ -1356,13 +1356,16 @@ span.header-badge {
 .comments-filter .status-drop a.chosen-single span::first-letter {
 	text-transform: uppercase;
 }
+.capital-letter {
+	text-transform: capitalize;
+}
 /*END - Comments section*/
 /*START - Users section*/
 .manage-users .form-group .users-dropdown {
 	float: left;
 	margin-right: 50px;
 }
-.users-filter #status_dropdown a.chosen-single span::first-letter,
+.users-filter #users_status_dropdown a.chosen-single span::first-letter,
 .users-filter #role_dropdown a.chosen-single span::first-letter {
 	text-transform: uppercase;
 }
