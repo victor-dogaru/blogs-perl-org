@@ -58,5 +58,77 @@ get '/author/blogs/page/:page' => sub {
 
 };
 
+=head2 /author/blog/:blogname/delete ; 
+
+delete a blog with all its posts, comments, ownership relations etc.
+
+=cut
+
+any '/author/blog/:blogname/delete' => sub{
+
+  my $user  = resultset('Users')->find_by_session(session);
+  my $blog  = resultset('Blog')->find ({ name=> params->{blogname} });
+  my $flag  = resultset('BlogOwner')->search ({ 
+                  user_id => $user->id,
+                  blog_id => $blog->id,
+                  is_admin=>1})->count();
+  if ($flag == 0){
+
+    redirect '/author/blogs';
+  }
+  else {
+    my @posts;
+
+    my @blog_posts = resultset('BlogPost')->search({
+        blog_id => $blog->id
+        });
+
+    foreach my $iterator (@blog_posts){
+      push @posts, resultset('Post')->find({ id => $iterator->post_id});
+    }
+    
+    foreach my $iterator (@posts){
+      my @post_categories = resultset('PostCategory')->search ({
+        post_id => $iterator->id
+        })->delete();
+    } 
+    
+    foreach my $iterator (@posts){
+      my @post_tag = resultset('PostTag')->search ({
+        post_id => $iterator->id
+        })->delete();
+    } 
+    
+    foreach my $iterator (@posts){
+      my @comments = resultset('Comment')->search ({
+        post_id => $iterator->id
+        })->delete();
+    } 
+
+    my @blog_posts2 = resultset('BlogPost')->search({
+      blog_id => $blog->id
+      })->delete();
+
+    foreach my $iterator (@blog_posts){
+      my @posts = resultset('Post')->search({ id => $iterator->post_id })->delete();
+    }
+
+    my @blog_owners= resultset('BlogOwner')->search({
+      blog_id => $blog->id
+      })->delete();
+
+    my @blog_pages= resultset('BlogPage')->search({
+      blog_id => $blog->id
+      })->delete();
+
+    my @blog_categories= resultset('BlogCategories')->search({
+      blog_id => $blog->id
+      })->delete();
+
+      $blog->delete();
+  }
+
+  redirect '/author/blogs/page/1';
+};
 
 1;
