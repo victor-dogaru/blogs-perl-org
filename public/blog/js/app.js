@@ -249,9 +249,9 @@ $(document).ready(function() {
         $('.pages').css('min-height', $(window).height()-$('footer').height()-45);
     });
     //Blog start overlay
-    $('.blog-start').css('max-height', $(window).height()*0.99);
+    $('.blog-start').css('height', $(window).height()-$('.header').height());
     $(window).resize(function(){
-        $('.blog-start').css('max-height', $(window).height()*0.99);
+        $('.blog-start').css('height', $(window).height()-$('.header').height());
     });
 
     $('.blog-start .row').css('max-height', $('.blog-start').height()-$('.header').height());
