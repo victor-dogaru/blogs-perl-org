@@ -70,10 +70,10 @@
 									<a href="/blogs/user/[% blog.blog_creator.username %]/blogname/[%blog.name%]	">
 										<button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button>
 									</a>
-									<a href="/[% role %]/posts/edit/[% post.slug %]">
+									<a href="/author/settings">
 										<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 									</a>
-									<a href="/[% role %]/blog/delete/[% post.slug %]">
+									<a href="/[% role %]/blog/[% blog.name %]/delete">
 										<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 									</a>
 									[% ELSE %]
