@@ -104,8 +104,8 @@
                                         <tbody>
                                         <tr>
                                             <td valign="top" width="720" style="padding-top:25px; padding-bottom:0;">
-                                                <h3 style="color: #ffffff; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 20px; font-weight: 100; margin-right: 15px; margin-left: 10px;">Hi [%username%],</h3>
-                                                <p  style="margin-left: 10px; margin-bottom: 10px; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 15px; text-align: justify; line-height: 22px; color: #ffffff;">[%inviter FILTER ucfirst%] would like to invite you to join his/her blog [%blog%] on <a href="http://blogsperlorg.pearlbee.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a>. You can accept the invitation by logging in to your profile and check out the details in your personal dashboard.</p>
+                                                <h3 style="color: #ffffff; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 20px; font-weight: 100; margin-right: 15px; margin-left: 10px;">Hi <b>[%username%]</b>,</h3>
+                                                <p  style="margin-left: 10px; margin-bottom: 10px; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 15px; text-align: justify; line-height: 22px; color: #ffffff;"><b>[%inviter FILTER ucfirst%]</b> would like to invite you to join his/her blog <b>[%blog%]</b> on <a href="http://blogsperlorg.pearlbee.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a>. You can accept the invitation by logging in to your profile and check out the details in your personal dashboard.</p>
                                             </td>
                                         </tr>
                                         <tr>
@@ -147,4 +147,3 @@
 </body>
 
 </html>
-    
