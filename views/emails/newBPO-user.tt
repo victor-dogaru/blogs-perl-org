@@ -1,0 +1,152 @@
+<html>
+<body leftmargin="0" topmargin="0" rightmargin="0" bottommargin="0" marginwidth="0" marginheight="0" bgcolor="#06001A">
+<br>
+<title> BPO's New User</title>
+<meta http-equiv="Content-Type" content="text/html" charset="UTF-8">
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+        background-color: #06001A ;
+    }
+    h1 {
+        margin: 20px 0 20px 0;
+        font-size: 30px;
+        line-height: 33px;
+        color: #43C8E7;
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        width: 320px;
+    }
+    h2{
+        margin-left: 10px!important;
+        font-weight: normal;
+        font-size: 17px;
+        color: #fff;
+    }
+    h5 {
+        color: #ffffff;
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+        font-size: 20px;
+        font-weight: initial;
+        margin-right: 15px;
+        margin-left: 10px;
+        margin-bottom: 0;
+    }
+    hr {
+        background: #ccc;
+        border: 0 none;
+        margin-right: 0!important;
+        margin-left: 10px!important;
+        opacity: 0.5;
+    }
+    u {
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+        text-decoration: none !important;
+    }
+    p {
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+        font-size: 15px;
+        text-align: justify;
+        line-height: 22px;
+        color: #ffffff;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+    img {
+        display: block;
+    }
+    a {
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+        text-decoration: none !important;
+        color: #43C8E7;
+    }
+    td {
+        font-family: 'Montserrat', 'Open sans', sans-serif;
+    }
+</style>
+
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" height="100%" bgcolor="#06001A">
+        <tbody>
+        <tr>
+            <td align="center" valign="top">
+                <table cellpadding="0" cellspacing="0" border="0" width="720" style="margin-top:50px;">
+                    <tbody>
+
+                    <tr><!-- START: MAIL LAYOUT -->
+                        <td width="720">
+                            <table cellpadding="0" cellspacing="0" border="0" width="720">
+                                <tbody>
+
+                                <tr><!-- START: LOGO -->
+                                    <td width="720">
+                                        <table cellpadding="20" cellspacing="0" border="0">
+                                            <tbody>
+                                            <tr>
+                                                <td width="145" valign="middle">
+                                                    <img src="[% config.app_url %]/blog/img/welcome.png" width="170" height="130" style="margin-left:10px;" alt="">
+                                                </td>
+                                                <td width="575" valign="middle" float="right">
+                                                    <h1 style="margin: 20px 0 20px 0; font-size: 30px; line-height: 33px; color: #43C8E7; font-family: 'Montserrat', 'Open sans', sans-serif; font-weight: bold; text-transform: uppercase; width: 320px;">Welcome to <a style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;" href="http://blogsperlorg.pearlbee.org/">blogs.perl.org</a></h1>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- END:   LOGO -->
+
+                                <tr><!-- START:  EMAIL CONTENT -->
+                                    <td>
+                                        <table cellpadding="20" cellspacing="0" border="0" width="720">
+                                            <tbody>
+                                            <tr>
+                                                <td valign="top" width="720" style="padding-top:25px; padding-bottom:0;">
+                                                    <h3 style="color: #ffffff; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 20px; font-weight: 100; margin-right: 15px; margin-left: 10px;">Hello stranger,</h3>
+                                                    <h2 style=" margin-left: 10px!important; font-weight: normal; font-size: 17px; color: #fff;"> Join [username.inviter]'s blog on <a style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;" href="http://blogsperlorg.pearlbee.org/">blogs.perl.org</a> </h2>
+                                                    <p  style="margin-left: 10px; margin-bottom: 10px; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 15px; text-align: justify; line-height: 22px; color: #ffffff;">[username.inviter] would like to invite you to join his/her blog [blogname] on <a href="http://blogsperlorg.pearlbee.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a>. It looks like you don’t have an account with us just yet, but it’s really easy to create one.</p>
+                                                    <p  style="margin-left: 10px; margin-bottom: 10px; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 15px; text-align: justify; line-height: 22px; color: #ffffff; font-weight: bold">Follow this link & join the community of <a href="http://blogsperlorg.pearlbee.org/" style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;">blogs.perl.org</a> bloggers: [link]</p>
+                                                    <p  style="margin-left: 10px; margin-bottom: 10px; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 15px; text-align: justify; line-height: 22px; color: #ffffff;">Once you have your account, you can accept the invitation by logging in to your profile and accessing your personal dashboard.</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" width="720" style="padding-top:0px;">
+                                                    <h5 style ="color: #ffffff; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 20px; margin-right: 15px; margin-left: 10px; margin-bottom: 0;">Happy blogging!</h5>
+                                                </td>
+                                            </tr>
+
+                                            <tr><!-- START: EMAIL GRAY-ISH LINE-->
+                                                <td width="720" height="5" style="padding:0px;">
+                                                    <hr style="opacity: 0.5; margin-left: 10px!important; margin-right: 0!important; height: 1px; background: #ccc; border: 0 none;">
+                                                </td>
+                                            </tr>
+                                            <!-- END: EMAIL GRAY-ISH LINE-->
+                                            <tr>
+                                                <td>
+                                                    <p style="margin-left: 10px; margin-right: 10px; font-family: 'Montserrat', 'Open sans', sans-serif; font-size: 15px; text-align: justify; line-height: 22px; color: #ffffff; font-style: italic;">Copyright &copy; 2016 <a style="font-family: 'Montserrat', 'Open sans', sans-serif; text-decoration: none !important; color: #43C8E7;" href="http://blogsperlorg.pearlbee.org/">blogs.perl.org</a>. All rights reserved</p>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <!-- END:  EMAIL CONTENT -->
+
+                                </tbody>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- END: MAIL LAYOUT -->
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+</body>
+
+</html>
