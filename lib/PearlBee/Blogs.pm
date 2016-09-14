@@ -437,9 +437,10 @@ post '/add-contributor/blog' => sub {
         });
 
         PearlBee::Helpers::Notification_Email->invite_contributor({
-            user => $user,
+            user    => $user,
             invitee => $invitee,
-            config => config
+            config  => config,
+            blog    => $blog->name
         });
 
         template 'admin/users/add', {
@@ -476,7 +477,8 @@ post '/add-contributor/blog' => sub {
        template_params => {
           config    => config,
           role      =>$role,
-          blog      => $blog->name
+          blog      => $blog->name,
+          sender    => $user->username
        }
      });
 

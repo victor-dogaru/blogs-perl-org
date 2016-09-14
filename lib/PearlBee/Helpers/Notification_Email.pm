@@ -52,6 +52,7 @@ sub invite_contributor {
     my $user     = $args->{user};
     my $invitee  = $args->{invitee};
     my $config   = $args->{config};
+    my $blog     = $args->{blog};
 
     try {
         PearlBee::Helpers::Email::send_email_complete({
@@ -65,7 +66,8 @@ sub invite_contributor {
                 name       => $invitee->name,
                 username   => $invitee->username,
                 email      => $invitee->email,
-                inviter    => $user->name
+                inviter    => $user->name,
+                blog       => $blog
                 #signature => config->{'email_signature'}
             }
         });
