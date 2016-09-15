@@ -148,10 +148,8 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
       push @blog_posts, resultset('BlogPost')->search({ blog_id => $iterator->get_column('blog_id')});
     }
   }
-  
-  
-  my @comments_aux;
-  
+ 
+  my @comments_aux; 
   my @posts; 
   my @ids;
 
@@ -178,8 +176,7 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
     }
   }
   
-  my $flag   ;     
-
+  my $flag;     
 
   my @comments;
   if (params->{blog} ne 'all'){
@@ -237,7 +234,7 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/comments/' . $blog);
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/comments/blog/' . $blog . '/'. $status);
 
   # Generating the pagination navigation
   my $total_comments  = $all;
