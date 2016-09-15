@@ -66,14 +66,14 @@
 								</td>
 
 								<td width="11%">
-									[% IF blog.role_in_blog == '1' %]
+									[% IF blog.role_in_blog == '1' or  session.user.is_admin %]
 									<a href="/blogs/user/[% blog.blog_creator.username %]/blogname/[%blog.name%]	">
 										<button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button>
 									</a>
 									<a href="/author/settings">
 										<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 									</a>
-									<a href="/[% role %]/blog/[% blog.name %]/delete">
+									<a href="/author/blog/[% blog.name %]/delete">
 										<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 									</a>
 									[% ELSE %]
