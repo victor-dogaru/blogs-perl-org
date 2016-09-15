@@ -283,6 +283,16 @@ post '/create-blog' => sub{
     warn "***** Redirecting guest away from /create-blog";
     redirect '/'
   }
+  my @special_characters = ('#','\\','/');
+  my $result ;
+  my $special_char = 0;
+  foreach my $iterator (@special_characters){
+    $result = index($params->{blog_name},$iterator);
+    if ($result > 0) {
+      $special_char = 1;
+      last;
+    }
+  }
 
   my $flag = 0;
   my $check_blog = resultset('Blog')->find({ name=> $params->{blog_name}});
@@ -290,7 +300,7 @@ post '/create-blog' => sub{
       $flag = 1;
   }
   
-  if (!$flag ){
+  if (!$flag && !$special_char ){
     try{
       my $blog = resultset('Blog')->create_with_slug({
         name            => $params->{blog_name},
@@ -321,6 +331,14 @@ post '/create-blog' => sub{
     },
     { layout  => 'admin' };
   }
+  elsif ($result>0){
+  template 'admin/blogs/add',
+   {    
+    timezones => \@timezones,
+    error     => 'Special characters (like the pound sign)  are not allowed.'
+    },
+    { layout  => 'admin' };
+  }    
   else {
     template 'admin/blogs/add', {
     timezones => \@timezones,
@@ -437,10 +455,10 @@ post '/add-contributor/blog' => sub {
         });
 
         PearlBee::Helpers::Notification_Email->invite_contributor({
-            user    => $user,
+            user => $user,
             invitee => $invitee,
-            config  => config,
-            blog    => $blog->name
+            config => config,
+            blog   => $blog->name
         });
 
         template 'admin/users/add', {
@@ -478,7 +496,7 @@ post '/add-contributor/blog' => sub {
           config    => config,
           role      =>$role,
           blog      => $blog->name,
-          sender    => $user->username
+          sender     => $user->username,
        }
      });
 
@@ -489,5 +507,6 @@ post '/add-contributor/blog' => sub {
     {layout => 'admin' }; 
   }
 };
+
 
 1;

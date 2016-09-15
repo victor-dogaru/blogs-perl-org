@@ -49,7 +49,18 @@ post '/blog/profile' => sub {
       }
   }
 
-  if ($flag){
+  my @special_characters = ('#','\\','/');
+  my $result ;
+  my $special_char = 0;
+  foreach my $iterator (@special_characters){
+    $result = index($params->{blog_name},$iterator);
+    if ($result > 0) {
+      $special_char = 1;
+      last;
+    }
+  }
+
+  if ($flag && !$special_char){
 
     if ($params->{'blog_name'}){
       utf8::decode($params->{'blog_name'});
@@ -156,6 +167,21 @@ post '/blog/profile' => sub {
       }
 
   }
+    elsif ($special_char){
+      for my $blog_owner (@blog_owners){
+        push @blogs, resultset('Blog')->search({ 
+                    id => $blog_owner->get_column('blog_id')
+                    });
+      }
+      @blogs = map { $_->as_hashref } @blogs; 
+      template 'admin/settings/index.tt', 
+      {
+      timezones => \@timezones,
+      blogs     => \@blogs,
+      warning   => "Special characters (like the pound sign)  are not allowed."
+      },
+      { layout => 'admin' };
+    }
     else {
       if (!$res_user->is_admin){
       for my $blog_owner (@blog_owners){
