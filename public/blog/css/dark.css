@@ -178,3 +178,13 @@ color: #ffffff;
 .info-entry ul.info-blog li{
     color: #fff;
 }
+
+@media all and (max-width: 479px){
+    .text-listing-entries::before, .loading-posts .view-more::before {
+        background: none;
+    }
+
+    .text-listing-entries {
+        border-bottom: none;
+    }
+}
