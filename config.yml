@@ -49,7 +49,7 @@ plugins:
             pg_enable_utf8: 1
       feed:
         title:     'blogs.perl.org'
-        format:    'atom'
+        format:    'Atom'
         max_posts: 10
       reCAPTCHA:
         site_key:
