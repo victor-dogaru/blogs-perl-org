@@ -288,7 +288,7 @@ post '/create-blog' => sub{
   my $special_char = 0;
   foreach my $iterator (@special_characters){
     $result = index($params->{blog_name},$iterator);
-    if ($result > 0) {
+    if ($result >= 0) {
       $special_char = 1;
       last;
     }
