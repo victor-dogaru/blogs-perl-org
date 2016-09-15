@@ -331,7 +331,7 @@ post '/create-blog' => sub{
     },
     { layout  => 'admin' };
   }
-  elsif ($result>0){
+  elsif ($special_char){
   template 'admin/blogs/add',
    {    
     timezones => \@timezones,
