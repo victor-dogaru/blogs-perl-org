@@ -299,8 +299,9 @@ post '/author/create-blog' => sub{
   if ($check_blog){
       $flag = 1;
   }
-  
-  if (!$flag && !$special_char ){
+  my $check = length $params->{blog_name};
+
+  if (!$flag && !$special_char && $check<30){
     try{
       my $blog = resultset('Blog')->create_with_slug({
         name            => $params->{blog_name},
@@ -338,7 +339,15 @@ post '/author/create-blog' => sub{
     error     => 'Special characters (like the pound sign)  are not allowed.'
     },
     { layout  => 'admin' };
-  }    
+  }  
+  elsif ($check>30){
+  template 'admin/blogs/add',
+   {    
+    timezones => \@timezones,
+    error     => 'The blog name must not exceed 30 characters'
+    },
+    { layout  => 'admin' };
+    }    
   else {
     template 'admin/blogs/add', {
     timezones => \@timezones,

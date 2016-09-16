@@ -34,7 +34,7 @@ post '/blog/profile' => sub {
                       user_id=>$res_user->id
                       });
   my $flag = 0;
-
+  my $check = length $params->{'blog_name'};
   if ($res_user->is_admin){
     $flag = 1;
     @blogs = resultset('Blog')->all();
@@ -60,7 +60,7 @@ post '/blog/profile' => sub {
     }
   }
 
-  if ($flag && !$special_char){
+  if ($flag && !$special_char && $check<30){
 
     if ($params->{'blog_name'}){
       utf8::decode($params->{'blog_name'});
@@ -179,6 +179,21 @@ post '/blog/profile' => sub {
       timezones => \@timezones,
       blogs     => \@blogs,
       warning   => "Special characters (like the pound sign)  are not allowed."
+      },
+      { layout => 'admin' };
+    }
+    elsif ($check>30){
+      for my $blog_owner (@blog_owners){
+        push @blogs, resultset('Blog')->search({ 
+                    id => $blog_owner->get_column('blog_id')
+                    });
+      }
+      @blogs = map { $_->as_hashref } @blogs; 
+      template 'admin/settings/index.tt', 
+      {
+      timezones => \@timezones,
+      blogs     => \@blogs,
+      warning   => "The blog name must not exceed 40 characters"
       },
       { layout => 'admin' };
     }
