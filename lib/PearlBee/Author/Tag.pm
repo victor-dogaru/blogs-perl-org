@@ -62,7 +62,7 @@ Add a new tag
 
 =cut
 
-post '/author/tags/add' => sub {
+any '/author/tags/add' => sub {
 
   my $name = params->{name};
   my $nr_of_rows = 5;
