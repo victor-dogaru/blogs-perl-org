@@ -270,7 +270,7 @@ get '/blogs/authors/slug/:slug/page/:page' => sub {
 
 =cut
 
-post '/create-blog' => sub{
+post '/author/create-blog' => sub{
 
   my $params    = body_parameters;
   my @timezones = DateTime::TimeZone->all_names;
