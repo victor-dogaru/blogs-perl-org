@@ -1514,27 +1514,6 @@ div.ppt {
    font-family:"Open Sans",sans-serif;
 }
 
-/* Back to top */
-.totop {
-   position: fixed;
-   bottom: 0px;
-   right: 0px;
-   z-index: 104400;
-   background: #16cbe6;
-}
-.totop a, .totop a:visited{
-   display: block;
-   width: 30px;
-   height: 30px;
-   color: #fff;
-   text-align: center;
-   line-height: 30px;
-}
-.totop a:hover {
-   color: #eee;
-   text-decoration: none;
-}
-
 /* Footer */
 footer{
    background:#43C8E7;
