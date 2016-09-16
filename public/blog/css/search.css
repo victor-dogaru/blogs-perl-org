@@ -329,6 +329,18 @@
     .search-page #tag-list li {
         max-width: 100%;
     }
+    .no-posts2, .no-posts3, .no-posts-found1{
+        font-size: 25px;
+    }
+    .search-page .no-posts2, .search-page .no-posts3, .search-page .no-posts-found1{
+        padding-top: 0;
+        padding-right: 8%;
+        padding-bottom: 8%;
+        padding-left: 8%;
+    }
+    .no-posts-found4{
+        padding-top: 0;
+    }
 }
 @media all and (max-width: 360px){
     #tab-content2 .info-entry{

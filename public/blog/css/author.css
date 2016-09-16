@@ -177,9 +177,16 @@
         padding-left: 35%;
     }
 }
-@media screen and (min-width: 360px) and (max-width:480px){
+@media screen and (min-width: 320px) and (max-width:480px){
     .author-description .author-info {
         padding-left: 10%;
+    }
+    #author-tab-content2 p.no-posts, #author-tab-content3 p.no-pages{
+        font-size: 25px;
+        line-height: 30px;
+    }
+    .author-messages {
+        padding: 8% 8% 8% 8%;
     }
 }
 @media screen and (min-width: 480px) and (max-width:620px){
