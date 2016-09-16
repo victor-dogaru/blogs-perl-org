@@ -641,10 +641,20 @@ any '/author/users/make_author/:username/:blog' => sub {
   }
   my $blog   = resultset('Blog')->find({ name =>params->{blog} });
   my $user   = resultset('Users')->find({ username=> params->{username}});
-  my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
-  ->update({ is_admin=>0 });
-  redirect '/author/users';
-
+  my $count  = resultset('BlogOwner')->search({ blog_id=>$blog->id, is_admin =>1 })->count();
+  if ( $count>1 ){
+    my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
+    ->update({ is_admin=>0 });
+    redirect '/author/users';
+  }
+  else {
+    template 'admin/users/list', 
+    {
+    error => 'At least 1 admin must remain on the blog'
+    }, 
+    { layout => 'admin' };
+  }
+  
 };
 
 =head2 /author/users/add

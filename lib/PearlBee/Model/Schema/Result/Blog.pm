@@ -347,7 +347,7 @@ sub blog_creator {
   my $schema     = $self->result_source->schema;
   my $id         = $self->id;
   my $blog_owner = $schema->resultset('BlogOwner')->search(
-                      { blog_id => $id, is_admin => 1 },
+                      { blog_id => $id },
                       { order_by  => { -asc => "created_date" } }
                    )->first();
    my $blog_creator = $schema->resultset('Users')->find({
