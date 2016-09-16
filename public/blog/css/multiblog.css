@@ -83,3 +83,19 @@
     font-weight: bold;
 }
 
+/*Media queries for multi-blog*/
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (-webkit-min-device-pixel-ratio: 1) {
+    .posts.listings .info-entry .date,
+    .blog_author .info-entry .date{
+        font-size: 13px;
+    }
+}
+
+@media all and (max-width: 479px){
+    .posts.listings .info-entry .date, .blog_author .info-entry .date{
+        font-size: 12px;
+    }
+}

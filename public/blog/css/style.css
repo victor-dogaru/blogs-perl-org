@@ -2556,8 +2556,21 @@ a:focus {
      .text-listing-entries::before{
          left: -80px;
      }
+    .posts.listings .post-heading h2{
+       line-height: 18px;
+    }
      .posts.listings .post-heading h2 a {
          font-size: 18px;
+         line-height: 15px;
+         text-transform: capitalize;
+     }
+    .posts.listings .info-entry .user a.user-name, .posts.listings .info-entry .user a.blog-name{
+       text-transform: capitalize;
+    }
+
+     .posts.listings .post_preview_wrapper{
+        font-size: 16px;
+        line-height: 22px;
      }
      .posts.listings .info-entry .user,
      .posts.listings .info-entry .date,
@@ -2568,14 +2581,15 @@ a:focus {
          left: -120px;
          padding: 8px 16px;
      }
+    .entry .bubble img{
+       left: -80px;
+       width: 50px;
+       height: 50px;
+       display: block;
+    }
  }
 
  @media all and (max-width: 660px){
-     .entry .bubble img{
-         left: -80px;
-         width: 50px;
-         height: 50px;
-     }
      .text-listing-entries::before{
          left: -50px;
      }
@@ -2587,29 +2601,40 @@ a:focus {
          left: -50px;
      }
  }
- @media all and (max-width: 480px){
+ @media all and (max-width: 479px){
      .posts.listings .info-entry .user,
      .posts.listings .info-entry .date,
      .posts.listings .comments-listings {
          font-size: 14px;
      }
-     .entry .bubble img{
-         display: none;
-     }
+    .blog .posts.listings .entry{
+       border-bottom: 1px solid rgba(242, 245, 238, 0.4);
+    }
+    .text-listing-entries{
+       border-bottom: none;
+    }
+    .posts.listings .post-heading h2{
+       margin-bottom: 5px;
+    }
+    .posts.listings .entry .post_preview {
+       height: 70px;
+    }
+    .text-listing-entries::before, .loading-posts .view-more::before{
+       background: none;
+    }
+    .entry .bubble img {
+       left: -55px;
+       top: 20px;
+    }
      .text-listing-entries::before{
          left: -10%;
      }
-     .loading-posts .more-posts{
-         left: -69px;
-     }
-
+    .loading-posts .more-posts {
+       left: -25px;
+       width: 100%;
+    }
      .loading-posts .view-more::before {
       left: -10%;
-     }
- }
- @media all and (max-width: 360px){
-     .loading-posts .more-posts{
-         left: -65px;
      }
  }
  /*media for tablet&mobile*/
@@ -2689,6 +2714,18 @@ a:focus {
  }
 /*/progressloader-holder*/
 
+
+/*media query for progress loader*/
+   @media all and (max-width: 479px){
+      .progressloader{
+         left: 25px;
+      }
+      .progressloader .spinner {
+         top: 0;
+         left: 25%;
+         margin-top: 80px;
+      }
+   }
 /*class used for index.tt*/
 .no-tags{
    left: 0;
@@ -3203,19 +3240,6 @@ input[readonly] {
 #changeImg.modal .modal-body .profile-pic .bubble {
    position: relative;
 }
-/*
-#changeImg.modal .modal-body #image_upload_preview {
-   left: 50px;
-   position: absolute;
-   top: 5px;
-}
-#croppie-avatars {
-   left: -60px;
-   position: absolute;
-   top: -45px;
-}
-Paul: L-am scos fiindca aranja poza aiurea in modal ope mobile
-*/
 #croppie-avatars .cr-image {
    opacity: 1 !important;
 }
@@ -3267,10 +3291,6 @@ Paul: L-am scos fiindca aranja poza aiurea in modal ope mobile
       padding-right: 0;
       padding-left: 0;
    }
-	.posts.listings .col-xs-10 h2 {
-		margin-top: 30px;
-		margin-bottom: 20px;
-	}
 }
 
 .blog-top-part .bubble .blog-image {
