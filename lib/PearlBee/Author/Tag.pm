@@ -86,7 +86,7 @@ any '/author/tags/add' => sub {
   my $current_page    = 1;
   my $pages_per_set   = 5;
   my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
-
+  my $check           = length ($name);
   my $found_slug_or_name = resultset('Tag')->search({ -or => [ slug => $slug, name => $name ] })->first;
 
   # Check for slug or name duplicates
@@ -94,6 +94,19 @@ any '/author/tags/add' => sub {
   template 'admin/tags/list',
     {
      warning       => 'The tag name or slug already exists',
+     all           => $all, 
+     page          => 1,
+     next_link     => $next_link,
+     previous_link => $previous_link,
+     action_url    => 'author/tags/page',
+     pages         => $pagination->pages_in_set,
+     tags          => \@tags 
+    }, 
+    { layout => 'admin' };  }
+    elsif ( $check>30 ) {
+    template 'admin/tags/list',
+    {
+     warning       => 'The category name must not exceed 30 characters!',
      all           => $all, 
      page          => 1,
      next_link     => $next_link,
