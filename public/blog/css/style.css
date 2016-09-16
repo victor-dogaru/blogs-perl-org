@@ -3116,6 +3116,15 @@ input[readonly] {
     font-size: 36px;
     /*padding: 8%;*/
 }
+@media all and (max-width: 800px){
+   .search-page .tabs .posts.listings h5, .no-posts{
+      font-size: 25px;
+      padding-top: 0;
+      padding-right: 8%;
+      padding-bottom: 8%;
+      padding-left: 8%;
+   }
+}
 
 /*  error allert  */
 /* 404 & 500 pages */
