@@ -89,7 +89,7 @@ post '/admin/categories/add' => sub {
     $params->{warning} = "The category name or slug already exists";
   }
   elsif($check>40){
-    @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'},user_id=>$user->id });
+    @categories = resultset('Category')->search({ name => { '!=' => 'Uncategorized'} });
 
     $params->{warning} = "The category name must not exceed 40 characters!";
   }
