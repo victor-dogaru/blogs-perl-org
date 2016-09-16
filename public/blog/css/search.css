@@ -163,13 +163,12 @@
     .tabs label span {
         display: block;
     }
-}
-@media all and (max-width: 368px) {
     .tabs label {
-        margin-left: 8px;
-        margin-right: 8px;
+        margin-right: -8px;
+        margin-left: 0px;
     }
 }
+
 /* people */
 .people .info-entry,
 .people .properties,

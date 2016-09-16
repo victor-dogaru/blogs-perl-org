@@ -439,6 +439,7 @@ strong{
    height: 30px;
    border-radius: 50%;
    margin-left: 5px;
+   margin-right: 15px;
 }
 .links-group .dark-button {
    width: 40%;
@@ -1894,6 +1895,7 @@ footer .fwidget #powered_by {
    .header .pull-left {
       margin-left: 15px;
    }
+
    .blog-start-wrapper {
       padding-top: 1em;
    }
@@ -2048,6 +2050,10 @@ footer .fwidget #powered_by {
 /*END Home-page-overlay*/
 
 @media (max-width: 767px) {
+   .header .header-icon .user_name {
+      display: none;
+   }
+
    footer .flinks {
       height: 140px;
    }
