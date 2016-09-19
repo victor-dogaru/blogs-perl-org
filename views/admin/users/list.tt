@@ -97,7 +97,7 @@
 						<tr>
 							<td>
 								[% user.username %]
-
+								[%IF session.user.is_admin == 1%]
 								<br />
 								<br /> [% IF (user.status == 'pending') %]
 								<span class="label label-warning"> Pending </span>&nbsp;&nbsp;|
@@ -108,7 +108,7 @@
 								<a href="/admin/users/activate/[% user.id %]"> Activate </a> [% END %] | [% IF (user.status == 'suspended') %]
 								<span class="label label-danger"> Suspended </span> [% ELSE %]
 								<a href="/admin/users/suspend/[% user.id %]"> Suspend </a> [% END %] [% END %]
-
+								[% END %]
 								<!--
 									[% IF (user.status == 'pending') %]
 										<span class="label label-danger"> Pending </span>
@@ -123,7 +123,7 @@
 
 							<td> [% user.email %] </td>
 
-							<td> <a href="/blogs/user/[% user.blog_creator %]/blogname/[% user.blog_name %]">[% user.blog_name %] </a></td>
+							<td> <a href="/blogs/user/[% blog.blog_creator.username %]/blogname/[% user.blog_name %]">[% user.blog_name %] </a></td>
 
 							<td> [% user.register_date %] </td>
 

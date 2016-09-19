@@ -44,7 +44,12 @@
                      </a>
                      <!-- Sub menu -->
                      <ul>
-                        <li><a href="/[% role %]/users/blog/all/role/all/status/all/page/1">All</a></li>
+                        <li>
+                        [%IF session.user.is_admin == 0%]<a href="/[% role %]/users/blog/all/role/all/status/all/page/1">All</a>
+                        [%ELSE%]
+                        <a href="/[% role %]/users/page/1">All</a>
+                        [%END%]
+                        </li>
                         <li><a href="/[% role %]/users/add">Add user</a></li>
                     </ul>
                 </li>
