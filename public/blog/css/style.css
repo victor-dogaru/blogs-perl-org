@@ -2592,6 +2592,10 @@ a:focus {
      .posts.listings .comments-listings {
          font-size: 14px;
      }
+     .blog .entry .bubble img{
+       left: -55px;
+       top: 20px;
+    }
     .blog .posts.listings .entry{
        border-bottom: 1px solid rgba(242, 245, 238, 0.4);
     }
@@ -2607,9 +2611,8 @@ a:focus {
     .text-listing-entries::before, .loading-posts .view-more::before{
        background: none;
     }
-    .entry .bubble img {
-       left: -55px;
-       top: 20px;
+    .search-page .entry .bubble img {
+       display: none;
     }
      .text-listing-entries::before{
          left: -10%;
@@ -2746,6 +2749,7 @@ a:focus {
    font-size: 24px;
    font-weight: bold;
    text-transform: uppercase;
+   line-height: 28px;
 }
 .individual-post .meta {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
@@ -3032,6 +3036,7 @@ input.cmn-toggle-round-flat:checked + label:after {
 }
 .posts .post-content p {
    margin-bottom: 10px;
+   font-size: 18px;
    word-break: break-word;
     -ms-word-break: break-word;
 }
@@ -3299,28 +3304,6 @@ input[readonly] {
       height: 70px;
    }
 }
-/* !!!! delete when multiple blogs feature enabled !!!!!! */
-
-/*.blog .info-blog {*/
-   /*display: none;*/
-/*}*/
-/*.blog_author #author-tab-content1 .info-entry {*/
-   /*display: none;*/
-/*}*/
-/*.blog .info-blog:first-child > .entry-name {*/
-   /*display: block;*/
-/*}*/
-/*.blog .info-blog:first-child > .info-blog {*/
-   /*display: block;*/
-/*}*/
-/*.blog_author #author-tab-content1 .info-entry:first-child {*/
-   /*display: block;*/
-/*}*/
-/*.blog .info-blog:first-child {*/
-   /*display: block;*/
-/*}*/
-/* End */
-
 
 .error_ascii,
 .error_char,
@@ -3391,6 +3374,13 @@ input[readonly] {
    cursor: pointer;
    opacity: 1;
 }
+
+@media all and (max-width: 800px){
+   .blog-top-part .bubble .blog-image{
+      width: 100px;
+      height: 100px;
+   }
+}
 @media all and (max-width: 720px) {
    .cookie {
       font-size: 10px;
@@ -3400,6 +3390,12 @@ input[readonly] {
 @media all and (max-width: 460px) {
    .cookie {
       font-size: 8px;
+   }
+   .individual-post .info-entry .post-heading h2{
+      font-size: 18px;
+   }
+   .posts .post-content p{
+      font-size: 15px;
    }
 }
 @media all and (max-width: 381px) {

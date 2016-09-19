@@ -178,6 +178,9 @@
 .people .properties {
     padding: 0;
 }
+.people .info-entry .user{
+    width: 100%;
+}
 .people .bubble img {
     border-radius: 50%;
     height: 70px;
