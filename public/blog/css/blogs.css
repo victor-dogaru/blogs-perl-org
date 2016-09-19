@@ -58,8 +58,21 @@
         padding-left: 50px;
     }
 }
-@media all and (max-width: 570px) {
-    .blog-top-part .blog-info {
-        padding-left: 75px;
+
+@media screen and (min-width: 320px) and (max-width:480px){
+    .blog .blog-top-part .entry-name{
+        font-size: 18px;
     }
-} 
+    .blog .blog-top-part ul .information-blog{
+        font-size: 15px;
+    }
+    .info-blog a.number-authors{
+        font-weight: bold;
+    }
+    .blog-top-part .blog-info{
+        padding-left: 40px;
+    }
+    .blog .blog-top-part{
+        padding: 10px;
+    }
+}

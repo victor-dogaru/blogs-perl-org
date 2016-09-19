@@ -187,4 +187,7 @@ color: #ffffff;
     .text-listing-entries {
         border-bottom: none;
     }
+    .search-page .text-listing-entries{
+        border-bottom: 1px solid rgba(242, 245, 238, 0.4);
+    }
 }
