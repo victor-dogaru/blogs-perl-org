@@ -645,15 +645,8 @@ any '/author/users/make_author/:username/:blog' => sub {
   if ( $count>1 ){
     my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
     ->update({ is_admin=>0 });
-    redirect '/author/users';
   }
-  else {
-    template 'admin/users/list', 
-    {
-    error => 'At least 1 admin must remain on the blog'
-    }, 
-    { layout => 'admin' };
-  }
+redirect '/author/users';
   
 };
 
