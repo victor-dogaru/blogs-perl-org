@@ -251,7 +251,7 @@ post '/profile-image' => sub {
 
 =cut
 
-post '/blog-image/:size/blog/:blogname' => sub {
+any '/blog-image/:size/blog/:blogname' => sub {
   
   my $size        = route_parameters->{'size'};
   my $blogname    = route_parameters->{'blogname'};
