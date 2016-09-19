@@ -2854,6 +2854,7 @@ a:focus {
 .comments .comment p {
    margin-top: 15px;
    font-size: 18px;
+   word-wrap: break-word;
 }
 .comments .comment {
    margin: 0;
