@@ -137,7 +137,7 @@ get '/admin/categories/delete/:id' => sub {
     template 'admin/categories/list', { categories => \@categories, warning => "Something went wrong." }, { layout => 'admin' };
   };
 
-  redirect "/admin/categories";
+  redirect request->referer;
 
 };
 
