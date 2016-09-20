@@ -55,7 +55,7 @@
                 <a href="/profile" class="pull-left">Profile</a>
               </div>
               <div class="links-group header-menu-links">
-                <a href="/[%role%]/posts" class="pull-left">Dashboard</a>
+                <a href="/dashboard" class="pull-left">Dashboard</a>
               </div>
               <div class="links-group log-out">
                 <a href="/logout" class="pull-left">Log Out</a>
