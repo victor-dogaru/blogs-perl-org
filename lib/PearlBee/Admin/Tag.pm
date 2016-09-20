@@ -162,7 +162,7 @@ my $tag_id   = params->{id};
     error "Could not delete tag";
   };
 
-  redirect '/admin/tags';
+  redirect request->referer;
 
 };
 

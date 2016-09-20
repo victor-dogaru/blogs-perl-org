@@ -302,7 +302,7 @@ any '/admin/users/activate/:id' => sub {
     error "Could not activate user";
   };
 
-  redirect '/admin/users';
+  redirect request->referer;
 };
 
 =head2 /admin/users/deactivate/:id
@@ -331,7 +331,7 @@ any '/admin/users/deactivate/:id' => sub {
     };
   }
 
-  redirect '/admin/users';
+  redirect request->referer;
 };
 
 =head2 /admin/users/suspend/:id
@@ -360,7 +360,7 @@ any '/admin/users/suspend/:id' => sub {
     };
   }
 
-  redirect '/admin/users';
+  redirect request->referer;
 };
 
 =head2 /admin/users/allow/:id
@@ -406,7 +406,7 @@ any '/admin/users/allow/:id' => sub {
     };
   }
 
-  redirect '/admin/users';
+  redirect request->referer;
 };
 
 =head2 /admin/users/add
