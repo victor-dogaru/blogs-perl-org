@@ -283,7 +283,7 @@ post '/author/create-blog' => sub{
     warn "***** Redirecting guest away from /create-blog";
     redirect '/'
   }
-  my @special_characters = ('#','\\','/');
+  my @special_characters = ('#','\\','/','"');
   my $result ;
   my $special_char = 0;
   foreach my $iterator (@special_characters){

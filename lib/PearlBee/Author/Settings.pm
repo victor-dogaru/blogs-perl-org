@@ -49,7 +49,7 @@ post '/blog/profile' => sub {
       }
   }
 
-  my @special_characters = ('#','\\','/');
+  my @special_characters = ('#','\\','/', '"');
   my $result ;
   my $special_char = 0;
   foreach my $iterator (@special_characters){
