@@ -426,7 +426,7 @@ post '/add-contributor/blog' => sub {
     my $date    = DateTime->now();
     my $token   = generate_hash( $email . $date );
 
-    if ($invitee && &blog){
+    if ($invitee && $blog){
       my $flag    = 0;
       my $message = '';
       my $check   = resultset('BlogOwner')->search ({ 
