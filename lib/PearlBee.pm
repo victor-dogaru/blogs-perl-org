@@ -62,16 +62,6 @@ use Data::Dumper;
 hook before_template_render => sub {
   my ( $tokens ) = @_;
   $tokens->{copyright_year} = ((localtime)[5]+1900);
-};
-  
-=head2 Prepare the blog path
-
-=cut
-
-hook before => sub {
-  session app_url   => config->{app_url} unless ( session('app_url') );
-  session blog_name => resultset('Setting')->first->blog_name unless ( session('blog_name') );
-  session multiuser => resultset('Setting')->first->multiuser;
   my $user_obj    = resultset('Users')->find_by_session(session);
   if ( $user_obj ) {
     my $counter  = resultset('Notification')->search({
@@ -94,8 +84,19 @@ hook before => sub {
     name         => 'response'
     })->count;
 
-    session total => $counter;
+    $tokens->{notification_counter} = $counter;
   }
+};
+  
+=head2 Prepare the blog path
+
+=cut
+
+hook before => sub {
+  session app_url   => config->{app_url} unless ( session('app_url') );
+  session blog_name => resultset('Setting')->first->blog_name unless ( session('blog_name') );
+  session multiuser => resultset('Setting')->first->multiuser;
+  
 };
 
 =head2 /theme
