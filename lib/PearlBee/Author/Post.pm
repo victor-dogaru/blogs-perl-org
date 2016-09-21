@@ -172,7 +172,7 @@ get '/author/posts/publish/:id' => sub {
     error "Could not publish post for $user->{username}";
   };
 
-  redirect '/author/posts';
+  redirect request->referer;
 };
 
 =head2 /author/posts/draft/:id
@@ -200,7 +200,7 @@ get '/author/posts/draft/:id' => sub {
     error "Could not file draft post for $user->{username}";
   };
 
-  redirect '/author/posts';
+  redirect request->referer;
 };
 
 =head2 /author/posts/trash/:id
@@ -222,7 +222,7 @@ get '/author/posts/trash/:id' => sub {
 
   eval { $post->trash($user); };
 
-  redirect '/author/posts';
+  redirect request->referer;
 };
 
 =head2 /author/posts/add

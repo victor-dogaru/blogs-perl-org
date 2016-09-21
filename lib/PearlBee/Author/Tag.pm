@@ -176,7 +176,7 @@ get '/author/tags/delete/:id' => sub {
     error "Could not delete tag";
   };
  }
-  redirect '/author/tags';
+  redirect request->referer;
 
 };
 

@@ -134,10 +134,10 @@ any '/author/blog/:blogname/delete' => sub{
       };
   }
   if ($user->is_admin) {
-    redirect '/admin/blogs/page/1';
+    redirect request->referer;
   }
   else {
-    redirect '/author/blogs/page/1';
+    redirect request->referer;
   }
 
 };

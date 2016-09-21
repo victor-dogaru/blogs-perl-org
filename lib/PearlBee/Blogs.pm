@@ -283,7 +283,7 @@ post '/author/create-blog' => sub{
     warn "***** Redirecting guest away from /create-blog";
     redirect '/'
   }
-  my @special_characters = ('#','\\','/');
+  my @special_characters = ('#','\\','/','"');
   my $result ;
   my $special_char = 0;
   foreach my $iterator (@special_characters){
@@ -426,7 +426,7 @@ post '/add-contributor/blog' => sub {
     my $date    = DateTime->now();
     my $token   = generate_hash( $email . $date );
 
-    if ($invitee && &blog){
+    if ($invitee && $blog){
       my $flag    = 0;
       my $message = '';
       my $check   = resultset('BlogOwner')->search ({ 

@@ -293,7 +293,7 @@ get '/author/comments/approve/:id' => sub {
     error "Could not approve comment for $user->{username}";
   };
 
-  redirect '/author/comments';
+  redirect request->referer;
 };
 
 =head2 /author/comments/trash/:id
@@ -316,7 +316,7 @@ get '/author/comments/trash/:id' => sub {
     error "Could not mark comment as trash for $user->{username}";
   };
 
-  redirect '/author/comments';
+  redirect request->referer;
 };
 
 =head2 /author/comments/spam/:id
@@ -339,7 +339,7 @@ get '/author/comments/spam/:id' => sub {
     error "Could not mark comment as spam for $user->{username}";
   };
 
-  redirect '/author/comments';
+  redirect request->referer;
 };
 
 =head2 /author/comments/pending/:id
@@ -362,7 +362,7 @@ get '/author/comments/pending/:id' => sub {
     error "Could not mark comment as pending for $user->{username}";
   };
 
-  redirect '/author/comments';
+  redirect request->referer;
 };
 
 1;

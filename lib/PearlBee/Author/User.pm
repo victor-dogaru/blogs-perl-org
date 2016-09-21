@@ -425,7 +425,7 @@ any '/author/users/activate/:id' => sub {
     error "Could not activate user";
   };
 
-  redirect '/author/users';
+  redirect request->referer;
 };
 
 =head2 /author/users/deactivate/:id
@@ -454,7 +454,7 @@ any '/author/users/deactivate/:id' => sub {
     };
   }
 
-  redirect '/author/users';
+  redirect request->referer;
 };
 
 =head2 /author/users/suspend/:id
@@ -483,7 +483,7 @@ any '/author/users/suspend/:id' => sub {
     };
   }
 
-  redirect '/author/users';
+  redirect request->referer;
 };
 
 =head2 /author/users/allow/:id
@@ -534,7 +534,7 @@ any '/author/users/allow/:id' => sub {
     };
   }
 
-  redirect '/author/users';
+  redirect request->referer;
 };
 
 =head2 /author/users/add
@@ -622,7 +622,14 @@ any '/author/users/make_admin/:username/:blog' => sub {
   my $user   = resultset('Users')->find({ username=> params->{username}});
   my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
   ->update({ is_admin=>1 });
-  redirect '/author/users';
+  my $args;
+  $args->{old_status} = 'author';
+  $args->{user_id}    = $user->id;
+  $args->{sender_id}  = $user_obj->id;
+  $args->{role}       = 'admin';
+  $args->{generic_id} = $blog->id;
+  my $notification = resultset('Notification')->create_changed_role($args);
+  redirect request->referer;
 
 };
 
@@ -645,11 +652,17 @@ any '/author/users/make_author/:username/:blog' => sub {
   if ( $count>1 ){
     my $action = resultset('BlogOwner')->find({user_id=>$user->id, blog_id=>$blog->id})
     ->update({ is_admin=>0 });
+  my $args;
+  $args->{old_status} = 'admin';
+  $args->{user_id}    = $user->id;
+  $args->{sender_id}  = $user_obj->id;
+  $args->{role}       = 'author';
+  $args->{generic_id} = $blog->id;
+  my $notification = resultset('Notification')->create_changed_role($args);
   }
-redirect '/author/users';
+redirect request->referer;
   
 };
-
 =head2 /author/users/add
 
 getter for the user's dashboard when adding an user
