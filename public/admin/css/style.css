@@ -179,7 +179,8 @@ strong{
 /* Logo & Navigation */
 
 .header.admin-header {
-   height: 70px;
+   height: 80px;
+   line-height: 80px;
    background: #16cbe6;
    border-top: 4px solid #0fa6bc;
    border-bottom: 1px solid #0fa6bc;
@@ -187,6 +188,9 @@ strong{
    width: 100%;
    top: 0;
    z-index: 999;
+}
+.header.admin-header .navbar{
+   margin-top: 20px;
 }
 #no-user-header{
    background: #16cbe6;
@@ -244,6 +248,9 @@ strong{
    border-bottom:0px !important;
    margin-top:7px !important;
    font-weight:bold;
+}
+.header .navbar .nav > li.welcome-user{
+   margin-right: 130px;
 }
 
 .header .navbar-nav>.open>a,.header  .navbar-nav>.open>a:hover,.header  .navbar-nav>.open>a:focus {
@@ -371,6 +378,16 @@ strong{
    color: white !important;
    border: none;
 }
+
+/* Header for admin mobile resolution */
+.header .logo h1.admin-header-bpo{
+   font-size: 25px;
+   font-weight: bold;
+   margin: 0;
+   padding: 0;
+   float: left;
+}
+/* END header for admin mobile resolution */
 
 /* Sidebar navigation */
 
@@ -1095,6 +1112,9 @@ footer .copy{
 
 /* Tablets */
 @media (max-width: 767px){
+   .header.admin-header .navbar .nav > li.welcome-user{
+      margin-right: 130px;
+   }
    .container{
       width:100%;
    }
@@ -1290,13 +1310,57 @@ footer .copy{
 #invitation_modal .modal-footer {
   margin-top: 30px;
 }
-#notification-parent {
-  bottom: 4px;
-  left: 30px;
-}
+/*#notification-parent {*/
+  /*bottom: 4px;*/
+  /*left: 30px;*/
+/*}*/
 .header-notifications {
   font-size: 23px!important;
 }
+.burger-menu {
+   background-color: #1dc1da !important;
+   border: 1px solid #0fa6bc !important;
+   right: 0px;
+   position: absolute;
+   float: right;
+   padding: 9px 10px;
+   border-radius: 4px;
+}
+
+.burger-menu .icon-bar {
+   display: block;
+   width: 22px;
+   height: 2px;
+   border-radius: 1px;
+   background-color: #fff;
+}
+.burger-menu .icon-bar+.icon-bar {
+   margin-top: 4px;
+}
+.admin-header ul.navbar-nav{
+   line-height: 40px;
+   max-height: 40px;
+   padding: 0;
+   margin: 0;
+}
+.admin-header ul.nav>li{
+   position: relative;
+   display: inline-block;
+   height: 40px;
+   line-height: 40px;
+}
+.admin-header ul.nav>li a{
+   margin-top: 0 !important;
+   /* position: absolute; */
+   padding: 0 !important;
+   margin-right: 50px;
+}
+.admin-header ul.nav>li.dropdown{
+   position: absolute;
+   right: 0;
+   top: 0;
+}
+
 span.header-badge {
   background-color: red;
   border-radius: 50%;
@@ -1346,3 +1410,31 @@ span.header-badge {
 	text-transform: uppercase;
 }
 /*END - Users section*/
+
+@media screen and (min-width: 768px) and (max-width:999px){
+   .admin-header ul.nav>li a{
+      margin-right: 0;
+   }
+}
+@media screen and (max-width:767px){
+   .header.admin-header{
+      height: auto;
+      padding-bottom: 0;
+   }
+   #only-logo{
+      width: 35px;
+      height: 35px;
+      display: inline-block;
+   }
+   .header .logo h1 {
+      padding: 0;
+      margin: 0;
+   }
+   .header .logo h1 a span{
+      font-size: 18px;
+      display: inline-block;
+   }
+   .header.admin-header .navbar{
+      margin: 0;
+   }
+}
