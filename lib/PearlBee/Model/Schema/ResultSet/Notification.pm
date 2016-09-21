@@ -172,7 +172,7 @@ sub create_changed_role {
     role       => $args->{role},
     generic_id => $args->{generic_id}
   });
-
+}
 
 =head2 read_changed_role({ old_role => 'author', user_id => 1 })
 
