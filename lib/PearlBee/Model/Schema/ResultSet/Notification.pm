@@ -165,12 +165,13 @@ sub create_changed_role {
   my $schema = $self->result_source->schema;
 
   $schema->resultset('Notification')->create({
-    name       => 'changed_role',
-    old_status => $args->{old_role},
+    name       => 'changed role',
+    old_status => $args->{old_status},
     sender_id  => $args->{sender_id},
-    user_id    => $args->{user_id}
+    user_id    => $args->{user_id},
+    role       => $args->{role},
+    generic_id => $args->{generic_id}
   });
-}
 
 
 =head2 read_changed_role({ old_role => 'author', user_id => 1 })
