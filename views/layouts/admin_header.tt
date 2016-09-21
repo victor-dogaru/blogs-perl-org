@@ -2,26 +2,35 @@
       <div class="header admin-header">
          <div class="container">
             <div class="row">
-               <div class="col-md-3">
+               <div class="col-xs-6 col-sm-3">
                   <!-- Logo -->
                   <div class="logo">
-                     <h1><a href="/">[% session.blog_name %]</a></h1>
+                     <h1><a class="hidden-xs" href="/">[% session.blog_name %]</a></h1>
+                     <h1 class="admin-header-bpo"><a class="hidden-sm hidden-md hidden-lg" href="/">
+                         <img id="only-logo" src="/blog/img/only-logo.png">
+                         <span>BPOrg</span></a></h1>
                   </div>
                </div>
 
-               <div class="col-md-6 pull-right">
-                  <div class="navbar navbar-inverse" role="banner">
+               <div class="col-xs-6 col-sm-9">
+                  <div class="navbar navbar-inverse pull-right" role="banner">
                       <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
                         <ul class="nav navbar-nav">
                           <li>
                               <a href="/notification" id="notification-parent"><i class="fa fa-bell-o header-notifications" aria-hidden="true"></i><span class="header-badge"> [% session.total %] </span></a>
-
                           </li>
-                          <li>
+                          <li class="hidden-xs welcome-user">
                               <a href="/admin"> Welcome <b id="sessionUsername">[% session.user.name %]</b> !</a>
                           </li>
                           <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" class="my_account">My Account <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle my_account hidden-xs" data-toggle="dropdown">
+                                My Account <b class="caret"></b>
+                            </a>
+                              <button type="button" class="dropdown-toggle burger-menu collapsed visible-xs" data-toggle="dropdown" aria-expanded="false" aria-controls="navbar">
+                                  <span class="icon-bar"></span>
+                                  <span class="icon-bar"></span>
+                                  <span class="icon-bar"></span>
+                              </button>
                             <ul class="dropdown-menu animated fadeInUp">
                               <li><a href="/profile">Profile</a></li>
                               <li><a href="/logout">Logout</a></li>
