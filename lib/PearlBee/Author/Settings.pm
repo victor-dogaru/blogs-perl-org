@@ -231,7 +231,7 @@ Getter method so as to retrieve only those blogs in which you are an owner.
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });
     }
-      template 'author/settings',
+      template 'admin/settings/index.tt',
     {
       blogs         => \@blogs
     },
