@@ -249,6 +249,17 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });
   }
+  my $session_user      = session('user');
+  foreach (@comments){
+    my $comment = resultset('Comment')->find({ id=> $_->id });
+    if( $comment->is_authorized($session_user)){
+      $_->{is_admin} = 1;
+    }
+    else
+    {
+      $_->{is_admin} = 0;
+    }   
+  }
   my @sorted_comments = sort {$b->id <=> $a->id} @comments;
   my @actual_comments = splice(@sorted_comments,($page-1)*$nr_of_rows,$nr_of_rows);
   map { $_->as_hashref } @actual_comments;
