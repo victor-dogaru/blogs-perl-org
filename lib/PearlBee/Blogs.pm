@@ -405,13 +405,17 @@ get 'author/create-blog' => sub{
 
 =cut
 
-post '/add-contributor/blog' => sub {
+any '/add-contributor/blog' => sub {
 
     my $user        = resultset('Users')->find_by_session(session);
     my $params      = body_parameters;
     my $blogname    = $params->{'blog_name'};
+    if (!$blogname){
+      redirect 'author/users/add';
+    }
     my $email       = $params->{'email'};
     my $role        = $params->{'role'};
+    utf8::decode($blogname);
     my $invitee     = resultset('Users')->find({ email => $email });
     my $blog        = resultset('Blog')->find({ name  => $blogname });
     my @blogs;
