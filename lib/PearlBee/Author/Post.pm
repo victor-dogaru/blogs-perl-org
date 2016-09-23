@@ -264,46 +264,50 @@ post '/author/posts/add' => sub {
 
     $cover->copy_to( config->{covers_folder} . $cover_filename );
   }
+  if ($blog_name) {
+    # Next we can store the post into the database safely
+    my $params = {
+      title   => params->{title},
+      slug    => $slug,
+      content => params->{post},
+      user_id => $user_obj->id,
+      status  => params->{status},
+      cover   => ( $cover_filename ) ? $cover_filename : '',
+      type    => params->{type} || 'HTML',
+      blog_id => $blog->id,
+    };
+    my $count = () = $params->{content} =~ m{ <p> }gx;
+    if ( $count == 1 ) {
+      $params->{content} =~ s{ ^ <p> (.+) </p>\r $ }{$1}msx;
+    }
 
-  # Next we can store the post into the database safely
-  my $params = {
-    title   => params->{title},
-    slug    => $slug,
-    content => params->{post},
-    user_id => $user_obj->id,
-    status  => params->{status},
-    cover   => ( $cover_filename ) ? $cover_filename : '',
-    type    => params->{type} || 'HTML',
-    blog_id => $blog->id,
-  };
-  my $count = () = $params->{content} =~ m{ <p> }gx;
-  if ( $count == 1 ) {
-    $params->{content} =~ s{ ^ <p> (.+) </p>\r $ }{$1}msx;
-  }
+    try {
+      $post = resultset('Post')->can_create($params);
 
-  try {
-    $post = resultset('Post')->can_create($params);
+      # Insert the categories selected with the new post
+      resultset('PostCategory')->
+        connect_categories( params->{categories}, $post->id, $user_obj->id );
 
-    # Insert the categories selected with the new post
-    resultset('PostCategory')->
-      connect_categories( params->{categories}, $post->id, $user_obj->id );
+      # Connect and update the tags table
+      resultset('PostTag')->connect_tags( params->{tags}, $post->id );
+    }
+    catch {
+      error $_ if ($_);
+    };
 
-    # Connect and update the tags table
-    resultset('PostTag')->connect_tags( params->{tags}, $post->id );
-  }
-  catch {
-    error $_ if ($_);
-  };
+    # If the post was added successfully, store a success message to show on the view
+    session success => "The <a href='/post/$slug'>post</a> was added successfully" if ( !$@ && $post );
 
-  # If the post was added successfully, store a success message to show on the view
-  session success => "The <a href='/post/$slug'>post</a> was added successfully" if ( !$@ && $post );
-
-  # If the user created a new post redirect him to the post created
-  if ( $post ) {
-    redirect '/author/posts/edit/' . $post->slug;
+    # If the user created a new post redirect him to the post created
+    if ( $post ) {
+      redirect '/author/posts/edit/' . $post->slug;
+    }
+    else {
+      template 'admin/posts/add', { categories => \@categories }, { layout => 'admin' };
+    }
   }
   else {
-    template 'admin/posts/add', { categories => \@categories }, { layout => 'admin' };
+    template 'admin/posts/add', { categories => \@categories, warning=>'In order to post you must be a contributor in at least one blog!' }, { layout => 'admin' };
   }
 };
 
