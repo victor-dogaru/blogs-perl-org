@@ -9,6 +9,7 @@ use Digest::Bcrypt;
 
 use PearlBee::Password;
 use HTML::Entities;
+use HTML::Restrict;
 
 require Exporter;
 our @ISA    = qw(Exporter);
@@ -324,7 +325,21 @@ sub map_posts {
         $el->{nr_of_comments}     = $post->nr_of_comments;
         $el->{created_date_human} = $post->created_date_human;
         $el->{content_formatted}  = $post->content_formatted;
-        decode_entities($el->{content});
+        if ($post->type eq "HTML"){
+            decode_entities($el->{content});
+        }
+        else{             
+            my $m = Text::Markdown->new;
+            my $hr = HTML::Restrict->new(
+                rules =>
+                 {    
+                    strip_enclosed_content => [ 'pre']
+                 }
+            );
+
+            my $text = $hr->process($el->{content} );
+            $el->{content} =  $m->markdown($text);          
+        }
         # get post author
         $el->{user} = $post->user->as_hashref;
         
