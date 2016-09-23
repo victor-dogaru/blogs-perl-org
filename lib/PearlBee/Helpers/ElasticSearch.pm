@@ -9,8 +9,8 @@ use PearlBee::Model::Schema;
 use Search::Elasticsearch;
 
 require Exporter;
-our @ISA 	= qw(Exporter);
-our @EXPORT_OK 	= qw/search_posts search_comments search_blogs/;
+our @ISA    = qw(Exporter);
+our @EXPORT_OK  = qw/search_posts search_comments search_blogs/;
 
 =head2 index_comment( $comment )
 
@@ -89,12 +89,12 @@ sub search_posts {
         params => { from => $start, size => $page_size },
         body => {
             query => {
-		bool => {
-		    should => [
+        bool => {
+            should => [
                         { match => { title => $text } },
-		        { match => { content => $text } },
-		        { match => { username => $text } },
-		    ]
+                { match => { content => $text } },
+                { match => { username => $text } },
+            ]
                 }
             }
         }
@@ -123,12 +123,12 @@ sub search_posts {
      
     my $href = $rs->as_hashref_sanitized;
     $href->{content} = $text if $href->{type} eq 'Markdown';               
-	my $href = $rs->as_hashref_sanitized;
-	$href->{created_date}   = $rs->created_date_human;
-	$href->{nr_of_comments} = $rs->nr_of_comments;
-	$href->{user}           = $rs->user->as_hashref_sanitized;
+    my $href = $rs->as_hashref_sanitized;
+    $href->{created_date}   = $rs->created_date_human;
+    $href->{nr_of_comments} = $rs->nr_of_comments;
+    $href->{user}           = $rs->user->as_hashref_sanitized;
         $href->{tags}           = $result->{_source}{tags};
-	push @results, $href;
+    push @results, $href;
     }
 
     return @results;
