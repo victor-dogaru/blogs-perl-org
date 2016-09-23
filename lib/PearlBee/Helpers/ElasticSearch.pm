@@ -107,7 +107,22 @@ sub search_posts {
         my $user_avatar = $rs->user->avatar;
         if ( $user_avatar and $user_avatar =~ m{ ^/blog }x ) {
             $user_avatar = "";
-        }                
+        } 
+        my $text;   
+        if ($rs->type eq'Markdown'){
+            my $m = Text::Markdown->new;
+            my $hr = HTML::Restrict->new(
+                    rules =>
+                     {    
+                        strip_enclosed_content => [ 'pre']
+                     }
+                );
+
+            $text = $m->markdown($hr->process($rs->content ));           
+        }  
+     
+    my $href = $rs->as_hashref_sanitized;
+    $href->{content} = $text if $href->{type} eq 'Markdown';               
 	my $href = $rs->as_hashref_sanitized;
 	$href->{created_date}   = $rs->created_date_human;
 	$href->{nr_of_comments} = $rs->nr_of_comments;
