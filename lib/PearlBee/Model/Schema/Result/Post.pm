@@ -21,6 +21,7 @@ use Date::Period::Human;
 use PearlBee::Helpers::Markdown;
 use HTML::Entities;
 use Text::Markdown;
+use HTML::Restrict;
 =head1 TABLE: C<post>
 
 =cut
@@ -512,8 +513,14 @@ sub massaged_content_more {
 sub content_formatted {
   my ($self) = @_;
   if ( $self->type eq 'Markdown' ) {
-    my $m = Text::Markdown->new;
-    return  $m->markdown($self->_massage_content($self->content ));
+    my $m = Text::Markdown->new; 
+    my $hr = HTML::Restrict->new(
+        rules => {
+            strip_enclosed_content => [ 'pre']
+        }
+    );
+    my $text = $hr->process($self->_massage_content($self->content ) )  ;
+    return  $m->markdown($text);
     # return PearlBee::Helpers::Markdown::Markdown( $self->content );
   }
 
@@ -522,6 +529,7 @@ sub content_formatted {
 
   return $text;
 }
+
 
 =head2 content_more_formatted
 
