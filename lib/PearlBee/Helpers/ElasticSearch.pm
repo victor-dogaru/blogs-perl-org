@@ -99,7 +99,7 @@ sub search_posts {
             }
         }
     );
-    use DDP;
+
     my @results;
     for my $result ( @{ $elastic_results->{hits}{hits} } ) {
         my $rs = resultset('Post')->find({ id => $result->{_id} });
