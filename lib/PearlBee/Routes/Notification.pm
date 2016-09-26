@@ -10,6 +10,7 @@ use Dancer2 0.163000;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Helpers::Util qw(map_posts);
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link);
+use PearlBee::Dancer2::Plugin::Admin;
 
 our $VERSION = '0.1';
 
