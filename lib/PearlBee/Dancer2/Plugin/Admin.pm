@@ -10,7 +10,7 @@ on_plugin_import {
         Dancer2::Core::Hook->new(
             name => 'before',
             code => sub {
-                $dsl->set( layout => 'admin' );
+
                 my $context = shift;
                 my $user = $context->session->{'data'}->{'user'};
                 $user = $dsl->resultset('Users')->find({ id => $user->{id} }) if ($user);
@@ -38,7 +38,6 @@ on_plugin_import {
         Dancer2::Core::Hook->new(
             name => 'before',
             code => sub {
-                            $dsl->set( layout => 'admin' );
 
                 my $context = shift;
                 my $user_obj = $context->session->{'data'}->{'user'};
