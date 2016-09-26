@@ -3,6 +3,7 @@ package PearlBee::Dashboard;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
 use PearlBee::Password;
+use PearlBee::Dancer2::Plugin::Admin;
 
 =head2 hook 'before'
 
