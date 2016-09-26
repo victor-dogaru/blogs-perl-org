@@ -60,7 +60,7 @@ create method
 
 =cut
 
-post '/author/categories/add' => sub {
+any '/author/categories/add' => sub {
 
   my $temp_user = resultset('Users')->find_by_session(session);
   unless ( $temp_user and $temp_user->can_do( 'create category' ) ) {
@@ -149,7 +149,9 @@ any '/author/categories/delete/:id' => sub {
   my $user       = resultset('Users')->find_by_session(session);
   my $params = {};
   my $category = resultset('Category')->find( $id ); 
-
+  if (!$category){
+    redirect '/author/categories';
+  }
   if ($category->user_id == $user->id){
     
     my @post_categories = resultset('PostCategory')->search({

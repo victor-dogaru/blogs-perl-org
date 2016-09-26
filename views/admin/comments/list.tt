@@ -86,7 +86,7 @@
 
 							<td>
 								[% comment.content %]
-
+								[% IF comment.is_admin == 1%]
 								<br />
 								<br /> [% IF (comment.status == 'pending') %]
 								<span class="label label-warning"> Pending </span> [% ELSE %]
@@ -97,6 +97,7 @@
 								<a href="/[% role %]/comments/trash/[% comment.id %]"> Trash </a> [% END %] | [% IF (comment.status == 'spam') %]
 								<span class="label label-danger"> Spam </span> [% ELSE %]
 								<a href="/[% role %]/comments/spam/[% comment.id %]"> Spam </a> [% END %]
+								[%END%]
 							</td>
 
 							<td width="15%"> <a href="/post/[% comment.post.slug %]"> [% comment.post.title %] </a> </td>

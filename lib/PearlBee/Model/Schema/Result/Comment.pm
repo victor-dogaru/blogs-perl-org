@@ -251,12 +251,15 @@ Check if the user has enough authorization for modifying
 
 sub is_authorized {
   my ($self, $user) = @_;
-
   my $schema     = $self->result_source->schema;
   $user          = $schema->resultset('Users')->find( $user->{id} );
+  my $blog_post  = $schema->resultset('BlogPost')->find({ post_id => $self->post->id});
+  my $blog_owner = $schema->resultset('BlogOwner')->find({ blog_id =>$blog_post->blog_id, user_id => $user->id});
+  my  $check     = $blog_owner->is_admin == 1;
   my $authorized = 0;
   $authorized    = 1 if ( $user->is_admin );
   $authorized    = 1 if ( !$user->is_admin && $self->post->user_id == $user->id );
+  $authorized    = 1 if (!$user->is_admin && $check);
 
   return $authorized;
 }

@@ -19,7 +19,9 @@ use DateTime;
 use DateTime::Format::MySQL;
 use Date::Period::Human;
 use PearlBee::Helpers::Markdown;
-
+use HTML::Entities;
+use Text::Markdown;
+use HTML::Restrict;
 =head1 TABLE: C<post>
 
 =cut
@@ -459,6 +461,7 @@ Ignoring nested <pre/> and <code/> tags, remove tags.
 
 sub _massage_content {
   my ($self,$content) = @_;
+
   return '' unless $content;
   my @content = split '\n', $content;
   
@@ -509,13 +512,24 @@ sub massaged_content_more {
 
 sub content_formatted {
   my ($self) = @_;
-
   if ( $self->type eq 'Markdown' ) {
-    return PearlBee::Helpers::Markdown::Markdown( $self->content );
+    my $m = Text::Markdown->new; 
+    my $hr = HTML::Restrict->new(
+        rules => {
+            strip_enclosed_content => [ 'pre']
+        }
+    );
+    my $text = $hr->process($self->_massage_content($self->content ) )  ;
+    return  $m->markdown($text);
+    # return PearlBee::Helpers::Markdown::Markdown( $self->content );
   }
 
-  return $self->massaged_content;
+  my $text = $self->massaged_content;
+  decode_entities($text);
+
+  return $text;
 }
+
 
 =head2 content_more_formatted
 

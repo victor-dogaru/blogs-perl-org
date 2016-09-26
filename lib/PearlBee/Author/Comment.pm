@@ -3,6 +3,7 @@ package PearlBee::Author::Comment;
 use Try::Tiny;
 use Dancer2;
 use Dancer2::Plugin::DBIC;
+use PearlBee::Dancer2::Plugin::Admin;
 
 use PearlBee::Helpers::Pagination qw(get_total_pages get_previous_next_link generate_pagination_numbering);
 
@@ -248,6 +249,17 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
   for my $blog_owner ( @blog_owners ) {
       push @blogs, map { $_->as_hashref }
                    resultset('Blog')->search({ id => $blog_owner->blog_id });
+  }
+  my $session_user      = session('user');
+  foreach (@comments){
+    my $comment = resultset('Comment')->find({ id=> $_->id });
+    if( $comment->is_authorized($session_user)){
+      $_->{is_admin} = 1;
+    }
+    else
+    {
+      $_->{is_admin} = 0;
+    }   
   }
   my @sorted_comments = sort {$b->id <=> $a->id} @comments;
   my @actual_comments = splice(@sorted_comments,($page-1)*$nr_of_rows,$nr_of_rows);

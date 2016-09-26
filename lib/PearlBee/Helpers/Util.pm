@@ -8,10 +8,12 @@ use String::Random;
 use Digest::Bcrypt;
 
 use PearlBee::Password;
+use HTML::Entities;
+use HTML::Restrict;
 
 require Exporter;
-our @ISA 	= qw(Exporter);
-our @EXPORT_OK 	= qw(
+our @ISA    = qw(Exporter);
+our @EXPORT_OK  = qw(
     generate_crypted_filename 
     generate_new_slug_name 
     string_to_slug 
@@ -29,10 +31,10 @@ Generate a unique filename using GUID
 =cut
 
 sub generate_crypted_filename {
-  	my $guid     = Data::GUID->new;
-  	my $filename = $guid->as_string;
+    my $guid     = Data::GUID->new;
+    my $filename = $guid->as_string;
 
-  	return $filename;
+    return $filename;
 }
 
 =head2 generate_new_slug_name
@@ -42,20 +44,20 @@ Generate a new slug name based on existing slug names
 =cut
 
 sub generate_new_slug_name {
-	my ($original_slug, $similar_slugs) = @_;
+    my ($original_slug, $similar_slugs) = @_;
 
-	# Extract only the slugs that matter: the slugs with this pattern: $original_slug-number	
-	my @slugs_of_interest = grep { $_ =~ /^${original_slug}-\d*$/ } @{ $similar_slugs };
+    # Extract only the slugs that matter: the slugs with this pattern: $original_slug-number    
+    my @slugs_of_interest = grep { $_ =~ /^${original_slug}-\d*$/ } @{ $similar_slugs };
 
-	my $max_number = 0;
-	foreach ( @slugs_of_interest ) {
-		my @parts = split('-', $_);
-		my $number = $parts[-1];											# Get the number at the end of the slugs
-		
-		$max_number = ( $max_number < $number ) ? $number : $max_number;	# Find the biggest one
-	}
+    my $max_number = 0;
+    foreach ( @slugs_of_interest ) {
+        my @parts = split('-', $_);
+        my $number = $parts[-1];                                            # Get the number at the end of the slugs
+        
+        $max_number = ( $max_number < $number ) ? $number : $max_number;    # Find the biggest one
+    }
 
-	my $new_slug_name = $original_slug . '-' . ++$max_number;				# Generate the new slug name
+    my $new_slug_name = $original_slug . '-' . ++$max_number;               # Generate the new slug name
 
     return $new_slug_name;
 }
@@ -273,15 +275,15 @@ sub _xliterate_utf8 {
 =cut
 
 sub remove_html {
-	my ($text) = @_;
-	return '' unless defined $text;    # suppress warnings
-	$text = Encode::encode_utf8($text);
-	$text =~
-	  s/(<\!\[CDATA\[(.*?)\]\]>)|(<[^>]+>)/defined $1 ? $1 : ''/geisx;
-	$text =~ s/<(?!\!\[CDATA\[)/&lt;/gis;
-	$text = Encode::decode_utf8($text)
-		unless Encode::is_utf8($text);
-	$text;
+    my ($text) = @_;
+    return '' unless defined $text;    # suppress warnings
+    $text = Encode::encode_utf8($text);
+    $text =~
+      s/(<\!\[CDATA\[(.*?)\]\]>)|(<[^>]+>)/defined $1 ? $1 : ''/geisx;
+    $text =~ s/<(?!\!\[CDATA\[)/&lt;/gis;
+    $text = Encode::decode_utf8($text)
+        unless Encode::is_utf8($text);
+    $text;
 }
 
 =head2 string_to_slug
@@ -293,18 +295,18 @@ But I'm guessing
 =cut
 
 sub string_to_slug {
-	my ($string) = @_;
-	my $s = _xliterate_utf8( $string );
-	my $sep = '-';
+    my ($string) = @_;
+    my $s = _xliterate_utf8( $string );
+    my $sep = '-';
 
-	$s = lc $s;            ## lower-case.
-	$s = uri_encode( $s );
-	$s = remove_html($s);  ## remove HTML tags.
-	$s =~ s!&[^;\s]+;!!gs; ## remove HTML entities.
-	$s =~ s![^\w\s-]!!gs;  ## remove non-word/space chars.
-	$s =~ s!\s+!$sep!gs;
+    $s = lc $s;            ## lower-case.
+    $s = uri_encode( $s );
+    $s = remove_html($s);  ## remove HTML tags.
+    $s =~ s!&[^;\s]+;!!gs; ## remove HTML entities.
+    $s =~ s![^\w\s-]!!gs;  ## remove non-word/space chars.
+    $s =~ s!\s+!$sep!gs;
 
-	return $s;
+    return $s;
 }
 
 =head2 map_posts
@@ -323,7 +325,21 @@ sub map_posts {
         $el->{nr_of_comments}     = $post->nr_of_comments;
         $el->{created_date_human} = $post->created_date_human;
         $el->{content_formatted}  = $post->content_formatted;
-        
+        if ($post->type eq "HTML"){
+            decode_entities($el->{content});
+        }
+        else{             
+            my $m = Text::Markdown->new;
+            my $hr = HTML::Restrict->new(
+                rules =>
+                 {    
+                    strip_enclosed_content => [ 'pre']
+                 }
+            );
+
+            my $text = $hr->process($el->{content} );
+            $el->{content} =  $m->markdown($text);          
+        }
         # get post author
         $el->{user} = $post->user->as_hashref;
         
@@ -386,7 +402,7 @@ Create a password
 
 sub create_password {
   my ($plaintext) = @_;
-	
+    
   # Match encryption from MT
   my @alpha  = ( 'a' .. 'z', 'A' .. 'Z', 0 .. 9 );
   my $salt   = join '', map $alpha[ rand @alpha ], 1 .. 16;
@@ -403,7 +419,7 @@ Create an authentication token
 
 sub generate_hash {
     return -1 if @_ < 1 || @_ > 2;
-	
+    
     my $password = shift;
     my $hashref = {};
 
