@@ -1,10 +1,11 @@
 <link href="/blog/css/style.css" rel="stylesheet">
+<link href="/admin/css/style.css" rel="stylesheet">
 <link href="/blog/css/croppie.css" rel="stylesheet">
 
 <div class="mainy">
 	<!-- Page title -->
 	<div class="page-title">
-		<h2><i class="icon-wrench color"></i> Settings <small>manage your blog settings</small></h2>
+		<h2><i class="icon-wrench color"></i> Settings <small>Manage your blog settings</small></h2>
 		<hr />
 	</div>
 	<!-- Page title -->
@@ -14,9 +15,8 @@
 		<div class="col-md-12">
 			<div class="awidget clearfix">
 				<div class="awidget-head">
-
-
 				</div>
+
 				<div class="awidget-body">
 					[% INCLUDE components/alerts.tt %]
 					<div class="col-lg-6">
@@ -38,67 +38,68 @@
 							<hr />
 
 							<h5>Blog Description</h5>
-
-							<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" ></textarea>
-
-
-							<hr />
-
-							<h5>Social media buttons</h5>
-							<div class="make-switch" data-on="success" data-off="danger">
-								[% IF setting.social_media %]
-								<input id="social_media_check" name="social_media" type="checkbox" checked> [% ELSE %]
-								<input id="social_media_check" name="social_media" type="checkbox"> [% END %]
-							</div>
-							<input id="social_media_state" type="hidden" value="[% setting.social_media %]" />
+							<textarea type="text" rows="10" class="form-control rows-for-mobile" name="blog_description" placeholder="Blog Description" ></textarea>
+							<textarea type="text" rows="5" class="form-control hidden-sm hidden-md hidden-lg" name="blog_description" placeholder="Blog Description" ></textarea>
 
 							<hr />
 
-							<h5>Multiuser</h5>
-							<div class="make-switch" data-on="success" data-off="danger">
-								[% IF setting.multiuser %]
-								<input id="multiuser_check" name="multiuser" type="checkbox" checked> [% ELSE %]
-								<input id="multiuser_check" name="multiuser" type="checkbox"> [% END %]
-							</div>
-							<input id="multiuser_state" type="hidden" value="[% setting.multiuser %]" />
-
-							<hr />
-
-							<h5>Accepting comments</h5>
-							<div class="make-switch" data-on="success" data-off="danger">
-								[% IF setting.multiuser %]
-								<input id="accepting_comments_check" name="accepting_comments" type="checkbox" checked> [% ELSE %]
-								<input id="accepting_comments_check" name="accepting_comments" type="checkbox"> [% END %]
-							</div>
-							<input id="accepting_comments_state" type="hidden" value="[% setting.multiuser %]" />
-
-							<hr />
-
-							<h5>Timezone</h5>
-							<div class="btn-group">
-								<!-- <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select time zone <span class="caret"></span></button> -->
-								<select name="timezone" class="chosen-select">
-									<option value=""> Select time zone </option>
-									[% FOREACH timezone IN timezones %] [% SET selected = timezone == setting.timezone ? "selected" : "" %]
-									<option [% selected %] value="[% timezone %]"> [% timezone %] </option>
-									[% END %]
-								</select>
-							</div>
-
-							<hr />
-
-							<div class="form-group">
-								<div>
-									<button type="submit" class="btn btn-default">Save</button>
-									<a href="/blog/profile">
-										<button type="button" class="btn btn-danger">Cancel</button>
-									</a>
+							<div class="hidden-xs">
+								<h5>Social media buttons</h5>
+								<div class="make-switch" data-on="success" data-off="danger">
+									[% IF setting.social_media %]
+									<input id="social_media_check" name="social_media" type="checkbox" checked> [% ELSE %]
+									<input id="social_media_check" name="social_media" type="checkbox"> [% END %]
 								</div>
-							</div>
-						</form>
+								<input id="social_media_state" type="hidden" value="[% setting.social_media %]" />
+
+								<hr />
+
+								<h5>Multiuser</h5>
+								<div class="make-switch" data-on="success" data-off="danger">
+									[% IF setting.multiuser %]
+									<input id="multiuser_check" name="multiuser" type="checkbox" checked> [% ELSE %]
+									<input id="multiuser_check" name="multiuser" type="checkbox"> [% END %]
+								</div>
+								<input id="multiuser_state" type="hidden" value="[% setting.multiuser %]" />
+
+								<hr />
+
+								<h5>Accepting comments</h5>
+								<div class="make-switch" data-on="success" data-off="danger">
+									[% IF setting.multiuser %]
+									<input id="accepting_comments_check" name="accepting_comments" type="checkbox" checked> [% ELSE %]
+									<input id="accepting_comments_check" name="accepting_comments" type="checkbox"> [% END %]
+								</div>
+								<input id="accepting_comments_state" type="hidden" value="[% setting.multiuser %]" />
+
+								<hr/>
+
+								<h5>Timezone</h5>
+								<div class="btn-group">
+									<!-- <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">Select time zone <span class="caret"></span></button> -->
+									<select name="timezone" class="chosen-select">
+										<option value=""> Select time zone </option>
+										[% FOREACH timezone IN timezones %] [% SET selected = timezone == setting.timezone ? "selected" : "" %]
+										<option [% selected %] value="[% timezone %]"> [% timezone %] </option>
+										[% END %]
+									</select>
+								</div>
+
+								<hr/>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="settings-page-admin">
+                                    <button type="submit" class="btn btn-default">Save</button>
+                                    <a href="/blog/profile">
+                                        <button type="button" class="btn btn-danger">Cancel</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </form>
 					</div>
 					<div class="col-lg-6">
-						<div class="col-lg-3 profile-pic blog-pic">
+						<div class="col-lg-3 profile-pic blog-pic hidden-xs">
 							<div class="bubble">
 								[% IF blogs.0.large_avatar_path %]
 								<img id="blog_img_preview" class="user-image preview-avatar" src="/blog_avatar/[% blogs.0.name %]"/>
@@ -116,12 +117,9 @@
 						</div>
 					</div>
 				</div>
-
 			</div>
 		</div>
-
 	</div>
-
 </div>
 
 <div class="profile-modal">

@@ -58,7 +58,7 @@
 
 	[% ELSE %]
 
-	<div class="col-md-12">
+	<div class="col-md-12 tag-page-admin">
 		<div class="awidget">
 			<div class="awidget-head">[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 				<h3>Add a new tag [%role%]</h3>
@@ -108,7 +108,7 @@
 
 	[% END %]
 
-	<div class="col-md-12">
+	<div class="col-md-12 hidden-xs">
 
 		<div class="awidget">
 			<div class="awidget-head">

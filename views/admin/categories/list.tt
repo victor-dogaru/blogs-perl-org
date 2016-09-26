@@ -1,7 +1,7 @@
 <div class="mainy">
 	<!-- Page title -->
 	<div class="page-title">
-		<h2><i class="icon-list color"></i> Categories <small> manage categories</small></h2>
+		<h2><i class="icon-list color"></i> Categories <small> Manage categories</small></h2>
 		<hr />
 	</div>
 	[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
@@ -55,7 +55,7 @@
 
 	[% ELSE %]
 
-	<div class="col-md-12">
+	<div class="col-md-12 new-category-mobile">
 		<div class="awidget">
 			<div class="awidget-head">
 				<h3>Add a new category</h3>
@@ -105,7 +105,7 @@
 
 	[% END %]
 
-	<div class="col-md-12">
+	<div class="col-md-12 hidden-xs">
 
 		<div class="awidget">
 			<div class="awidget-head">

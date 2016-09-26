@@ -15,7 +15,7 @@
 					<h3>All [% status %] blogs</h3> [% ELSE %]
 					<h3>All blogs</h3> [% END %]
 				</div>
-				<div class="awidget-body">
+				<div class="awidget-body hidden-xs hidden-sm">
 
 					[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 					All ([% all %]) |
@@ -96,9 +96,57 @@
 					<div class="clearfix"></div>
 
 				</div>
-			</div>
 
+				<div class="blog-list-mobile hidden-md hidden-lg">
+					[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
+					All ([% all %]) |
+
+					<table class="table table-hover table-bordered ">
+						<thead>
+						<tr>
+							<th> Blog Name </th>
+							<th> Posts </th>
+							<th> Role </th>
+						</tr>
+						</thead>
+						<tbody>
+
+						[% FOREACH blog in blogs %]
+
+						<tr>
+							<td width="20%">
+								<b><a href="/blogs/user/[% blog.blog_creator.username %]/blogname/[%blog.name%]">[% blog.name %]</a></b>
+							</td>
+
+							<td width="25%">
+								[% blog.nr_of_posts %]
+							</td>
+
+
+							<td>
+								[% IF blog.role_in_blog == '1' %]
+								Admin
+								[% ELSE %]
+								Author
+								[% END %]
+							</td>
+
+						</tr>
+
+						[% END %]
+
+						</tbody>
+					</table>
+
+					<ul class="pagination pull-right">
+						[% INCLUDE components/pagination.tt %]
+					</ul>
+
+					<div class="clearfix"></div>
+
+				</div>
+			</div>
+			<a href="/[% role %]/create-blog" class="create-blog-page hidden-md hidden-lg hidden-sm">Create blog</a>
 		</div>
 	</div>
-</div>
 </div>

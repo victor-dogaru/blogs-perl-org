@@ -214,7 +214,4 @@ $('.role-arrow').click(function() {
   });
 
 
-
-
-
 }); // <- end of Document ready
