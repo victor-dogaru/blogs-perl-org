@@ -1,6 +1,5 @@
 [% SET global.template_name = 'notification' %]
 
-[% INCLUDE layouts/admin.tt %]
 [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 
    <div class="container">
@@ -58,7 +57,7 @@
                             </div>
                         </div>
                         
-                        <div class="modal-footer"></div>
+                        <!--<div class="modal-footer"></div>-->
                     </div>
                 </div>
             </div> <!-- end modal -->
@@ -103,5 +102,3 @@
       </div>
     </div>
   </div>
-
-<script src="/admin/js/bootstrap.min.js"></script>

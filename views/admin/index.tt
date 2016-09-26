@@ -53,7 +53,12 @@
                       </div>
                   </form>
                 [% ELSE %]
-                  <h3> Welcome to our blog, </h3> Now you can post articles...
+                <h3> Welcome to our blog, </h3>
+                <p> Now you can post articles, create blogs & interact with the community!</p>
+                <p> To have access to full admin features, please log in from a desktop device. </p>
+                <br>
+                <h4>Cheers,</h4>
+                <h5>the blogs.perl.org team</h5>
                 [% END %]
             </div>
          </div>

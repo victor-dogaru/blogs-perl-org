@@ -15,7 +15,7 @@
 					<h3>All [% status %] posts</h3> [% ELSE %]
 					<h3>All posts</h3> [% END %]
 				</div>
-				<div class="awidget-body">
+				<div class="awidget-body three-columns">
 
 					[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 					<a href="/[% role %]/posts"> All </a>([% all %]) |
@@ -28,11 +28,11 @@
 							<tr>
 								<th> Author </th>
 								<th> Title </th>
-								<th> Blogs </th>
-								<th> Categories </th>
-								<th> Tags </th>
-								<th> Comments </th>
-								<th> Actions </th>
+								<th class="hidden-xs"> Blogs </th>
+								<th class="hidden-xs"> Categories </th>
+								<th class="hidden-xs"> Tags </th>
+								<th class="hidden-xs"> Comments </th>
+								<th class="hidden-xs"> Actions </th>
 							</tr>
 						</thead>
 						<tbody>
@@ -43,42 +43,48 @@
 								<td width="20%">
 									<b> <i class="icon-user"></i> <a href="/profile/author/[% post.user.username | uri %]">[% post.user.username %]</a></b>
 									<br />
-									<b> [% post.user.name %] </b>
 									<br />
-									<i> [% post.created_date_human %] </i>
+									<b class="hidden-xs"> [% post.user.name %] </b>
+									<span class="hidden-sm hidden-md hidden-lg">in blog:</span>
+									<b><a class="hidden-sm hidden-md hidden-lg" href="/blogs/user/[% post.user.username %]/blogname/[%post.blog.name%]"> [% post.blog.name %] </a></b>
+									<br />
+									<br />
+									<i class="small-date"> [% post.created_date_human %] </i>
 								</td>
 
 								<td width="25%">
-									<b> <a href="/post/[% post.slug %]"> [% post.title %] </a> </b>
+									<b> <a class="resize-title" href="/post/[% post.slug %]"> [% post.title %] </a> </b>
 									<br />
-									<br /> [% IF (post.status == 'published') %]
-									<span class="label label-success"> Published </span> [% ELSE %]
-									<a href="/[% role %]/posts/publish/[% post.id %]"> Publish </a> [% END %] | [% IF (post.status == 'draft') %]
-									<span class="label label-warning"> Draft </span> [% ELSE %]
-									<a href="/[% role %]/posts/draft/[% post.id %]"> Draft </a> [% END %] | [% IF (post.status == 'trash') %]
-									<span class="label label-danger"> Trash </span> [% ELSE %]
-									<a href="/[% role %]/posts/trash/[% post.id %]"> Trash </a> [% END %]
+									<span class="hidden-xs">
+										<br /> [% IF (post.status == 'published') %]
+										<span class="label label-success"> Published </span> [% ELSE %]
+										<a  href="/[% role %]/posts/publish/[% post.id %]"> Publish </a> [% END %] | [% IF (post.status == 'draft') %]
+										<span class="label label-warning"> Draft </span> [% ELSE %]
+										<a href="/[% role %]/posts/draft/[% post.id %]"> Draft </a> [% END %] | [% IF (post.status == 'trash') %]
+										<span class="label label-danger"> Trash </span> [% ELSE %]
+										<a href="/[% role %]/posts/trash/[% post.id %]"> Trash </a> [% END %]
+									</span>
 								</td>
 
-								<td>
+								<td class="hidden-xs">
 									<a href="/blogs/user/[% post.user.username %]/blogname/[%post.blog.name%]"> [% post.blog.name %] </a>
 								</td>
 
-								<td>
+								<td class="hidden-xs">
 									[% FOREACH post_category IN post.post_categories %]
 									<a href="/posts/category/[% post_category.category.slug %]"> [% post_category.category.name %] </a> [% END %]
 								</td>
 
-								<td width="5%">
+								<td class="hidden-xs" width="5%">
 									[% FOREACH post_tag IN post.post_tags %]
 									<a href="/posts/tag/[% post_tag.tag.slug %]"> [% post_tag.tag.name %] </a> [% END %]
 								</td>
 
-								<td width="5">
+								<td class="hidden-xs" width="5">
 									<a href="/post/[% post.slug %]#comments"> [% post.nr_of_comments %] </a>
 								</td>
 
-								<td width="11%">
+								<td class="hidden-xs" width="11%">
 									<a href="/post/[% post.slug %]">
 										<button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button>
 									</a>
@@ -99,9 +105,8 @@
 					<ul class="pagination pull-right">
 						[% INCLUDE components/pagination.tt %]
 					</ul>
-
 					<div class="clearfix"></div>
-
+					<a href="/[% role %]/posts/add" class="create-blog-page hidden-md hidden-lg hidden-sm">Create post</a>
 				</div>
 			</div>
 

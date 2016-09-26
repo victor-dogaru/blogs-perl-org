@@ -1,61 +1,4 @@
-<!--<link href="/blog/css/profile.css" rel="stylesheet">-->
-<link href="/blog/css/style.css" rel="stylesheet">
-<!--<link href="/blog/css/croppie.css" rel="stylesheet">-->
-
-	
-
-	
-	<!--<div class="profile-modal">-->
-
-	<!--&lt;!&ndash; Modal &ndash;&gt;-->
-	<!--<div class="modal fade" id="changeImgBlog" tabindex="-1" role="dialog" aria-labelledby="changeImgBlogLabel">-->
-		<!--<div class="modal-dialog" role="document">-->
-			<!--<div class="modal-content">-->
-				<!--<div class="modal-header">-->
-					<!--<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
-					<!--<h4 class="modal-title" id="changeImgBlogLabel">Change Photo</h4>-->
-				<!--</div>-->
-				<!--<div class="modal-body clearfix">-->
-					<!--<div class="col-xs-12 col-sm-6 profile-pic">-->
-						<!--<div class="bubble text-center">-->
-							<!--[% IF session.blog.avatar_path %]-->
-							<!--<img id="blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% searched_blog.slug %]/user/[% user.username %]" />-->
-							<!--[% ELSE %]-->
-							<!--<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />-->
-							<!--[% END %]-->
-
-							<!--<div id="croppie_pic">-->
-							<!--</div>-->
-
-
-						<!--</div>-->
-					<!--</div>-->
-					<!--<div class="col-xs-12 col-sm-6 picture-btn">-->
-						<!--<form action="/blog-image/large/slug/[% searched_blog.slug %]/user/[% user.username %]" enctype="multipart/form-data" method="post" id="upload_blog_img">-->
-							<!--<span class="file-input btn btn-file light-button buttons-group change-pic">-->
-					<!--<p>Choose picture</p> &lt;!&ndash; <input type="file" name="file"> &ndash;&gt;-->
-					<!--<input type="file" id="file-upload-blog" class="form-control" name="file">-->
-					<!--<input type="text" class="form-control hidden" name="width">-->
-					<!--<input type="text" class="form-control hidden" name="height">-->
-					<!--<input type="text" class="form-control hidden" name="top">-->
-					<!--<input type="text" class="form-control hidden" name="left">-->
-					<!--<input type="text" class="form-control hidden" name="zoom">-->
-                    <!--<input type="text" class="form-control hidden" name="action_form">-->
-				<!--</span>-->
-						<!--</form>-->
-						<!--<label class="error_file">We only allows file types of PNG, JPG, GIF and BMP.</label>-->
-					<!--</div>-->
-
-				<!--</div>-->
-				<!--<div class="modal-footer">-->
-					<!--<button type="button" class="save-img btn btn-primary">Save</button>-->
-					<!--<button type="button" class="cancel-img btn btn-default">Undo</button>-->
-					<!--<button type="button" class="delete-img btn">Delete Photo</button>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-<!--</div>-->
+<link href="/admin/css/style.css" rel="stylesheet">
 
 
 
@@ -68,45 +11,42 @@
 	<!-- Page title -->
 
 	<div class="row">
-		<div class="col-md-12">
-
+		<div class="col-xs-12">
 			<div class="awidget clearfix">
-
 				<div class="awidget-head">
 					<h3>Add</h3>
 				</div>
 				<div class="awidget-body">
 
 					[% INCLUDE components/alerts.tt %]
-
 					<form class="form-horizontal" role="form" method="post" action="/author/create-blog">
-						<div class="col-lg-9">
+						<div class="col-xs-12">
 							<div class="form-group">
-								<label class="col-lg-4 control-label">Blog Name</label>
-								<div class="col-lg-8">
+								<label class="col-xs-4 control-label">Blog Name</label>
+								<div class="col-xs-8">
 									<input type="text" class="form-control" name="blog_name" placeholder="Blog Name" required>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-lg-4 control-label">Blog URL</label>
-								<div class="col-lg-8">
+								<label class="col-xs-4 control-label">Blog URL</label>
+								<div class="col-xs-8">
 									<input type="text" class="form-control" name="blog_url" placeholder="Slug" required>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-lg-4 control-label">Blog Description</label>
-								<div class="col-lg-8">
+								<label class="col-xs-4 control-label">Blog Description</label>
+								<div class="col-xs-8">
 									<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
 								</div>
 							</div>
 
 							<hr />
 
-							<div class="form-group">
-								<label class="col-lg-4 control-label">Social media buttons</label>
-								<div class="col-lg-8">
+							<div class="form-group hidden-xs">
+								<label class="col-xs-4 control-label">Social media buttons</label>
+								<div class="col-xs-8">
 									<div class="make-switch" data-on="success" data-off="danger">
 										<input id="newblog_social_media_check" name="newblog_social_media" type="checkbox" >
 									</div>
@@ -114,11 +54,11 @@
 								</div>
 							</div>
 
-							<hr />
+							<hr  />
 
-							<div class="form-group">
-								<label class="col-lg-4 control-label">Multiuser</label>
-								<div class="col-lg-8">
+							<div class="form-group hidden-xs">
+								<label class="col-xs-4 control-label">Multiuser</label>
+								<div class="col-xs-8">
 									<div class="make-switch" data-on="success" data-off="danger">
 										<input id="newblog_multiuser_check" name="newblog_multiuser" type="checkbox" >
 									</div>
@@ -128,9 +68,9 @@
 
 							<hr />
 
-							<div class="form-group">
-								<label class="col-lg-4 control-label">Accepting comments</label>
-								<div class="col-lg-8">
+							<div class="form-group hidden-xs">
+								<label class="col-xs-4 control-label">Accepting comments</label>
+								<div class="col-xs-8">
 									<div class="make-switch" data-on="success" data-off="danger">
 										<input id="newblog_comments_check" name="newblog_comments" type="checkbox" >
 									</div>
@@ -140,9 +80,9 @@
 
 							<hr />
 
-							<div class="form-group">
-								<label class="col-lg-3 control-label">Timezone</label>
-								<div class="col-lg-6">
+							<div class="form-group hidden-xs">
+								<label class="col-xs-3 control-label">Timezone</label>
+								<div class="col-xs-6">
 									<select name="timezone" class="chosen-select">
 										<option value=""> Select time zone </option>
 										[% FOREACH timezone IN timezones %] [% SET selected = timezone == setting.timezone ? "selected" : "" %]
@@ -155,33 +95,15 @@
 							<hr />
 
 							<div class="form-group">
-								<div class=" col-lg-10">
+								<div class="button-width col-xs-12">
 									<button type="submit" class="btn btn-default">Save</button>
 									<button type="button" class="btn btn-danger">Cancel</button>
 								</div>
 							</div>
 						</div>
-
-						<!--<div class="col-lg-3 profile-pic blog-pic">-->
-							<!--<div class="bubble">-->
-								<!--[% IF session.blog.avatar_path %]-->
-								<!--<img id="blog_img_preview" class="user-image" src="/blog-avatar/large/slug/[% searched_blog.slug %]/user/[% user.username %]" />-->
-								<!--[% ELSE %]-->
-								<!--<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />-->
-								<!--[% END %]-->
-							<!--</div>-->
-							<!--<div>-->
-								<!--<button type="button" class="btn change-pic" data-toggle="modal" data-target="#changeImgBlog">Change photo-->
-								<!--</button>-->
-							<!--</div>-->
-						<!--</div>-->
 					</form>
-
 				</div>
-
 			</div>
-
 		</div>
 	</div>
-
 </div>

@@ -1417,6 +1417,7 @@ span.header-badge {
    }
 }
 @media screen and (max-width:767px){
+   /*header admin*/
    .header.admin-header{
       height: auto;
       padding-bottom: 0;
@@ -1424,7 +1425,7 @@ span.header-badge {
    #only-logo{
       width: 35px;
       height: 35px;
-      display: inline-block;
+      display: inline-block!important;
    }
    .header .logo h1 {
       padding: 0;
@@ -1436,5 +1437,94 @@ span.header-badge {
    }
    .header.admin-header .navbar{
       margin: 0;
+   }
+
+   /*blog page from admin*/
+   .page-title small{
+      font-size: 15px;
+      display: block;
+      margin:5px;
+   }
+   .create-blog-page{
+      background-color: #008CBA;
+      border: none;
+      color: white;
+      padding: 15px 32px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 16px;
+      width: 100%;
+      border-radius: 10px;
+   }
+   .form-horizontal hr{
+      display: none;
+   }
+   .button-width button{
+      width: 49%;
+   }
+   .small-date{
+      font-size:11px;
+   }
+
+   /*post list page admin*/
+   .awidget  .three-columns{
+      padding: 0;
+   }
+   .resize-title{
+      word-break: break-word;
+   }
+   .awidget table b{
+      font-weight: normal;
+   }
+
+   /*comments page admin*/
+   #apply-filter{
+      width: 100%;
+   }
+   .comment {
+      word-break: break-word;
+      font-style: italic;
+      border: 1px dotted #ccc;
+      margin: 25px auto;
+   }
+   .status-comment{
+      display: none;
+   }
+   .comment-list-display b span{
+      font-weight: bold;
+   }
+
+   /*category page admin*/
+   .new-category-mobile br{
+      display: none;
+   }
+   .new-category-mobile button{
+      width: 49%;
+   }
+
+   /*tag page admin*/
+   .tag-page-admin br{
+      display: none;
+   }
+   .tag-page-admin button{
+      width: 49%;
+   }
+
+   /*settings general page admin*/
+   .rows-for-mobile{
+      display: none;
+   }
+   .settings-page-admin button{
+      width: 49%;
+   }
+   
+   /*notification page admin*/
+   #invitation_modal .modal-dialog{
+      width: 100%;
+   }
+   a[data-target="#invitation_modal"]{
+      background: #ccc;
+      opacity: 0.5;
+      padding: 0 5px;
    }
 }

@@ -43,20 +43,22 @@
 					</div>
 
 					<div class="form-group pull-right">
-						<button type="submit" class="btn btn-success" id="apply-filter" onclick="Javascript:getFilterOptions(); createURL();" >Apply</button>
+						<button type="submit" class="btn btn-success " id="apply-filter" onclick="Javascript:getFilterOptions(); createURL();" >Apply</button>
 <!--						<button type="button" class="btn btn-danger">Reset</button>-->
 					</div>
 
 				</div>
 
-				<div class="pull-left">
+				<div class="pull-left hidden-xs">
 					 All ([% all %]) | 
 					 Approved ([% approved %]) | 
 					 Pending ([% pending %]) | 
 					 Trash ([% trash %]) | 
 					 Spam ([% spam %])
 				</div>
-				<table class="table table-hover table-bordered">
+
+				<div class="clearfix"></div>
+				<table class="table table-hover table-bordered hidden-xs">
 					<thead>
 						<tr>
 							<th> Author </th>
@@ -113,6 +115,50 @@
 
 					</tbody>
 				</table>
+
+				<div class="visible-xs">
+					[% FOREACH comment IN comments %]
+					<div class="comment-list-display">
+						<div>
+							[% IF comment.fullname %]
+							<b> <span>Author: </span>[% comment.fullname %] </b> [% ELSE %]
+							<b> <span>Author: </span> <i class="icon-user"></i> <a href="/profile/author/[% comment.uid.username | uri %]">[% comment.uid.name %]</a></b> [% END %]
+							 [% IF comment.email %]
+							<p> <span>E-mail: </span>[% comment.email %] </p> [% ELSE %]
+							<p> <span>E-mail: </span> [% comment.uid.email %] </p> [% END %]
+							<p class="small-date">[% comment.comment_date_human %]</p>
+						</div>
+
+						<div class="comment col-xs-12">
+							<p>"[% comment.content %]"</p>
+							<div class="status-comment">
+								<br />
+								<br /> [% IF (comment.status == 'pending') %]
+								<span class="label label-warning"> Pending </span> [% ELSE %]
+								<a href="/[% role %]/comments/pending/[% comment.id %]"> Pending </a> [% END %] | [% IF (comment.status == 'approved') %]
+								<span class="label label-success"> Approved </span> [% ELSE %]
+								<a href="/[% role %]/comments/approve/[% comment.id %]"> Approve </a> [% END %] | [% IF (comment.status == 'trash') %]
+								<span class="label label-danger"> Trash </span> [% ELSE %]
+								<a href="/[% role %]/comments/trash/[% comment.id %]"> Trash </a> [% END %] | [% IF (comment.status == 'spam') %]
+								<span class="label label-danger"> Spam </span> [% ELSE %]
+								<a href="/[% role %]/comments/spam/[% comment.id %]"> Spam </a> [% END %]
+							</div>
+						</div>
+
+						<div> <span>Title: </span> <a href="/post/[% comment.post.slug %]"> [% comment.post.title %] </a> </div>
+
+						<div> <span>Blog:  </span> <a href="/blogs/user/[% comment.post.user.username %]/blogname/[%comment.post.blog.name%]">[% comment.post.blog.name %] </a> </div>
+
+						<div class="action-comments hidden-xs">
+							[% IF comment.reply_to %]
+							<a href="/post/[% comment.post.slug %]#comment_[% comment.reply_to %]"> Reply </a> [% ELSE %] [% IF comment.status == 'approved' %]
+							<a href="/post/[% comment.post.slug %]#comment_[% comment.id %]">View Comment </a> [% ELSE %] Comment [% END %] [% END %]
+						</div>
+
+					</div>
+					<hr>
+					[% END %]
+				</div>
 
 				<ul class="pagination pull-right">
 					[% INCLUDE components/pagination.tt %]

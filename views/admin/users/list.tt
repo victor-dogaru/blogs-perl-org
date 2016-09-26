@@ -1,7 +1,7 @@
 <div class="mainy manage-users">
 	<!-- Page title -->
 	<div class="page-title">
-		<h2><i class="icon-user color"></i> Users <small>a list of all registered users</small></h2>
+		<h2><i class="icon-user color"></i> Users <small>A list of all registered users</small></h2>
 		<hr />
 	</div>
 
@@ -17,7 +17,6 @@
 			</div>
 			<div class="awidget-body">
 
-
 				<div class="users-filter clearfix">
 
 					<div class="form-group pull-left">
@@ -26,7 +25,6 @@
 							<select name="users_blogs_list" id="users_blogs_list" class="chosen-select" onchange="getBlogName()">
 								<option value="all"> All </option>
 								[% FOREACH blog IN all_blogs %]
-<!--								[% blog.name %]-->
 								[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 								<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
 								[% END %] 
@@ -60,11 +58,10 @@
 					</div>
 					<div class="form-group pull-right">
 						<button type="submit" class="btn btn-success" id="apply-filter" onclick="Javascript:getFilterOptions(); createURL();" >Apply</button>
-<!--						<button type="button" class="btn btn-danger">Reset</button>-->
 					</div>
 				</div>
 
-
+			<div class="action-of-users hidden-xs">
 				<div class="pull-left">
 					 All ([% all %]) |
 					 Active ([% active %]) |
@@ -155,7 +152,7 @@
 				<ul class="pagination pull-right user-list-pagination">
 					[% INCLUDE components/pagination.tt %]
 				</ul>
-
+			</div>
 				<div class="clearfix"></div>
 			</div>
 		</div>

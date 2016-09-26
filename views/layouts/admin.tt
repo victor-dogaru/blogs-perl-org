@@ -164,7 +164,9 @@
     <!-- App JS -->
     <script src="/admin/js/app.js"></script>
 
-   [% IF global.template_name == "set_password" %]
+    [% IF global.template_name == 'notification' %]
+    <script src="/admin/js/notification.js"></script>
+    [% ELSIF global.template_name == "set_password" %]
     <script src="/admin/js/set_password.js"></script>
    [% END %]
 
