@@ -45,7 +45,7 @@ get '/notification' => sub {
   template 'admin/notification/notification',
     {
       counter => $counter
-    };
+    }, { layout  => 'admin' };
 
 };
 
