@@ -1527,4 +1527,12 @@ span.header-badge {
       opacity: 0.5;
       padding: 0 5px;
    }
+   .notification-text{
+      margin: 25px 0 !important;
+   }
+   .modal-body {
+      position: relative;
+      padding: 66px 20px;
+      padding-top: 10px;
+   }
 }
