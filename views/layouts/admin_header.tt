@@ -17,7 +17,7 @@
                       <nav class="collapse navbar-collapse bs-navbar-collapse navbar-right" role="navigation">
                         <ul class="nav navbar-nav">
                           <li>
-                              <a href="/notification" id="notification-parent"><i class="fa fa-bell-o header-notifications" aria-hidden="true"></i><span class="header-badge"> [% session.total %] </span></a>
+                              <a href="/notification" id="notification-parent"><i class="fa fa-bell-o header-notifications" aria-hidden="true"></i><span class="header-badge"> [% vars.notification_counter %] </span></a>
                           </li>
                           <li class="hidden-xs welcome-user">
                               <a href="/admin"> Welcome <b id="sessionUsername">[% session.user.name %]</b> !</a>

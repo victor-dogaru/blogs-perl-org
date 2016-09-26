@@ -34,6 +34,41 @@ on_plugin_import {
             }
         )
     );
+    $dsl->app->add_hook(
+        Dancer2::Core::Hook->new(
+            name => 'before',
+            code => sub {
+                            $dsl->set( layout => 'admin' );
+
+                my $context = shift;
+                my $user_obj = $context->session->{'data'}->{'user'};
+                        $user_obj = $dsl->resultset('Users')->find({ id => $user_obj->{id} }) if ($user_obj);
+                if ( $user_obj ) {
+                    my $counter  = $dsl->resultset('Notification')->search({
+                    user_id      => $user_obj->id,
+                    name         =>  'changed role'
+                    })->count;
+                     $counter   += $dsl->resultset('Notification')->search({
+                    user_id      => $user_obj->id,
+                    name         =>  'comment',
+                    viewed       => 0
+                    })->count;
+                    $counter    += $dsl->resultset('Notification')->search({
+                    user_id      => $user_obj->id,
+                    name         =>  'invitation',
+                    viewed       => 0
+                    })->count;
+                    $counter     += $dsl->resultset('Notification')->search({
+                    sender_id    => $user_obj->id,
+                    name         => 'response'
+                    })->count;
+                    
+                    $dsl->vars->{notification_counter}= $counter;
+                }
+            }
+
+        )
+    );
 };
 
 register_plugin for_versions => [2];
