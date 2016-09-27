@@ -23,6 +23,9 @@ View all notifications
 get '/notification' => sub {
 
   my $res_user = resultset('Users')->find_by_session(session);
+  if (!$res_user){
+    redirect "/";
+  }
   my $counter  = resultset('Notification')->search({
   user_id      => $res_user->id,
   name         =>  'changed role'
