@@ -45,3 +45,12 @@
 	</div>	
 
 [% END %]
+
+
+<div class="block-content alert-message">
+	<div class="alert alert-warning">
+		<button type="button" class="close">×</button>
+		<h4>Warning</h4>
+		<p></p>
+	</div>
+</div>

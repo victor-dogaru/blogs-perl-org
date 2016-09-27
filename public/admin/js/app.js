@@ -1,14 +1,9 @@
 /* ============================================================
-    All of the aplication's custom javascript scripts goes here
+    All of the application's custom javascript scripts goes here
    ============================================================
-
-Author: Andrei Cacio
-Email: andrei.cacio@evozon.com
-
 */
 
 // Prepare the Post status based on what button is pressed
-
 $(document).ready(function() {
 
 	$('#publish_btn').on('click', function() {
@@ -23,10 +18,32 @@ $(document).ready(function() {
 		$('#status').val('trash');
 	});
 
+//	choose file on input  Create Post page
+	$("#cover").on("change", function(){
+		var chooseFile = $(this).val();
+
+		if(!stringEndsWithValidExtension(chooseFile, ["jpeg", "jpg", "png", "gif", "png"])) {
+			$("#cover").val('');
+			$('.alert-message p').text("The system currently supports jpg, jpeg, png or gif uploads. Please try re-uploading a supported format.");
+			$('.alert-message').show();
+
+			var offsetTop = $(".alert-message").offset().top;
+			$("html, body").animate({
+				scrollTop: offsetTop - 90
+			}, 200);
+		}
+	});
+
+	$(".alert-message .close").on("click", function(){
+		$(this).parents(".alert-message").hide();
+	})
+
+
 });
 
-// Autocomplete the Tag/Category slug
 
+
+// Autocomplete the Tag/Category slug
 $(document).ready(function() {
 
 	$('input[name="name"').on('keyup', function(){
@@ -188,6 +205,22 @@ $(document).ready(function(){
 
 
 //----------------------------
+
+
+// Validation file input for img only
+function stringEndsWithValidExtension(stringToCheck, acceptableExtensionsArray, required) {
+	if (required == false && stringToCheck.length == 0) { return true; }
+	for (var i = 0; i < acceptableExtensionsArray.length; i++) {
+		if (stringToCheck.toLowerCase().endsWith(acceptableExtensionsArray[i].toLowerCase())) { return true; }
+	}
+	return false;
+}
+
+String.prototype.startsWith = function (str) { return (this.match("^" + str) == str) }
+String.prototype.endsWith = function (str) { return (this.match(str + "$") == str) }
+
+
+
 //Croppie avatars for the creation of the blog avatars
 
 $(document).ready(function() {
@@ -351,18 +384,6 @@ $(document).ready(function() {
 		$('#modal_blog_img_preview').removeClass('hidden');
 		$('#croppie_pic').addClass('hidden');
 	});
-
-	// Validation file input for img only
-	function stringEndsWithValidExtension(stringToCheck, acceptableExtensionsArray, required) {
-		if (required == false && stringToCheck.length == 0) { return true; }
-		for (var i = 0; i < acceptableExtensionsArray.length; i++) {
-			if (stringToCheck.toLowerCase().endsWith(acceptableExtensionsArray[i].toLowerCase())) { return true; }
-		}
-		return false;
-	}
-
-	String.prototype.startsWith = function (str) { return (this.match("^" + str) == str) }
-	String.prototype.endsWith = function (str) { return (this.match(str + "$") == str) }
 
 	//submitting upload picture form
 	$("#changeImgBlog .save-img").click(function() {
