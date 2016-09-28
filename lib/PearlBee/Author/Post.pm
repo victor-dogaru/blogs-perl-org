@@ -48,8 +48,10 @@ get '/author/posts/page/:page' => sub {
 
   }
   #my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
-
-  my ($all, $publish, $draft, $trash);
+  my $all     = 0;
+  my $publish = 0;
+  my $draft   = 0;
+  my $trash   = 0;
 
   foreach my $post (@posts){
     if ($post->status eq 'published'){
@@ -117,7 +119,10 @@ get '/author/posts/:status/page/:page' => sub {
   }
   my @posts       = resultset('Post')->search({ user_id => $user_obj->id, status => $status }, { order_by => \'created_date DESC' });
   my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
-
+  my $total = scalar @posts;
+  if ($total == 0){
+    redirect request->referer;
+  }
   my ($all, $publish, $draft, $trash) = $count->get_all_status_counts;
   my $status_count                    = $count->get_status_count($status);
 
@@ -131,10 +136,13 @@ get '/author/posts/:status/page/:page' => sub {
   my $current_page    = $page;
   my $pages_per_set   = 7;
   my $pagination      = generate_pagination_numbering($total_posts, $posts_per_page, $current_page, $pages_per_set);
+  map { $_->as_hashref } @posts;
+  my @sorted_posts    = sort {$b->id <=> $a->id} @posts;
+  my @actual_posts    = splice(@sorted_posts,($page-1)*$nr_of_rows,$nr_of_rows);
 
   template 'admin/posts/list',
     {
-      posts         => \@posts,
+      posts         => \@actual_posts,
       trash         => $trash,
       draft         => $draft,
       publish       => $publish,
