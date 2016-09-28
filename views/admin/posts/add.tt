@@ -18,12 +18,13 @@
                     </div>
 
                     <div class="awidget-body">
-
-                        <select name="posts_blog_name">
-                            [% FOREACH blog IN blogs %]
-                            <option [% blog.selected %] value="[% blog.name %]">[% blog.name %]</option>
-                            [% END %]
-                        </select>
+                        <div class="form-group">
+                            <select name="posts_blog_name" class="form-control">
+                                [% FOREACH blog IN blogs %]
+                                <option [% blog.selected %] value="[% blog.name %]">[% blog.name %]</option>
+                                [% END %]
+                            </select>
+                        </div>
                     </div>
 
                     <div class="awidget-head">
@@ -31,15 +32,12 @@
                     </div>
 
                     <div class="awidget-body">
-                        <select name="type">
-                            <option value="HTML">HTML</option>
-                            <option value="Markdown">Markdown</option>
-                            <!-- Keep these other options for later
-                                                           <option value="Markdown_With_Smartypants">Markdown with Smartypants</option>
-                                                           <option value="RichText">RichText</option>
-                                                           <option value="Textile2">Textile2</option>
-                            -->
-                        </select>
+                        <div class="form-group">
+                            <select name="type" class="form-control">
+                                <option value="HTML">HTML</option>
+                                <option value="Markdown">Markdown</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="awidget-head">
@@ -47,34 +45,32 @@
                     </div>
 
                     <div class="awidget-body">
-
                         <input class="form-control" required maxlength="180" id="title" name="title" type="text" placeholder="Title">
                         <br />
                         <input class="form-control" required id="slug" name="slug" type="text" placeholder="Slug">
                         <br />
-                        <input class="form-control" id="cover" name="cover" type="file" placeholder="Cover image">
+
+                        <!-- input html for choose file-->
+                        <div id="upload-image-container">
+                            <input class="form-control" accept="image/jpg, image/JPG, image/jpeg, image/JPEG" required="required" id="cover" name="cover" type="file" placeholder="Cover image"/>
+                        </div>
                         <br />
 
                         <br />
                         <textarea name="post" required class="form-control ckeditor" placeholder="Enter text ..." rows="20" cols="10"></textarea>
                         <input type="hidden" name="status" id="status" />
-
                     </div>
                 </div>
-
             </div>
 
             <!-- post sidebar -->
-
             <div class="col-md-4">
 
                 <div class="awidget">
                     <div class="awidget-head">
                         <h3>Details</h3>
                     </div>
-
                     <div class="awidget-body">
-
                         <h5>Category</h5>
                         <input class="col-lg-12 form-control" id="categories" name="categories" type="text" placeholder="Categories"><br />
                         <hr />

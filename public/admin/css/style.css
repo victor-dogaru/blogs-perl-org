@@ -836,6 +836,10 @@ strong{
    margin:5px 0px;
 }
 
+.alert-message {
+   display: none;
+}
+
 /* Error log */
 
 .error-log{
@@ -1277,7 +1281,12 @@ footer .copy{
 
 /*Make post style - Paul*/
 .make-post .awidget-body select {
-	min-width: 90px;
+   min-width: 90px;
+   margin-top: 0;
+   margin-right: 10px;
+   margin-bottom: 0;
+   margin-left: 10px;
+   width: 30%;
 }
 /*Manage tags style -Paul*/
 .manage-tags td.long-input {
