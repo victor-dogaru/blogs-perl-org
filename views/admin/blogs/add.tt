@@ -19,24 +19,24 @@
 				<div class="awidget-body">
 
 					[% INCLUDE components/alerts.tt %]
-					<form class="form-horizontal" role="form" method="post" action="/author/create-blog">
+					<form id="new-blog-form" class="form-horizontal" role="form" method="post" action="/author/create-blog">
 						<div class="col-xs-12">
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Blog Name</label>
+								<label class="col-xs-4 control-label">Blog Name*</label>
 								<div class="col-xs-8">
-									<input type="text" class="form-control" name="blog_name" placeholder="Blog Name" required>
+									<input id="idForm" type="text" class="form-control" name="blog_name" placeholder="Blog Name" required>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Blog URL</label>
+								<label class="col-xs-4 control-label">Blog URL*</label>
 								<div class="col-xs-8">
 									<input type="text" class="form-control" name="blog_url" placeholder="Slug" required>
 								</div>
 							</div>
 
 							<div class="form-group">
-								<label class="col-xs-4 control-label">Blog Description</label>
+								<label class="col-xs-4 control-label">Blog Description*</label>
 								<div class="col-xs-8">
 									<textarea type="text" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
 								</div>
