@@ -43,7 +43,8 @@ on_plugin_import {
                 my $user_obj = $context->session->{'data'}->{'user'};
                         $user_obj = $dsl->resultset('Users')->find({ id => $user_obj->{id} }) if ($user_obj);
                 if ( $user_obj ) {
-                    my $counter  = $dsl->resultset('Notification')->search({
+                    my $counter = 0;
+                     $counter  = $dsl->resultset('Notification')->search({
                     user_id      => $user_obj->id,
                     name         =>  'changed role'
                     })->count;

@@ -127,9 +127,9 @@ post '/register_success' => sub {
   my $err;
 
   my $template_params = {
-    username => $params->{'username'},
+    username => utf8::decode($params->{'username'}),
     email    => $params->{'email'},
-    name     => $params->{'name'},
+    name     => utf8::decode($params->{'name'}),
   };
 
   unless ( $params->{'username'} ) {
