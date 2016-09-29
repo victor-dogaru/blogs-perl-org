@@ -184,7 +184,7 @@ post '/profile' => sub {
 
 =cut
 
-post '/profile-image' => sub {
+any '/profile-image' => sub {
 
   my $params   = params;
   my $file     = $params->{file};
