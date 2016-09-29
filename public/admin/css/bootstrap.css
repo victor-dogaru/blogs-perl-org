@@ -4999,6 +4999,11 @@ a.thumbnail:focus {
   margin-top: 0;
   color: inherit;
 }
+.alert-danger{
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
 
 .alert .alert-link {
   font-weight: bold;

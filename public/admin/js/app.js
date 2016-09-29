@@ -24,19 +24,11 @@ $(document).ready(function() {
 
 		if(!stringEndsWithValidExtension(chooseFile, ["jpeg", "jpg", "png", "gif", "png"])) {
 			$("#cover").val('');
-			$('.alert-message p').text("The system currently supports jpg, jpeg, png or gif uploads. Please try re-uploading a supported format.");
-			$('.alert-message').show();
 
-			var offsetTop = $(".alert-message").offset().top;
-			$("html, body").animate({
-				scrollTop: offsetTop - 90
-			}, 200);
+			displayAlertMessage("The system currently supports jpg, jpeg, png or gif uploads. Please try re-uploading a supported format.", 'danger');
 		}
 	});
 
-	$(".alert-message .close").on("click", function(){
-		$(this).parents(".alert-message").hide();
-	})
 
 //for safari display error on Create Blog/Admin
 	$('#new-blog-form button[type=submit]').click(function(e) {
@@ -68,7 +60,7 @@ $(document).ready(function() {
 		if (sendModalForm) {
 			$('#new-post-form').submit();
 		} else {
-			alert("Please fill in the required field");
+			displayAlertMessage("Please fill in the required fields.", 'danger');
 		}
 	});
 });
@@ -484,3 +476,23 @@ $(document).ready(function() {
 		}
 	});
 });
+
+
+function displayAlertMessage(message, type) {
+	if (!type){
+		type = 'warning';
+	}
+	$('.alert-message p').text(message);
+	$('.alert-message').show();
+	$(".alert-message .alert").removeClass("alert-success alert-warning alert-danger alert-info").addClass("alert-"+type);
+
+	var offsetTop = $(".alert-message").offset().top;
+	$("html, body").animate({
+		scrollTop: offsetTop - 90
+	}, 200);
+
+
+	$(".alert-message .close").one("click", function(){
+		$(this).parents(".alert-message").hide();
+	})
+}
