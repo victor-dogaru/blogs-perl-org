@@ -52,7 +52,7 @@
 
                         <!-- input html for choose file-->
                         <div id="upload-image-container">
-                            <input class="form-control" accept="image/jpg, image/JPG, image/jpeg, image/JPEG" required="required" id="cover" name="cover" type="file" placeholder="Cover image"/>
+                            <input class="form-control" accept="image/jpg, image/JPG, image/jpeg, image/JPEG" id="cover" name="cover" type="file" placeholder="Cover image"/>
                         </div>
                         <br />
 
