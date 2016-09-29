@@ -38,9 +38,40 @@ $(document).ready(function() {
 		$(this).parents(".alert-message").hide();
 	})
 
+//for safari display error on Create Blog/Admin
+	$('#new-blog-form button[type=submit]').click(function(e) {
+		e.preventDefault();
+		var sendModalForm = true;
+		$('#new-blog-form [required]').each(function() {
+			if ($(this).val() == '') {
+				sendModalForm = false;
+			}
+		});
 
+		if (sendModalForm) {
+			$('#new-blog-form').submit();
+		} else {
+			alert("Please fill in all the required fields");
+		}
+	});
+
+//	for safari display error on Create Post/Admin
+	$('#new-post-form button[type=submit]').click(function(e) {
+		e.preventDefault();
+		var sendModalForm = true;
+		$('#new-post-form [required]').each(function() {
+			if ($(this).val() == '') {
+				sendModalForm = false;
+			}
+		});
+
+		if (sendModalForm) {
+			$('#new-post-form').submit();
+		} else {
+			alert("Please fill in the required field");
+		}
+	});
 });
-
 
 
 // Autocomplete the Tag/Category slug

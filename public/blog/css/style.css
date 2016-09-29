@@ -3140,6 +3140,9 @@ input[readonly] {
 .err-404 .err, .err-500 .err {
    color: #333333;
 }
+.alert-message {
+   display: none;
+}
 
 .err-404 .err h2, .err-500 .err h2 {
    font-size: 210px;
