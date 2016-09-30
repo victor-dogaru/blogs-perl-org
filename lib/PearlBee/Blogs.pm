@@ -77,11 +77,11 @@ get '/blogs/user/:username/blogname/:name' => sub{
   #the map_posts method must be investigated and refined, so, for the moment, 
   #we'll make the splice on the sorted_posts array, NOT on the mapped_posts one
   my @actual_posts   = splice(@sorted_posts,0*$num_user_posts,$num_user_posts);
-
+  my @mapped_posts = map_posts(@actual_posts);
 
   my $template_data = 
       { 
-        posts          => \@actual_posts,
+        posts          => \@mapped_posts,
         total_pages    => $total_pages,
         posts_for_user => $username,
         user           => $user,
