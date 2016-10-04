@@ -1,7 +1,3 @@
-/* ============================================================
-    All of the application's custom javascript scripts goes here
-   ============================================================
-*/
 
 // Prepare the Post status based on what button is pressed
 $(document).ready(function() {
@@ -24,11 +20,9 @@ $(document).ready(function() {
 
 		if(!stringEndsWithValidExtension(chooseFile, ["jpeg", "jpg", "png", "gif", "png"])) {
 			$("#cover").val('');
-
 			displayAlertMessage("The system currently supports jpg, jpeg, png or gif uploads. Please try re-uploading a supported format.", 'danger');
 		}
 	});
-
 
 //for safari display error on Create Blog/Admin
 	$('#new-blog-form button[type=submit]').click(function(e) {
@@ -39,15 +33,14 @@ $(document).ready(function() {
 				sendModalForm = false;
 			}
 		});
-
 		if (sendModalForm) {
 			$('#new-blog-form').submit();
 		} else {
-			alert("Please fill in all the required fields");
+			displayAlertMessage("Please fill in all the required fields", 'danger');
 		}
 	});
 
-//	for safari display error on Create Post/Admin
+//for safari display error on Create Post/Admin
 	$('#new-post-form button[type=submit]').click(function(e) {
 		e.preventDefault();
 		var sendModalForm = true;
@@ -56,7 +49,6 @@ $(document).ready(function() {
 				sendModalForm = false;
 			}
 		});
-
 		if (sendModalForm) {
 			$('#new-post-form').submit();
 		} else {
@@ -65,16 +57,28 @@ $(document).ready(function() {
 	});
 });
 
+// delete blog on Blogs Page/Admin
+$("a.remove-blog").on('click', function(e){
+	e.preventDefault();
+	var url = $(this).attr("href");
+	displayAlertModal({
+		title:"Delete Blog" ,
+		message: "Are you sure you want to delete this blog? All content will be lost." ,
+		okButton: "Yes" ,
+		cancelButton: "No"
+	}, function(){
+		window.location.href = url;
+	});
+
+});
 
 // Autocomplete the Tag/Category slug
 $(document).ready(function() {
-
 	$('input[name="name"').on('keyup', function(){
 		var slug = $(this).val();
 
 		// Replace all non-alphanumeric characters with a hypen
 		slug = slug.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'').toLowerCase();
-
 		$('input[name="slug"]').val(slug);
 	});
 
@@ -83,27 +87,21 @@ $(document).ready(function() {
 
 		// Replace all non-alphanumeric characters with a hypen
 		slug = slug.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'').toLowerCase();
-
 		$('input[name="slug"]').val(slug);
 	});
-
 });
 
 // Auto switch the bootstrap switcer on the Settings page.
 
 $(document).ready(function(){
-
 	var state = $('#social_media_state').val();
 	state = parseInt(state);
 
 	$('.make-switch').bootstrapSwitch('setState' , state);
-
 });
 
 // Activate the tag input
-
 $(document).ready(function() {
-
 	$.getJSON('/api/tags.json', function(tags_list) {
 		$("#tags").select2({tags: tags_list});
 	});
@@ -118,16 +116,7 @@ $(document).ready(function() {
 	});
 
 });
-	// if (location.pathname !== '/notification') {
-	// 	$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
-	// 	$(window).resize(function(){
-	// 		$('.page-content').css('min-height',$(window).height()-$('.header').outerHeight());
-	// 	});
-	// }
 
-// START - Admin dashboard - Users section filter and persistence
-// START - Admin dashboard - Comments section filter and persistence
-// Author: Paul Mercean
 function getBlogValue() {
 	if (window.location.href.split("/")[4] == "users") {
 		var e = document.getElementById("users_blogs_list");
@@ -208,7 +197,6 @@ $(document).ready(function () {
 			$("#comments_blogs_dropdown a.chosen-single span").html(filter[0]);
 			$("#comments_status_dropdown a.chosen-single span").html(filter[1]);
 		}
-		
 	}
 	
 	$(".sidey").click(function () {
@@ -228,8 +216,6 @@ $(document).ready(function(){
 
 
 //----------------------------
-
-
 // Validation file input for img only
 function stringEndsWithValidExtension(stringToCheck, acceptableExtensionsArray, required) {
 	if (required == false && stringToCheck.length == 0) { return true; }
@@ -245,9 +231,7 @@ String.prototype.endsWith = function (str) { return (this.match(str + "$") == st
 
 
 //Croppie avatars for the creation of the blog avatars
-
 $(document).ready(function() {
-
 // Image upload preview modal cancel button
 	$(".modal-footer .cancel-img").on('click', function(){
 		var src = $( ".blog-pic #blog_img_preview").attr('src');
@@ -477,7 +461,7 @@ $(document).ready(function() {
 	});
 });
 
-
+//function for Display Alerts : Info, Success, Warning, Danger
 function displayAlertMessage(message, type) {
 	if (!type){
 		type = 'warning';
@@ -495,4 +479,53 @@ function displayAlertMessage(message, type) {
 	$(".alert-message .close").one("click", function(){
 		$(this).parents(".alert-message").hide();
 	})
+}
+
+/**
+ * Function that will display an alert into a modal window
+ * @param {object} opts Configuration object for the alert window
+ * @param opts.title The title displayed in the modal header
+ * @param opts.message The alert message
+ * @param opts.okButton The text of the ok button. Defaults to 'OK'. Set to false to hide the button.
+ * @param opts.cancelButton The text of the cancel button. Defaults to 'CANCEL'. Set to false to hide the button.
+ * @param {function} callback The function to be called when clicking on the 'ok' button
+ */
+function displayAlertModal(opts, callback) {
+	opts = opts || {};
+	var msgContainer = $('#alerts-modal'),
+		okBtnText = (opts.okButton === false) ? false : opts.okButton || 'OK',
+		cancelBtnText = (opts.cancelButton === false) ? false : opts.cancelButton || 'CANCEL',
+		okBtn = msgContainer.find('.ok-btn'),
+		cancelBtn = msgContainer.find('.cancel-btn');
+
+	msgContainer.find('.modal-title').text(opts.title);
+
+	if (okBtnText === false) {
+		okBtn.hide();
+	} else {
+		okBtn.text(okBtnText);
+	}
+
+	if (cancelBtnText === false) {
+		cancelBtn.hide();
+	} else {
+		cancelBtn.text(cancelBtnText);
+	}
+
+	msgContainer.find('.modal-body').html(opts.message);
+
+
+	msgContainer.find('.ok-btn').one('click', function() {
+		msgContainer.modal('hide');
+		if (typeof callback === 'function') {
+			callback();
+		}
+	});
+
+
+	msgContainer.modal();
+	msgContainer.on('hidden.bs.modal', function () {
+		okBtn.show().unbind('click');
+		cancelBtn.show();
+	});
 }

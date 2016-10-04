@@ -73,7 +73,7 @@
 									<a href="/author/settings">
 										<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 									</a>
-									<a href="/author/blog/[% blog.name %]/delete">
+									<a class="remove-blog" href="/author/blog/[% blog.name %]/delete">
 										<button class="btn btn-xs btn-danger"><i class="icon-remove"></i> </button>
 									</a>
 									[% ELSE %]

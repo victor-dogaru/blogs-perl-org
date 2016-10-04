@@ -97,6 +97,7 @@
          </div>
       </div>
 
+    [% INCLUDE components/alert_modal.tt %]
 
 
       <!-- Footer starts -->
