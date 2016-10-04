@@ -74,20 +74,20 @@ $("a.remove-blog").on('click', function(e){
 
 // Autocomplete the Tag/Category slug
 $(document).ready(function() {
-	$('input[name="name"').on('keyup', function(){
+	$("input[name='name']").on('keyup', function(){
 		var slug = $(this).val();
 
 		// Replace all non-alphanumeric characters with a hypen
 		slug = slug.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'').toLowerCase();
-		$('input[name="slug"]').val(slug);
+		$("input[name='slug']").val(slug);
 	});
 
-	$('input[name="title"').on('keyup', function(){
+	$('input[name="title"]').on('keyup', function(){
 		var slug = $(this).val();
 
 		// Replace all non-alphanumeric characters with a hypen
 		slug = slug.replace(/([~!@#$%^&*()_+=`{}\[\]\|\\:;'<>,.\/? ])+/g, '-').replace(/^(-)+|(-)+$/g,'').toLowerCase();
-		$('input[name="slug"]').val(slug);
+		$("input[name='slug']").val(slug);
 	});
 });
 
