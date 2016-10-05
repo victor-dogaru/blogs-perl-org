@@ -249,7 +249,8 @@ post '/register_success' => sub {
 
     $flag ->update ({ 
       user_id    => $invitee->id,
-      old_status => ''
+      old_status => '',
+      read_date => DateTime->now()
     });
     my $user = resultset('Users')->find ({ id => $flag->sender_id });
 
