@@ -248,7 +248,8 @@ post '/register_success' => sub {
   if ($flag){
 
     $flag ->update ({ 
-      user_id    => $invitee->id
+      user_id    => $invitee->id,
+      old_status => ''
     });
     my $user = resultset('Users')->find ({ id => $flag->sender_id });
 
