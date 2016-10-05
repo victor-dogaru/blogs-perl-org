@@ -199,6 +199,8 @@ any '/profile-image' => sub {
 
   my $message;
   my $size_flag = 1;
+  # The request has the size set in bytes and in our case
+  # 4 MB = 4 * 1024 * 1024 =  4,194,304 bytes. (1 mb = 1024 kb, 1 kb = 1024 bytes)
   if (( request->uploads->{file}->{size} )> 4194304 ){
     $size_flag  = 0; 
   }
@@ -283,8 +285,10 @@ any '/blog-image/:size/blog/:blogname' => sub {
   my $blog = resultset('Blog')-> find({
               name => $blogname
   });
-  
+
   my $size_flag = 1;
+  # The request has the size set in bytes and in our case
+  # 4 MB = 4 * 1024 * 1024 =  4,194,304 bytes. (1 mb = 1024 kb, 1 kb = 1024 bytes)
   if (( request->uploads->{file}->{size} )> 4194304 ){
     $size_flag  = 0; 
   }
