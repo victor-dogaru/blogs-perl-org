@@ -13,7 +13,7 @@ use Dancer2::Plugin::DBIC;
 use PearlBee::Helpers::Access qw( has_ability );
 use PearlBee::Helpers::ProcessImage;
 use Try::Tiny;
-
+use PearlBee::Dancer2::Plugin::Admin;
 our $VERSION = '0.1';
 
 =head2 hook 'before'
@@ -198,7 +198,12 @@ any '/profile-image' => sub {
   }
 
   my $message;
-
+  my $size_flag = 1;
+  # The request has the size set in bytes and in our case
+  # 4 MB = 4 * 1024 * 1024 =  4,194,304 bytes. (1 mb = 1024 kb, 1 kb = 1024 bytes)
+  if (( request->uploads->{file}->{size} )> 4194304 ){
+    $size_flag  = 0; 
+  }
   my $upload_dir  = "/" . config->{'avatar'}{'path'};
   my $folder_path = config->{user_pics};
   my $filename    = sprintf( config->{'avatar'}{'format'}, $res_user->id );
@@ -206,45 +211,55 @@ any '/profile-image' => sub {
     xpixels => config->{avatar}{bounds}{width},
     ypixels => config->{avatar}{bounds}{height},
   };
-
-  if ( $params->{action_form} eq 'crop' ) {
-    if ( $params->{width} > 0 ) {
-      if ( $params->{file} ) {
-        my $logo = PearlBee::Helpers::ProcessImage->new(
-          request->uploads->{file}->tempname
-        );
-        try {
+  if ($size_flag){
+    if ( $params->{action_form} eq 'crop' ) {
+      if ( $params->{width} > 0 ) {
+        if ( $params->{file} ) {
+          my $logo = PearlBee::Helpers::ProcessImage->new(
+            request->uploads->{file}->tempname
+          );
+          try {
+            $logo->resize( $params, $scale, $folder_path, $filename );
+          }
+          catch {
+            info 'There was an error resizing your avatar: ' . Dumper $_;
+          };
+        }
+        else {
+          my $logo = PearlBee::Helpers::ProcessImage->new(
+            $folder_path . '/' . $filename
+          );
           $logo->resize( $params, $scale, $folder_path, $filename );
         }
-        catch {
-          info 'There was an error resizing your avatar: ' . Dumper $_;
-        };
       }
-      else {
-        my $logo = PearlBee::Helpers::ProcessImage->new(
-          $folder_path . '/' . $filename
-        );
-        $logo->resize( $params, $scale, $folder_path, $filename );
-      }
+
+      $res_user->update({ avatar_path => $upload_dir . $filename });
+      $user->{avatar_path} = $upload_dir . $filename;
+      $message = "Your profile picture has been changed.";
     }
+    elsif ( $params->{action_form} eq 'delete' ) {
+      $res_user->update({ avatar_path => '' });
 
-    $res_user->update({ avatar_path => $upload_dir . $filename });
-    $user->{avatar_path} = $upload_dir . $filename;
-    $message = "Your profile picture has been changed.";
-  }
-  elsif ( $params->{action_form} eq 'delete' ) {
-    $res_user->update({ avatar_path => '' });
-
-    $message = "Your picture has been deleted";
+      $message = "Your picture has been deleted";
+    }
   }
   else {
+    $message = 'The picture must be maximum 4MegaBytes';
   }
 
   session( 'user', $res_user->as_hashref_sanitized );
-  template 'profile',
+  if ($size_flag){
+    template 'profile',
+      {
+        success => $message
+      };
+  }
+  else {
+    template 'profile',
     {
-      success => $message
+      error => $message
     };
+  }
 };
 
 =head2 /blog-image/:size/blog/:blogname
@@ -270,6 +285,14 @@ any '/blog-image/:size/blog/:blogname' => sub {
   my $blog = resultset('Blog')-> find({
               name => $blogname
   });
+
+  my $size_flag = 1;
+  # The request has the size set in bytes and in our case
+  # 4 MB = 4 * 1024 * 1024 =  4,194,304 bytes. (1 mb = 1024 kb, 1 kb = 1024 bytes)
+  if (( request->uploads->{file}->{size} )> 4194304 ){
+    $size_flag  = 0; 
+  }
+
   if (!$user->is_admin){
 
     my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin => 1});
@@ -299,7 +322,7 @@ any '/blog-image/:size/blog/:blogname' => sub {
     $flag = 1;
   }
 
-  if ( $blog && $flag )   {
+  if ( $blog && $flag && $size_flag)   {
     my $message  = "Your profile picture has been changed.";
     my $filename = sprintf( config->{'blog-avatar'}{'format'},
                             $size,
@@ -355,6 +378,15 @@ any '/blog-image/:size/blog/:blogname' => sub {
         timezones => \@timezones,
         blogs     => \@blogs,
         warning => "You do not have the right to perform this action on the blog '$blogname' "
+      },
+      { layout => 'admin' };
+  }
+  elsif ( !($size_flag) ){
+      template 'admin/settings/index',
+      {
+        timezones => \@timezones,
+        blogs     => \@blogs,
+        warning => " Your picture must be maximum 4 MegaBytes. "
       },
       { layout => 'admin' };
   }

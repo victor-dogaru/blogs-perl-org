@@ -32,7 +32,7 @@ sub get_previous_next_link {
 	$custom_link = $custom_link || '';
 
 	my $previous_link = ( $page == 1 ) ? '#' : $custom_link . '/page/' . ( int($page) - 1 );
-  	my $next_link     = ( $page == $total_pages ) ? '#' : $custom_link . '/page/' . ( int($page) + 1 );
+  	my $next_link     = ( $page == $total_pages || $total_pages == 0 ) ? '#' : $custom_link . '/page/' . ( int($page) + 1 );
 
   	return ($previous_link, $next_link);
 }
