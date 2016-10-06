@@ -85,6 +85,9 @@ var InvitationSection = function() {
                           $(invitation).remove();
                           $(invitation).removeClass("invitation-row");
                           InvitationSection();
+                          var $notif_badge = $("#notification-parent span");
+                          var val          = $notif_badge.text();
+                          $notif_badge.text(val-1);
                       });
                       $('.modal-reject').on('click', function () {
                           ModalApproveClick = true;
@@ -95,6 +98,9 @@ var InvitationSection = function() {
                           $(invitation).remove();
                           $(invitation).removeClass("invitation-row");
                           InvitationSection();
+                          var $notif_badge = $("#notification-parent span");
+                          var val          = $notif_badge.text();
+                          $notif_badge.text(val-1);
                       });
                   });
 
