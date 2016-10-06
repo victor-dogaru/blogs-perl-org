@@ -85,6 +85,7 @@ var InvitationSection = function() {
                           $(invitation).remove();
                           $(invitation).removeClass("invitation-row");
                           InvitationSection();
+                          location.reload();
                       });
                       $('.modal-reject').on('click', function () {
                           ModalApproveClick = true;
@@ -95,6 +96,7 @@ var InvitationSection = function() {
                           $(invitation).remove();
                           $(invitation).removeClass("invitation-row");
                           InvitationSection();
+                          location.reload();
                       });
                   });
 
