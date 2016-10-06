@@ -82,7 +82,7 @@
                 <div class="buttons col-xs-12">
                     <button id="draft_btn" class="btn btn-default">Save Draft</button>
                     <button id="publish_btn" type="submit" class="btn btn-info">Publish</button>
-                    <button id="trash_btn" class="btn btn-danger">Trash</button>
+                    <button id="trash_btn" type="button" class="btn btn-danger">Trash</button>
                 </div>
             </div>
         </div>
