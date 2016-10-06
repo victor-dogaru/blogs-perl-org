@@ -40,8 +40,23 @@ $(document).ready(function() {
 		}
 	});
 
-//for safari display error on Create Post/Admin
+//for safari display error on Create Post/Admin => submit
 	$('#new-post-form button[type=submit]').click(function(e) {
+		e.preventDefault();
+		var sendModalForm = true;
+		$('#new-post-form [required]').each(function() {
+			if ($(this).val() == '') {
+				sendModalForm = false;
+			}
+		});
+		if (sendModalForm) {
+			$('#new-post-form').submit();
+		} else {
+			displayAlertMessage("Please fill in the required fields.", 'danger');
+		}
+	});
+//for safari display error on Create Post/ Admin => trash
+	$('#new-post-form button[type=button]').click(function(e) {
 		e.preventDefault();
 		var sendModalForm = true;
 		$('#new-post-form [required]').each(function() {
