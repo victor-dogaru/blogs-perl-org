@@ -5,7 +5,7 @@
 
 $(document).ready(function(){
     var pageURL = window.location.pathname.split('/');
-    var SessionUsername = $('.modal-title').text().split(', ')[1];
+    var SessionUsername = $('#session-username').text();
     var invitation = $(".invitation-row")[0];
     var response = $(".response-row")[0];
     var role = $(".role-row")[0];
@@ -44,64 +44,66 @@ var InvitationSection = function() {
     type: 'GET'
   })
   .done(function(data) {
-    var InvitationData = JSON.parse(data);
-    var totalPages = InvitationData.total;
-    var invitation_arrow = $(".invitation-arrow");
-    var invitationModal = $('<a href="#" data-toggle="modal" data-target="#invitation_modal" class="pull-right">View Invitation</a>');
+          var InvitationData = JSON.parse(data);
+          var totalPages = InvitationData.total;
+          var invitation_arrow = $(".invitation-arrow");
+          var invitationModal = $('<a href="#" data-toggle="modal" data-target="#invitation_modal" class="pull-right">View Invitation</a>');
 
 
-    // Update the Number of Invitations
-    $('.invitationNr').html(' ' + InvitationData.total + ' New Invitation(s) to Join the Blog(s)');
+          // Update the Number of Invitations
+          $('.invitationNr').html(' ' + InvitationData.total + ' New Invitation(s) to Join the Blog(s)');
 
-    // Pagination and making the arrow dissapear when all elements have loaded
-    for (var i = (InvitationPage == 2) ? 1 : 0; i < InvitationData.notifications.length; i++) {
-      $(invitation).clone().insertBefore(invitation_arrow);
-     ($(invitation).first().nextUntil(invitation).length - 1) === totalPages ? $('.invitation-arrow').hide()  : $('.invitation-arrow').show();
-    }
-
-
-    // Populating each invitation row
-  $('.invitation-row').each(function(idx, invitation) {
-
-    // Invitation Row Content
-    $(invitation).prepend('<a href="profile/author/' + InvitationData.notifications[idx].sender.username +  '">' + InvitationData.notifications[idx].sender.username + '</a>' + " added you as an " +  InvitationData.notifications[idx].role  + " to the " +  '<a href="/blogs/user/' + InvitationData.notifications[idx].blog.blog_creator.username  +'/slug/' + InvitationData.notifications[idx].blog.slug + '">' + InvitationData.notifications[idx].blog.name + '</a>'+' blog');
-
-    // Handling each Modal
-    var modal = invitationModal.clone();
-      $(modal).appendTo(invitation);
-      $(modal).on('click', function() {
-        $('.invitation-blogname').html('I would like to invite you to join my blog ' + '<a href="#">' + InvitationData.notifications[idx].blog.name + '</a>' + '.');
-        $('.invitation-username').html('<a href="#">' + InvitationData.notifications[idx].sender.username + '</a>');
-        $('.modal-footer').html('<button class="btn btn-primary btn-ok modal-accept" data-dismiss="modal"  +">' + 'Accept' + '</button>' + '<a type="button" class="btn  btn-danger modal-reject" data-dismiss="modal">Reject</a>');
+          // Pagination and making the arrow dissapear when all elements have loaded
+          for (var i = (InvitationPage == 2) ? 1 : 0; i < InvitationData.notifications.length; i++) {
+              $(invitation).clone().insertBefore(invitation_arrow);
+              ($(invitation).first().nextUntil(invitation).length - 1) === totalPages ? $('.invitation-arrow').hide() : $('.invitation-arrow').show();
+          }
 
 
-        $('.modal-accept').on('click', function() {
-          ModalApproveClick = true;
-          $.ajax({
-            url:  '/notification/invitation/'  + 'blog/' + InvitationData.notifications[idx].blog.name + '/mark-read/true',
-            type: 'GET'
-          });
-          $(invitation).remove();
-          $(invitation).removeClass("invitation-row");
-          InvitationSection();
-        });
-        $('.modal-reject').on('click', function() {
-          ModalApproveClick = true;
-          $.ajax({
-            url:  '/notification/invitation/'  + 'blog/' + InvitationData.notifications[idx].blog.name + '/mark-read/false',
-            type: 'GET'
-          });
-          $(invitation).remove();
-          $(invitation).removeClass("invitation-row");
-          InvitationSection();
-        });
-      });
+          // Populating each invitation row
+          if (InvitationData.total > 0) {
+              $('.invitation-row').each(function (idx, invitation) {
+
+                  // Invitation Row Content
+                  $(invitation).prepend('<a href="profile/author/' + InvitationData.notifications[idx].sender.username + '">' + InvitationData.notifications[idx].sender.username + '</a>' + " added you as an " + InvitationData.notifications[idx].role + " to the " + '<a href="/blogs/user/' + InvitationData.notifications[idx].blog.blog_creator.username + '/slug/' + InvitationData.notifications[idx].blog.slug + '">' + InvitationData.notifications[idx].blog.name + '</a>' + ' blog');
+
+                  // Handling each Modal
+                  var modal = invitationModal.clone();
+                  $(modal).appendTo(invitation);
+                  $(modal).on('click', function () {
+                      $('.invitation-blogname').html('I would like to invite you to join my blog ' + '<a href="#">' + InvitationData.notifications[idx].blog.name + '</a>' + '.');
+                      $('.invitation-username').html('<a href="#">' + InvitationData.notifications[idx].sender.username + '</a>');
+                      $('.modal-footer').html('<button class="btn btn-primary btn-ok modal-accept" data-dismiss="modal">Accept</button><a type="button" class="btn  btn-danger modal-reject" data-dismiss="modal">Reject</a>');
 
 
-      $(invitation).removeClass("invitation-row");
+                      $('.modal-accept').on('click', function () {
+                          ModalApproveClick = true;
+                          $.ajax({
+                              url: '/notification/invitation/' + 'blog/' + InvitationData.notifications[idx].blog.name + '/mark-read/true',
+                              type: 'GET'
+                          });
+                          $(invitation).remove();
+                          $(invitation).removeClass("invitation-row");
+                          InvitationSection();
+                      });
+                      $('.modal-reject').on('click', function () {
+                          ModalApproveClick = true;
+                          $.ajax({
+                              url: '/notification/invitation/' + 'blog/' + InvitationData.notifications[idx].blog.name + '/mark-read/false',
+                              type: 'GET'
+                          });
+                          $(invitation).remove();
+                          $(invitation).removeClass("invitation-row");
+                          InvitationSection();
+                      });
+                  });
 
 
-   });
+                  $(invitation).removeClass("invitation-row");
+
+
+              });
+          }
     ModalApproveClick = false;
     ModalRejectClick = false;
   });
@@ -134,23 +136,24 @@ var ResponseSection = function() {
        $(response).clone().insertBefore(response_arrow);
       ($(response).first().nextUntil(response).length) === totalPages ? $('.response-arrow').hide()  : $('.response-arrow').show();
      }
+    if (responseData.total > 0) {
+        $('.response-row').each(function (idx, response) {
 
-     $('.response-row').each(function(idx, response) {
+            // Populating view user for each link
+            var ViewUser = $('<a href="/profile/author/' + responseData.notifications[idx].receiver.username + ' " class="pull-right">View User</a>');
+            var viewUserRow = ViewUser.clone();
 
-       // Populating view user for each link
-       var ViewUser = $('<a href="/profile/author/' + responseData.notifications[idx].receiver.username  + ' " class="pull-right">View User</a>');
-       var viewUserRow = ViewUser.clone();
+            // Stringnify accepted/rejected and response Icon
+            (responseData.notifications[idx].accepted === 0) ? (responseStatus = "rejected", responseIcon = '<i class="fa fa-times-circle custom-fonts" aria-hidden="true"></i>') : (responseStatus = "accepted", responseIcon = '<i class="fa fa-plus-circle custom-fonts" aria-hidden="true"></i>');
 
-       // Stringnify accepted/rejected and response Icon
-       (responseData.notifications[idx].accepted === 0) ? (responseStatus = "rejected", responseIcon = '<i class="fa fa-times-circle custom-fonts" aria-hidden="true"></i>') : (responseStatus = "accepted", responseIcon = '<i class="fa fa-plus-circle custom-fonts" aria-hidden="true"></i>');
+            //  Populating the response row
+            $(response).prepend(responseIcon + '<a href="/profile/author/' + responseData.notifications[idx].receiver.username + '">' + responseData.notifications[idx].receiver.username + '</a>' + ' ' + responseStatus + ' your invitation to join ' + '<a href="/blogs/user/' + '<a href="/blogs/user/' + responseData.notifications[idx].blog.blog_creator.username + '/slug/' + responseData.notifications[idx].blog.slug + '">' + responseData.notifications[idx].blog.name + '</a>');
 
-      //  Populating the response row
-       $(response).prepend( responseIcon + '<a href="/profile/author/' + responseData.notifications[idx].receiver.username  + '">' + responseData.notifications[idx].receiver.username + '</a>' +  ' ' + responseStatus + ' your invitation to join ' + '<a href="/blogs/user/' +  '<a href="/blogs/user/' + responseData.notifications[idx].blog.blog_creator.username  +'/slug/' + responseData.notifications[idx].blog.slug + '">' + responseData.notifications[idx].blog.name + '</a>');
-
-      //  Appending view user
-       $(viewUserRow).appendTo(response);
-       $(response).removeClass("response-row");
-     }); // <- end of each
+            //  Appending view user
+            $(viewUserRow).appendTo(response);
+            $(response).removeClass("response-row");
+        }); // <- end of each
+    }
   }); // < -end of done
 };  // <- end of Response Function
 
@@ -179,15 +182,16 @@ var RoleSection = function() {
     ($(role).first().nextUntil(role).length) === totalPages ? $('.role-arrow').hide()  : $('.role-arrow').show();
     }
 
+    if (roleData.total) {
+        $('.role-row').each(function (idx, role) {
 
-    $('.role-row').each(function(idx, role) {
+            //  Populating the role row
+            $(role).prepend('Your role on the ' + '<a href="/blogs/user/' + roleData.notifications[idx].blog.blog_creator.username + '/slug/' + roleData.notifications[idx].blog.slug + '">' + roleData.notifications[idx].blog.name + '</a>' + ' blog has been changed from ' + roleData.notifications[idx].old_status + ' to ' + roleData.notifications[idx].role);
 
-     //  Populating the role row
-     $(role).prepend('Your role on the ' + '<a href="/blogs/user/' +  roleData.notifications[idx].blog.blog_creator.username + '/slug/'  +  roleData.notifications[idx].blog.slug + '">' +  roleData.notifications[idx].blog.name + '</a>'  + ' blog has been changed from ' + roleData.notifications[idx].old_status + ' to ' + roleData.notifications[idx].role);
+            $(role).removeClass("role-row");
 
-    $(role).removeClass("role-row");
-
-    }); // <- end of each
+        }); // <- end of each
+    }
   }); // <- end of done
 }; // <- end of Role Function
 
