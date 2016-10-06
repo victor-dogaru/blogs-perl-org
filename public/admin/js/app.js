@@ -24,7 +24,7 @@ $(document).ready(function() {
 		}
 	});
 
-//for safari display error on Create Blog/Admin
+//for safari display error on Create Blog/Admin => submit
 	$('#new-blog-form button[type=submit]').click(function(e) {
 		e.preventDefault();
 		var sendModalForm = true;
@@ -58,17 +58,8 @@ $(document).ready(function() {
 //for safari display error on Create Post/ Admin => trash
 	$('#new-post-form button[type=button]').click(function(e) {
 		e.preventDefault();
-		var sendModalForm = true;
-		$('#new-post-form [required]').each(function() {
-			if ($(this).val() == '') {
-				sendModalForm = false;
-			}
-		});
-		if (sendModalForm) {
-			$('#new-post-form').submit();
-		} else {
-			displayAlertMessage("Please fill in the required fields.", 'danger');
-		}
+		$('#new-post-form')[0].reset();
+		CKEDITOR.instances.post.setData('');
 	});
 
 
@@ -88,6 +79,33 @@ $(document).ready(function() {
 	});
 	$('#reset-new-blog').click(function(){
 		$('#new-blog-form')[0].reset();
+		$('#new-blog-form .chosen-select').trigger("chosen:updated");
+	});
+
+//	for safari Users Page/Admin =>add email-user =>cancel
+	$('#new-user-email button[type=button]').click(function(e) {
+		e.preventDefault();
+		$("#new-user-email")[0].reset();
+		$("#blog_for_users").trigger("chosen:updated");
+	});
+//	for safari Users Page/Admin =>add email-user =>submit
+	$('#new-user-email button[type=submit]').click(function(e) {
+		e.preventDefault();
+		var sendModalForm = true;
+		$('#new-user-email [required]').each(function() {
+			if ($(this).val() == '') {
+				sendModalForm = false;
+			}
+		});
+		if (sendModalForm) {
+			$('#user-email').submit();
+		} else {
+			displayAlertMessage("Please fill in the required fields.", 'danger');
+		}
+	});
+//	for safari Users Page/Admin =>add email-user =>remove fields, when cancel
+	$('#reset-user-email').click(function(){
+		$('#new-user-email')[0].reset();
 	});
 });
 
