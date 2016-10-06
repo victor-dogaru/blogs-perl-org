@@ -70,21 +70,25 @@ $(document).ready(function() {
 			displayAlertMessage("Please fill in the required fields.", 'danger');
 		}
 	});
-});
 
-// delete blog on Blogs Page/Admin
-$("a.remove-blog").on('click', function(e){
-	e.preventDefault();
-	var url = $(this).attr("href");
-	displayAlertModal({
-		title:"Delete Blog" ,
-		message: "Are you sure you want to delete this blog? All content will be lost." ,
-		okButton: "Yes" ,
-		cancelButton: "No"
-	}, function(){
-		window.location.href = url;
+
+	// delete blog on Blogs Page/Admin
+	$("a.remove-blog").on('click', function(e){
+		e.preventDefault();
+		var url = $(this).attr("href");
+		displayAlertModal({
+			title:"Delete Blog" ,
+			message: "Are you sure you want to delete this blog? All content will be lost." ,
+			okButton: "Yes" ,
+			cancelButton: "No"
+		}, function(){
+			window.location.href = url;
+		});
+
 	});
-
+	$('#reset-new-blog').click(function(){
+		$('#new-blog-form')[0].reset();
+	});
 });
 
 // Autocomplete the Tag/Category slug
