@@ -46,7 +46,8 @@ on_plugin_import {
                     my $counter = 0;
                      $counter  = $dsl->resultset('Notification')->search({
                     user_id      => $user_obj->id,
-                    name         =>  'changed role'
+                    name         =>  'changed role',
+                    viewed       => 0
                     })->count;
                      $counter   += $dsl->resultset('Notification')->search({
                     user_id      => $user_obj->id,
@@ -60,7 +61,8 @@ on_plugin_import {
                     })->count;
                     $counter     += $dsl->resultset('Notification')->search({
                     sender_id    => $user_obj->id,
-                    name         => 'response'
+                    name         => 'response',
+                    viewed       => 0
                     })->count;
                     
                     $dsl->vars->{notification_counter}= $counter;

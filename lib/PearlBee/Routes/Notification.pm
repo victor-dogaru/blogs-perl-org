@@ -28,7 +28,8 @@ get '/notification' => sub {
   }
   my $counter  = resultset('Notification')->search({
   user_id      => $res_user->id,
-  name         =>  'changed role'
+  name         =>  'changed role',
+  viewed       => 0
   })->count;
    $counter   += resultset('Notification')->search({
   user_id      => $res_user->id,
@@ -43,7 +44,8 @@ get '/notification' => sub {
   })->count;
   $counter     += resultset('Notification')->search({
   sender_id    => $res_user->id,
-  name         => 'response'
+  name         => 'response',
+  viewed       => 0 
   })->count;
   template 'admin/notification/notification',
     {
@@ -136,18 +138,18 @@ View all notifications
 
 =cut
 
-get '/notification/response/:id/user/:username/mark-read/:status' => sub {
+get '/notification/response/blog/:blogname/user/:username/mark-read' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
+  my $blog_name       = route_parameters->{'blogname'};
   my $username        = route_parameters->{'username'};
-  my $id              = route_parameters->{'id'};
-  my $invitation_user = resultset('Users')->find({ username => $username });
-  my $user_id         = $invitation_user->id;
-  my $status          = route_parameters->{'status'};
+  my $blog            = resultset('Blog')->find ({ name => $blog_name });
+  my $invitated_user  = resultset('Users')->find({ username => $username });
+  my $status          = 'true';
 
   resultset('Notification')->read_response({
-    blog_id => $id,
-    user_id => $user_id,
+    blog_id => $blog->id,
+    user_id => $invitated_user->id,
     status  => $status
   });
 
