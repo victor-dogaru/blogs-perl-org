@@ -145,13 +145,14 @@ get '/api/notification/response/user/:username/page/:page' => sub {
   my @notifications =
     resultset('Notification')->search(
       { sender_id  => $user->id,
+        viewed     => 0,
         name       => 'response' },
       { rows       => config->{api}{notification}{comment}{max_rows},
         page       => $page,
         order_by   => { -desc => 'created_date' } }
     );
   my $count_responses = resultset('Notification')->search({
-  sender_id => $user->id, name => 'response'
+  sender_id => $user->id, name => 'response', vieweed => 0
   })->count;
 
   my %data;
@@ -191,13 +192,14 @@ get '/api/notification/changed_role/user/:username/page/:page' => sub {
   my @notifications =
     resultset('Notification')->search(
       { user_id  => $user->id,
+        viewed   => 0,
         name     => 'changed role' },
       { rows     => config->{api}{notification}{comment}{max_rows},
         page     => $page,
         order_by => { -desc => 'created_date' } }
     );
   my $count_notifications = resultset('Notification')->search({
-  user_id => $user->id, name => 'changed role'
+  user_id => $user->id, name => 'changed role', viewed   => 0
   })->count;
 
   my %data;

@@ -187,10 +187,11 @@ sub read_changed_role {
   my $now = DateTime->now;
   my $status       = $args->{status};
   my $notification = $schema->resultset('Notification')->find({
-    name       => 'changed_role',
-    old_status => $args->{old_role},
+    name       => 'changed role',
+    generic_id => $args->{blog_id},
     user_id    => $args->{user_id}
   });
+
   if ( $notification ) {
     if ($status eq 'true'){
     $notification->update({ viewed => 1, read_date => $now, accepted => 1 });
@@ -200,6 +201,7 @@ sub read_changed_role {
     }
   }
 }
+
 
 
 1;

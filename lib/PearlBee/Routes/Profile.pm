@@ -295,7 +295,7 @@ any '/blog-image/:size/blog/:blogname' => sub {
 
   if (!$user->is_admin){
 
-    my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin => 1});
+    my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
     for my $blog_owner (@blog_owners){
       push @blogs, resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
     }
