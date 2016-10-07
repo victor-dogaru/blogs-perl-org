@@ -98,7 +98,7 @@ $(document).ready(function() {
 			}
 		});
 		if (sendModalForm) {
-			$('#user-email').submit();
+			$('#new-user-email').submit();
 		} else {
 			displayAlertMessage("Please fill in the required fields.", 'danger');
 		}
