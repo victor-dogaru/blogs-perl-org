@@ -152,7 +152,7 @@ get '/api/notification/response/user/:username/page/:page' => sub {
         order_by   => { -desc => 'created_date' } }
     );
   my $count_responses = resultset('Notification')->search({
-  sender_id => $user->id, name => 'response', vieweed => 0
+  sender_id => $user->id, name => 'response', viewed => 0
   })->count;
 
   my %data;
