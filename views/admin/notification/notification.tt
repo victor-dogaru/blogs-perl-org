@@ -75,7 +75,8 @@
       				<h3>&nbsp;<i class="fa fa-reply-all" aria-hidden="true"></i> <b class="responseNr"></b></h3>
       			</div>
             <div class="awidget-body">
-              <div class="notification-text response-row"></div>
+              <div class="notification-text response-row">
+              </div>
               <div class="text-center response-arrow">
                 <i class="fa fa-arrow-circle-o-down custom-fonts" aria-hidden="true"></i>
               </div>

@@ -149,14 +149,19 @@ var ResponseSection = function() {
             var ViewUser = $('<a href="/profile/author/' + responseData.notifications[idx].receiver.username + ' " class="pull-right">View User</a>');
             var viewUserRow = ViewUser.clone();
 
+            var MarkRead = $('<a href="/notification/response/blog/' + responseData.notifications[idx].blog.name + '/user/' + responseData.notifications[idx].receiver.username + '/mark-read" class="pull-right padding-left-notification"><i class="fa fa-check" aria-hidden="true"></i></a>');
+            var MarkReadTick = MarkRead.clone();
+
             // Stringnify accepted/rejected and response Icon
             (responseData.notifications[idx].accepted === 0) ? (responseStatus = "rejected", responseIcon = '<i class="fa fa-times-circle custom-fonts" aria-hidden="true"></i>') : (responseStatus = "accepted", responseIcon = '<i class="fa fa-plus-circle custom-fonts" aria-hidden="true"></i>');
 
             //  Populating the response row
             $(response).prepend(responseIcon + '<a href="/profile/author/' + responseData.notifications[idx].receiver.username + '">' + responseData.notifications[idx].receiver.username + '</a>' + ' ' + responseStatus + ' your invitation to join ' + '<a href="/blogs/user/' + '<a href="/blogs/user/' + responseData.notifications[idx].blog.blog_creator.username + '/slug/' + responseData.notifications[idx].blog.slug + '">' + responseData.notifications[idx].blog.name + '</a>');
 
+            $(MarkReadTick).appendTo(response);
             //  Appending view user
             $(viewUserRow).appendTo(response);
+
             $(response).removeClass("response-row");
         }); // <- end of each
     }
@@ -190,10 +195,12 @@ var RoleSection = function() {
 
     if (roleData.total) {
         $('.role-row').each(function (idx, role) {
+            var MarkRead = $('<a href="/notification/changed_role/blog/' + roleData.notifications[idx].blog.name + '/mark-read" class="pull-right padding-left-notification"><i class="fa fa-check" aria-hidden="true"></i></a>');
+            var MarkReadTick = MarkRead.clone();
 
             //  Populating the role row
             $(role).prepend('Your role on the ' + '<a href="/blogs/user/' + roleData.notifications[idx].blog.blog_creator.username + '/slug/' + roleData.notifications[idx].blog.slug + '">' + roleData.notifications[idx].blog.name + '</a>' + ' blog has been changed from ' + roleData.notifications[idx].old_status + ' to ' + roleData.notifications[idx].role);
-
+            $(role).append(MarkReadTick);
             $(role).removeClass("role-row");
 
         }); // <- end of each

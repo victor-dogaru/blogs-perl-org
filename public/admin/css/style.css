@@ -1342,10 +1342,10 @@ footer .copy{
 #invitation_modal .modal-footer {
   margin-top: 30px;
 }
-/*#notification-parent {*/
-  /*bottom: 4px;*/
-  /*left: 30px;*/
-/*}*/
+.padding-left-notification{
+   padding-left: 25px;
+}
+
 .header-notifications {
   font-size: 23px!important;
 }
