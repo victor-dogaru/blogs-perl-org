@@ -132,7 +132,7 @@ get '/notification/invitation/blog/:blogname/mark-read/:status' => sub {
   redirect '/notification'
 };
 
-=head2 /notification/response/:id/user/:username/mark-read
+=head2 /notification/response/blog/:blogname/user/:username/mark-read
 
 View all notifications
 
@@ -157,29 +157,28 @@ get '/notification/response/blog/:blogname/user/:username/mark-read' => sub {
 };
 
 
-=head2 /notification/changed_role/:id/user/:username/mark-read
+=head2 /notification/changed_role/blog/:blogname/mark-read
 
 View all notifications
 
 =cut
 
-get '/notification/changed_role/:id/user/:username/mark-read/:status' => sub {
+get '/notification/changed_role/blog/:blogname/mark-read' => sub {
 
   my $res_user        = resultset('Users')->find_by_session(session);
-  my $username        = route_parameters->{'username'};
-  my $id              = route_parameters->{'id'};
-  my $invitation_user = resultset('Users')->find({ username => $username });
-  my $user_id         = $invitation_user->id;
-  my $status          = route_parameters->{'status'};
+  my $blog_name       = route_parameters->{'blogname'};
+  my $blog            = resultset('Blog')->find ({ name => $blog_name });
+  my $status          = 'true';
 
   resultset('Notification')->read_changed_role({
-    blog_id => $id,
-    user_id => $user_id,
+    blog_id => $blog->id,
+    user_id => $res_user->id,
     status  => $status,
   });
-
+  
   redirect '/notification'
 };
+
 
 
 1;
