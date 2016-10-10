@@ -27,7 +27,7 @@ $(document).ready(function(){
         $('#register_form input').css('border-color' , '#CCC').removeClass('error');
 
         if (email.length < 1) { //      Email validation
-            $('.change_error').text('Email field is necesary').css('color' , 'red');
+            $('.change_error').text('Email field is necessary').css('color' , 'red');
             $('#emailRegister').css('border-color' , 'red');
             errors++;
 
@@ -37,7 +37,7 @@ $(document).ready(function(){
             errors++;
 
         } else if (username.length < 3) { //      Username validation
-            $('.change_error').text('Username field is necesary').css('color' , 'red');
+            $('.change_error').text('Username field is necessary').css('color' , 'red');
             $('#usernameRegister').css('border-color' , 'red');
             errors++;
 
@@ -58,7 +58,7 @@ $(document).ready(function(){
             $("#usernameRegister").keyup(function() {
                 $('.error_char').fadeOut( "slow" );
                 $('#usernameRegister').css('border-color' , '0');
-            })
+            });
             errors++;
         }
         else if (name.length < 3) { //      Display name validation

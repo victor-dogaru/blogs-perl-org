@@ -3310,11 +3310,13 @@ input[readonly] {
 }
 
 .error_ascii,
+.error_label,
 .error_char,
 .error_file {
    display: none;
    margin-top: 15px;
    color: red;
+   border: none;
 }
 
 /* No script msg */

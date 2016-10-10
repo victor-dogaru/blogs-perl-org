@@ -68,29 +68,70 @@ $(document).ready(function() {
 
     //my profile Email validation
     function isValidEmailAddress(emailAddress) {
-        var error = 0;
+        var errors = 0;
         var email = $("#user_email").val();
         var pattern = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
         //return pattern.test(emailAddress);
 
         if (!(email).match(pattern)) {
             $('#user_email').addClass('error');
+            $('#user_email').keyup(function() {
+                $('#user_email').removeClass('error');
+            });
             error++;
         }
-        if (error === 0) {
+        if (errors === 0) {
             return true;
         }
         else {
             return false;
         }
-    };
+    }
 
-    $("#changeSetings").on('submit', function() {
-        if (isValidEmailAddress()) // Calling validation function.
-        {
-            $("#changeSetings").submit(); // Form submission.
+// Validation username/ My profile
+    function isUsernameValid(){
+        var username = $("#user_username").val();
+        var errors = 0;
+        var ascii = /^[\x21-\x7E]+/;
+        var specialCharacters = /[^\w\s\.@-]/g;
+        var errorMessage;
+
+        //    validation username
+        if (username == '') {
+            errorMessage = 'Username can not be empty.';
+            errors++;
+        } else if (!(username).match(ascii)) { //      Username ascii validation
+            errorMessage = 'Username must be composed entirely of ASCII characters.'
+            errors++;
+
+        } else if ((username).match(specialCharacters)) { //      Username special URL char validation
+            errorMessage = 'Username must be composed without special characters.';
+            $('.error_char.hidden').removeClass("hidden");
+            errors++;
+        }
+
+        if (errors > 0) {
+            $('#user_username').addClass('error');
+
+            $('.error_label').fadeIn();
+            $('.error_label').text(errorMessage);
+
+            $("#user_username").keyup(function() {
+                $('.error_label').fadeOut();
+                $('#user_username').removeClass('error');
+            });
+            return false;
         } else {
-            $('#user_email').css('border-color' , 'red');
+            return true;
+        }
+    }
+
+
+    $("#changeSettings").on('submit', function() {
+        if (isValidEmailAddress() && isUsernameValid()) // Calling validation function.
+        {
+            $("#changeSettings").submit(); // Form submission.
+        } else {
             return false;
         }
     });
@@ -238,5 +279,6 @@ $(document).ready(function() {
             $("#confirmNewPassword").removeClass('error');
         }
     });
+
 
 });
