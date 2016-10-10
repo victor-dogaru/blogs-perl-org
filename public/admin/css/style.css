@@ -112,6 +112,12 @@ strong{
 .pagination{
    margin:5px 0px;
 }
+.pagination > .disabled > span,
+.pagination > .disabled > a,
+.pagination > .disabled > a:hover,
+.pagination > .disabled > a:focus {
+   pointer-events: none;
+}
 
 .page-title{
    margin:0px 0px 10px 0px;
