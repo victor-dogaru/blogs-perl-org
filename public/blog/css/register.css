@@ -45,6 +45,10 @@
 }
 .register .error {
     color: red;
+    border-color: red;
+}
+.error_label{
+    margin-left: 25px;
 }
 .register .captcha {
     height: 110px;

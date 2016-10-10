@@ -118,7 +118,7 @@
 				</div>
 				<div class="col-sm-10">
 
-					<form id="changeSetings" action="/profile" method="post">
+					<form id="changeSettings" action="/profile" method="post">
 						<h2>Personal Information</h2>
 						<div class="input-group">
 							<label>Email</label>
@@ -127,6 +127,7 @@
 						<div class="input-group">
 							<label>Username</label>
 							<input type="text" id="user_username" class="form-control" placeholder="[% IF session.user.username %] [% session.user.username %] [% ELSE %]username [% END %]" name="username">
+							<label class="error_label error"></label>
 						</div>
 						<div class="input-group">
 							<label>Display Name</label>

@@ -43,13 +43,16 @@
     margin: 10px 0 0 70px;
     width: 85%;
 }
-.credentials label {
+.credentials label:not(.error) {
     display: table-cell;
     padding-right: 20px;
     width: 200px;
     vertical-align: middle;
     font-size: 20px;
     font-weight: normal;
+}
+.error_label{
+    margin-left: 25px;
 }
 .credentials .form-control {
     height: 50px;
