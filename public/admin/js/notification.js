@@ -199,7 +199,7 @@ var RoleSection = function() {
             var MarkReadTick = MarkRead.clone();
 
             //  Populating the role row
-            $(role).prepend('Your role on the ' + '<a href="/blogs/user/' + roleData.notifications[idx].blog.blog_creator.username + '/slug/' + roleData.notifications[idx].blog.slug + '">' + roleData.notifications[idx].blog.name + '</a>' + ' blog has been changed from ' + roleData.notifications[idx].old_status + ' to ' + roleData.notifications[idx].role);
+            $(role).prepend('Your role on the ' + '<a href="/blogs/user/' + roleData.notifications[idx].blog.blog_creator.username + '/blogname/' + roleData.notifications[idx].blog.name + '">' + roleData.notifications[idx].blog.name + '</a>' + ' blog has been changed from ' + roleData.notifications[idx].old_status + ' to ' + roleData.notifications[idx].role);
             $(role).append(MarkReadTick);
             $(role).removeClass("role-row");
 
