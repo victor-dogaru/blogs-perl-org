@@ -65,7 +65,7 @@ var InvitationSection = function() {
               $('.invitation-row').each(function (idx, invitation) {
 
                   // Invitation Row Content
-                  $(invitation).prepend('<a href="profile/author/' + InvitationData.notifications[idx].sender.username + '">' + InvitationData.notifications[idx].sender.username + '</a>' + " added you as an " + InvitationData.notifications[idx].role + " to the " + '<a href="/blogs/user/' + InvitationData.notifications[idx].blog.blog_creator.username + '/slug/' + InvitationData.notifications[idx].blog.slug + '">' + InvitationData.notifications[idx].blog.name + '</a>' + ' blog');
+                  $(invitation).prepend('<a href="profile/author/' + InvitationData.notifications[idx].sender.username + '">' + InvitationData.notifications[idx].sender.username + '</a>' + " added you as an " + InvitationData.notifications[idx].role + " to the " + '<a href="/blogs/user/' + InvitationData.notifications[idx].blog.blog_creator.username + '/blogname/' + InvitationData.notifications[idx].blog.name + '">' + InvitationData.notifications[idx].blog.name + '</a>' + ' blog');
 
                   // Handling each Modal
                   var modal = invitationModal.clone();
