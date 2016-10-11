@@ -167,8 +167,7 @@ post '/register_success' => sub {
   }
 
   $existing_users =
-    resultset('Users')->search( \[ 'lower(username) = ?' =>
-                                   $params->{username} ] )->count;
+    resultset('Users')->search( {username => $params->{'username'}} )->count;;
   if ($existing_users > 0) {
     return 
     template 'register', {
@@ -288,9 +287,7 @@ post '/login' => sub {
   my $username = params->{username};
   my $redirect = param('redirect') || session('redirect');
 
-  my $user = resultset("Users")->search( \[
-    "lower(username) = ? AND (status = 'active' or status = 'inactive')",
-    $username ]
+  my $user = resultset("Users")->search( { username => params->{username} }
   )->first;
   
   if ( defined $user ) {
