@@ -390,8 +390,10 @@ even if the mails are different
 post '/connect_account' => sub {
 
   my $user       = resultset('Users')->find_by_session(session);
-   
+  my $duplicate  = 0;
   my $flag_oauth = resultset('UserOauth')->search({ service_id => params->{id}})->count;
+  my $total_flag = resultset('UserOauth')->search({ service_id => params->{id}, user_id =>$user->id})->count;
+
   my $message = "";
   my $status = 0;
   if ($flag_oauth == 0){
@@ -404,8 +406,7 @@ post '/connect_account' => sub {
       $message = "Disconnect account";
       $status = 1;
   }
-  else {
-
+  elsif ($total_flag ==1) {
     resultset('UserOauth')->find({
         name    => "Facebook",
         user_id => $user->id
@@ -413,11 +414,15 @@ post '/connect_account' => sub {
 
     $message = "Connect account"; 
   }
+  else {  
+    $message     = "Connect account";
+    $duplicate   = 1;         
+  }
   setConnectedAccountsOntoSession();
-    my $json = JSON->new;
-    $json->allow_blessed(1);
-    $json->convert_blessed(1);
-    $json->encode( {message => $message, status => $status} );
+  my $json = JSON->new;
+  $json->allow_blessed(1);
+  $json->convert_blessed(1);
+  $json->encode( {message => $message, status => $status, duplicate => $duplicate} );
     
 };
 
