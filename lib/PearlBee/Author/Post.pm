@@ -120,9 +120,9 @@ get '/author/posts/:status/page/:page' => sub {
   my @posts       = resultset('Post')->search({ user_id => $user_obj->id, status => $status }, { order_by => \'created_date DESC' });
   my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
   my $total = scalar @posts;
-  if ($total == 0){
-    redirect request->referer;
-  }
+  # if ($total == 0){
+  #   redirect request->referer;
+  # }
   my ($all, $publish, $draft, $trash) = $count->get_all_status_counts;
   my $status_count                    = $count->get_status_count($status);
 
