@@ -264,7 +264,17 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
   my @sorted_comments = sort {$b->id <=> $a->id} @comments;
   my @actual_comments = splice(@sorted_comments,($page-1)*$nr_of_rows,$nr_of_rows);
   map { $_->as_hashref } @actual_comments;
-  
+  my $now = DateTime->now;
+  foreach my $iterator (@actual_comments){
+    my $comment      = resultset('Comment')->find ({ id => $iterator->id });
+
+    my $notification = resultset('Notification')->search ({
+                              name        => 'comment',  
+                              generic_id  => $comment->id,
+                              user_id     => $user->id,
+                              viewed      => 0 })
+                                ->update({ viewed=>1, read_date=> $now });
+  }
   template 'admin/comments/list',
       {
         comments      => \@actual_comments,
