@@ -54,6 +54,11 @@
 .error_username, .error_email{
     margin-left: 25px;
 }
+#already-connected{
+    color: red;
+    line-height: 1.5;
+    padding-top: 15px;
+}
 .credentials .form-control {
     height: 50px;
     width: 100%;

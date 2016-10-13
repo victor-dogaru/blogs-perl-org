@@ -176,17 +176,19 @@
 							<p>We will never post to Facebook or message your friends without your permission</p>
 						</div>
 						<div class="col-sm-4">
-						<button class="btn btn-facebook" type="button" id ='connect_acc' data-toggle="collapse"  aria-expanded="false" >
-						<span class="fa fa-facebook" id="msg">
+							<button class="btn btn-facebook" type="button" id ='connect_acc' data-toggle="collapse"  aria-expanded="false" >
+								<span class="fa fa-facebook" id="msg">
 
-							[% IF facebook == 1 %]
-									 Disconnect Facebook								
-							[% ELSE %]								
-									Connect Facebook
-							[% END %]
-							</span>
+									[% IF facebook == 1 %]
+											 Disconnect Facebook
+									[% ELSE %]
+											Connect Facebook
+									[% END %]
+								</span>
 							</button>
-					</div>
+							<label id="already-connected" class="error" style="display: none;">This facebook account has already been connected to another user.</label>
+
+						</div>
 				</div>
 	<!-- 			<div class="row connected-accounts">
 					<div class="col-sm-6 col-sm-offset-1">
@@ -283,7 +285,12 @@ $(document).ready(function(){
         result.me().done(function(data) {
         data.type = "facebook";
         $.post("/connect_account",data, function(resp){
-          $("#msg").text(resp.message);
+			if(resp.duplicate == 1){
+				$("#already-connected").show();
+			} else{
+				$("#already-connected").hide();
+			}
+          $("#msg").text(" " + resp.message);
           client.status = resp.status;      
         },"json");
         // similar behavior as clicking on a link
