@@ -3310,7 +3310,8 @@ input[readonly] {
 }
 
 .error_ascii,
-.error_label,
+.error_username,
+.error_email,
 .error_char,
 .error_file {
    display: none;

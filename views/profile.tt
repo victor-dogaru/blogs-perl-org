@@ -123,11 +123,12 @@
 						<div class="input-group">
 							<label>Email</label>
 							<input type="text" id="user_email" class="form-control" placeholder="[% IF session.user.email %] [% session.user.email %] [% ELSE %]user@example.com [% END %]" name="email">
+							<label class="error_email error"></label>
 						</div>
 						<div class="input-group">
 							<label>Username</label>
 							<input type="text" id="user_username" class="form-control" placeholder="[% IF session.user.username %] [% session.user.username %] [% ELSE %]username [% END %]" name="username">
-							<label class="error_label error"></label>
+							<label class="error_username error"></label>
 						</div>
 						<div class="input-group">
 							<label>Display Name</label>
@@ -288,7 +289,7 @@ $(document).ready(function(){
         // similar behavior as clicking on a link
         // window.location.href = resp.location;
     })
-    })
+    });
     
     return false;
 
