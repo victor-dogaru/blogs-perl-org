@@ -51,7 +51,7 @@
     font-size: 20px;
     font-weight: normal;
 }
-.error_label{
+.error_username, .error_email{
     margin-left: 25px;
 }
 .credentials .form-control {

@@ -47,7 +47,7 @@
     color: red;
     border-color: red;
 }
-.error_label{
+.error_username, .error_email{
     margin-left: 25px;
 }
 .register .captcha {

@@ -75,10 +75,16 @@ $(document).ready(function() {
 
         if (!(email).match(pattern)) {
             $('#user_email').addClass('error');
-            $('#user_email').keyup(function() {
-                $('#user_email').removeClass('error');
+            $('.error_email').fadeIn();
+            $('.error_email').text("Please enter a valid email address");
+
+            $('#user_email').keyup(function(e) {
+                if (e.keyCode !== 13) {
+                    $('#user_email').removeClass('error');
+                    $('.error_email').fadeOut();
+                }
             });
-            error++;
+            errors++;
         }
         if (errors === 0) {
             return true;
@@ -97,28 +103,28 @@ $(document).ready(function() {
         var errorMessage;
 
         //    validation username
-        if (username == '') {
-            errorMessage = 'Username can not be empty.';
-            errors++;
-        } else if (!(username).match(ascii)) { //      Username ascii validation
-            errorMessage = 'Username must be composed entirely of ASCII characters.'
-            errors++;
+        if (username != '') {
+            if (!(username).match(ascii)) { //      Username ascii validation
+                errorMessage = 'Username must be composed entirely of ASCII characters.'
+                errors++;
 
-        } else if ((username).match(specialCharacters)) { //      Username special URL char validation
-            errorMessage = 'Username must be composed without special characters.';
-            $('.error_char.hidden').removeClass("hidden");
-            errors++;
+            } else if ((username).match(specialCharacters)) { //      Username special URL char validation
+                errorMessage = 'Username must be composed without special characters.';
+                $('.error_char.hidden').removeClass("hidden");
+                errors++;
+            }
         }
-
         if (errors > 0) {
             $('#user_username').addClass('error');
 
-            $('.error_label').fadeIn();
-            $('.error_label').text(errorMessage);
+            $('.error_username').fadeIn();
+            $('.error_username').text(errorMessage);
 
-            $("#user_username").keyup(function() {
-                $('.error_label').fadeOut();
-                $('#user_username').removeClass('error');
+            $("#user_username").keyup(function(e) {
+                if (e.keyCode !== 13) {
+                    $('.error_username').fadeOut();
+                    $('#user_username').removeClass('error');
+                }
             });
             return false;
         } else {
