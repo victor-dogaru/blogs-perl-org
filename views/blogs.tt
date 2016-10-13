@@ -70,8 +70,8 @@
                                                             </div>
                                                         </div>
                                                         [% END %]
-                                                        [% IF searched_blog.nr_of_contributors >= 5%]
-                                                        <a class="modal-load-more" href="/blogs/authors/slug/[% searched_blog.slug %]" data-page-number=1>Load more</a>
+                                                        [% IF searched_blog.nr_of_contributors > 5%]
+                                                        <a class="modal-load-more" href="/blogs/authors/blogname/[% searched_blog.name %]" data-page-number=1>Load more</a>
                                                         [% END %]
                                                     </div>
                                                 </div> <!--modal-content-->
