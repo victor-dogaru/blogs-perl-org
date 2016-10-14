@@ -261,6 +261,20 @@
 
 	</div>
 
+	<!-- modal popup for facebook-->
+	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			<h3 id="myModalLabel">Modal header</h3>
+		</div>
+		<div class="modal-body">
+			<p></p>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+		</div>
+	</div>
+
 	 </div>
 	</div>
  </div>
@@ -271,39 +285,49 @@
 <script>
  var client = client || {};
 client.status = [% facebook %];
-$(document).ready(function(){
-	 document.getElementById("connect_acc").onclick=
- (function(){
- 	if(client.status === 1){
- 		alert("Are you sure you want to disconnect your facebook account with BPO?");
- 	}else{
- 		alert("Are you sure you want to connect your facebook account with BPO?");
- 	}
-    
-    OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
-    OAuth.popup('facebook').done(function(result) {
-        result.me().done(function(data) {
-        data.type = "facebook";
-        $.post("/connect_account",data, function(resp){
-			if(resp.duplicate == 1){
-				$("#already-connected").show();
-			} else{
-				$("#already-connected").hide();
-			}
-          $("#msg").text(" " + resp.message);
-          client.status = resp.status;      
-        },"json");
-        // similar behavior as clicking on a link
-        // window.location.href = resp.location;
-    })
-    });
-    
-    return false;
 
-  });
+$(document).ready(function(){
+	 document.getElementById("connect_acc").onclick= (function(){
+		if(client.status === 1){
+			displayAlertModal({
+				title: "Facebook disconnect",
+				message: "Are you sure you want to disconnect your facebook account with BPO?",
+				okButton: "Yes",
+				cancelButton: "No"
+			}, handleFacebookConnection);
+		}else{
+			displayAlertModal({
+				title : "Facebook connect",
+				message: "Are you sure you want to connect your facebook account with BPO?",
+				okButton: "Yes",
+				cancelButton: "No"
+			}, handleFacebookConnection);
+		}
+
+		return false;
+
+	});
 
 });
 
-
+function handleFacebookConnection() {
+	OAuth.initialize('m5CIZKItMZSxl_wanGn9VXQcYGY');
+	OAuth.popup('facebook').done(function(result) {
+		result.me().done(function(data) {
+			data.type = "facebook";
+			$.post("/connect_account",data, function(resp){
+				if(resp.duplicate == 1){
+					$("#already-connected").show();
+				} else{
+					$("#already-connected").hide();
+				}
+				$("#msg").text(" " + resp.message);
+				client.status = resp.status;
+			},"json");
+			// similar behavior as clicking on a link
+			// window.location.href = resp.location;
+		})
+	});
+}
 
 </script>
