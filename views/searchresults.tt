@@ -6,7 +6,7 @@
 
         <div class="search-input">
             <div class="container">
-                <input type="text" name="search_term" placeholder="Search blogs.perl.org"/>
+                <input type="text" maxlength="50" name="search_term" placeholder="Search blogs.perl.org"/>
                 <p>Search in titles, blogs, people, keywords, content, tags & categories</p>
             </div>
         </div>
