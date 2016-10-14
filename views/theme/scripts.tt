@@ -16,7 +16,8 @@
 
 
 
-
+    <!--Alert displaying helper functions-->
+    <script src="/js/alerts.js" type="text/javascript"></script>
 
 <!-- Page specific javascript -->
     [% IF  global.template_name == 'profile' %]

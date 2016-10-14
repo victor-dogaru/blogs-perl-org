@@ -1,0 +1,23 @@
+#alerts-modal .modal-content{
+    background-color: #fff;
+}
+
+    #alerts-modal .modal-header{
+        border-bottom: none;
+    }
+        #alerts-modal .modal-title {
+            font-size: 15px;
+            font-weight: bold;
+            color: #16CBE6;
+        }
+        
+    #alerts-modal .modal-footer{
+        border-top: none;
+        margin-top: 0;
+    }
+    #alerts-modal .modal-body{
+        padding-top: 0;
+        padding-right: 20px;
+        padding-bottom: 0;
+        padding-left: 20px;
+    }

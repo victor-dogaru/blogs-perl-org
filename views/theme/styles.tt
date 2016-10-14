@@ -30,6 +30,7 @@
 <script src="https://use.fontawesome.com/3f7b04593d.js"></script>
 <!-- Custom CSS -->
 <link href="/blog/css/style.css" rel="stylesheet">
+<link href="/css/alerts.css" rel="stylesheet">
 <!-- <link id="theme" href="/blog/css/dark.css" rel="stylesheet">
  -->
  [%IF !session.theme %]
