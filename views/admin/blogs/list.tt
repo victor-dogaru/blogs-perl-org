@@ -18,7 +18,7 @@
 				<div class="awidget-body hidden-xs hidden-sm">
 
 					[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-					All ([% all %]) |
+					All ([% all %]) 
 					<!--
               <a href="/[%role%]/blogs/published/page/1"> Published </a>([% publish %]) | 
               <a href="/[%role%]/blogs/draft/page/1"> Draft </a>([% draft %]) | 

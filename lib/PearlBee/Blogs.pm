@@ -41,6 +41,7 @@ First page onto which we concatanate new jsons.
 =cut
 
 get '/blogs/user/:username/blogname/:name' => sub{
+
   my $num_user_posts =  10;
   my $blog_name   = route_parameters->{'name'};
   $blog_name =~ s/%20/ /g;
@@ -68,10 +69,12 @@ get '/blogs/user/:username/blogname/:name' => sub{
   my @sorted_posts = sort {$b->created_date <=> $a->created_date}@posts;
 
 
-  
+  my $num_authors =5;
   my @aux_authors    = $searched_blog->contributors;
+  #my @first_authors  = sort {$b->register_date cmp $a->register_date}@aux_authors;
+  my @actual_authors = splice(@aux_authors,0*$num_authors,$num_authors);
   $searched_blog     = $searched_blog->as_hashref_sanitized if $searched_blog;
-  my @authors        = map { $_->as_hashref_sanitized } @aux_authors;
+  my @authors        = map { $_->as_hashref_sanitized } @actual_authors;
   my $total_pages                 = get_total_pages($nr_of_posts, $num_user_posts);
 
   #the map_posts method must be investigated and refined, so, for the moment, 
@@ -226,14 +229,13 @@ get '/blogs/user/:username/slug/:slug/page/:page' => sub {
 
 =cut
 
-get '/blogs/authors/slug/:slug/page/:page' => sub {
-
+get '/blogs/authors/blogname/:name/page/:page' => sub {
   my $num_authors = config->{blogs}{nr_of_authors} || 5;
   my $page        = route_parameters->{'page'};
-  my $slug        = route_parameters->{'slug'};
+  my $name        = route_parameters->{'name'};
   my @authors; my $owner;
 
-  my $blog          = resultset('Blog')->find({ slug => $slug });
+  my $blog          = resultset('Blog')->find({ name => $name });
   my @blog_owners   = resultset('BlogOwner')->search ({ blog_id => $blog->id });
   my $nr_of_authors = resultset('BlogOwner')->search ({ blog_id => $blog->id })->count;
 
@@ -244,11 +246,14 @@ get '/blogs/authors/slug/:slug/page/:page' => sub {
 
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($nr_of_authors, $num_authors);
-  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/blogs/authors/slug/' . $slug);
-  
+
+  my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/blogs/authors/name/' . $name);
+
+  my @actual_authors  = splice(@authors,($page-1)*$num_authors,$num_authors);
+
   my $template_data =
     { 
-      authors        => \@authors,
+      authors        => \@actual_authors,
       page           => $page,
       total_pages    => $total_pages,
       next_link      => $next_link,
