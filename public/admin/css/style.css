@@ -618,7 +618,7 @@ strong{
 }
 
 .awidget .awidget-head h3{
-   margin:0px;
+   margin: 0;
    font-family:"Open Sans", sans-serif;
    font-size:15px;
    line-height:25px;
@@ -1305,6 +1305,7 @@ footer .copy{
    margin-left: 10px;
    width: 30%;
 }
+
 /*Manage tags style -Paul*/
 .manage-tags td.long-input {
 	word-break: break-all;

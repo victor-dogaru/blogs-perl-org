@@ -19,9 +19,9 @@
 
                     <div class="awidget-body">
                         <div class="form-group">
-                            <select name="posts_blog_name" class="form-control">
+                            <select name="posts_blog_name" class="form-control chosen-select">
                                 [% FOREACH blog IN blogs %]
-                                <option [% blog.selected %] value="[% blog.name %]">[% blog.name %]</option>
+                                <option class="options-drop" [% blog.selected %] value="[% blog.name %]">[% blog.name %]</option>
                                 [% END %]
                             </select>
                         </div>
@@ -33,7 +33,7 @@
 
                     <div class="awidget-body">
                         <div class="form-group">
-                            <select name="type" class="form-control">
+                            <select name="type" class="form-control chosen-select">
                                 <option value="HTML">HTML</option>
                                 <option value="Markdown">Markdown</option>
                             </select>
