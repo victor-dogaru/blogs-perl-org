@@ -132,7 +132,7 @@
 						</div>
 						<div class="input-group">
 							<label>Display Name</label>
-							<input type="text" id="user_display_name" class="form-control" placeholder="[% IF session.user.name %] [% session.user.name %] [% ELSE %]Name + Surname [% END %]" name="displayname">
+							<input maxlength="30" type="text" id="user_display_name" class="form-control" placeholder="[% IF session.user.name %] [% session.user.name %] [% ELSE %]Name + Surname [% END %]" name="displayname">
 						</div>
 						<div class="input-group">
 							<label>About</label>
