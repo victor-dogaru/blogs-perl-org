@@ -156,8 +156,8 @@ var ResponseSection = function() {
             (responseData.notifications[idx].accepted === 0) ? (responseStatus = "rejected", responseIcon = '<i class="fa fa-times-circle custom-fonts" aria-hidden="true"></i>') : (responseStatus = "accepted", responseIcon = '<i class="fa fa-plus-circle custom-fonts" aria-hidden="true"></i>');
 
             //  Populating the response row
-            $(response).prepend(responseIcon + '<a href="/profile/author/' + responseData.notifications[idx].receiver.username + '">' + responseData.notifications[idx].receiver.username + '</a>' + ' ' + responseStatus + ' your invitation to join ' + '<a href="/blogs/user/' + '<a href="/blogs/user/' + responseData.notifications[idx].blog.blog_creator.username + '/slug/' + responseData.notifications[idx].blog.slug + '">' + responseData.notifications[idx].blog.name + '</a>');
-
+            $(response).prepend(responseIcon + '<a href="/profile/author/' + responseData.notifications[idx].receiver.username + '">' + responseData.notifications[idx].receiver.username + '</a>' + ' ' + responseStatus + ' your invitation to join ' + '<a href="/blogs/user/'  + responseData.notifications[idx].blog.blog_creator.username + '/blogname/' + responseData.notifications[idx].blog.name + '">' + responseData.notifications[idx].blog.name + '</a>');
+            
             $(MarkReadTick).appendTo(response);
             //  Appending view user
             $(viewUserRow).appendTo(response);
