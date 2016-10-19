@@ -496,5 +496,7 @@ $(document).ready(function() {
 
 		}
 	});
+//	Keep selected value of drop down list after page refresh
+
 });
 

@@ -25,6 +25,7 @@
 							<h2>Choose blog</h2>
 							<div class="btn-group">
 								<select id="blog-select" name="current_name" class="chosen-select">
+
 									[% FOREACH blog IN blogs %]
 									[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 									<option value="[% blog.name %]" data-slug="[%blog.slug%]"> [% blog.name %] </option>

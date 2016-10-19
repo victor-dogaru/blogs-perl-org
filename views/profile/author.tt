@@ -63,7 +63,7 @@
                         <!-- Radio button and label for #tab-content2 -->
                         <input type="radio" name="author-tabs" id="author-tab2" data-author-term="">
                         <label id="entries" for="author-tab2">
-                            <span>entries</span>
+                            <span>posts</span>
                         </label>
 
                         <!-- Radio button and label for #tab-content3 -->
