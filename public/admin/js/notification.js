@@ -71,8 +71,8 @@ var InvitationSection = function() {
                   var modal = invitationModal.clone();
                   $(modal).appendTo(invitation);
                   $(modal).on('click', function () {
-                      $('.invitation-blogname').html('I would like to invite you to join my blog ' + '<a href="#">' + InvitationData.notifications[idx].blog.name + '</a>' + '.');
-                      $('.invitation-username').html('<a href="#">' + InvitationData.notifications[idx].sender.username + '</a>');
+                      $('.invitation-blogname').html('I would like to invite you to join my blog ' + '<a href="/blogs/user/' + InvitationData.notifications[idx].blog.blog_creator.username + '/blogname/' + InvitationData.notifications[idx].blog.name + '">' + InvitationData.notifications[idx].blog.name + '</a>' + ' blog');
+                      $('.invitation-username').html('<a href="profile/author/' + InvitationData.notifications[idx].sender.username + '">' + InvitationData.notifications[idx].sender.username + '</a>');
                       $('.modal-footer').html('<button class="btn btn-primary btn-ok modal-accept" data-dismiss="modal">Accept</button><a type="button" class="btn  btn-danger modal-reject" data-dismiss="modal">Reject</a>');
 
 
