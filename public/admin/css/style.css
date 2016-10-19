@@ -1305,7 +1305,9 @@ footer .copy{
    margin-left: 10px;
    width: 30%;
 }
-
+#blog_select_chosen{
+   margin-left: 0;
+}
 /*Manage tags style -Paul*/
 .manage-tags td.long-input {
 	word-break: break-all;
