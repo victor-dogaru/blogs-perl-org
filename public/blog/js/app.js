@@ -412,9 +412,9 @@ $(document).ready(function() {
                     var authorItem = $("#author-modal .row:last"),
                         newItem = authorItem.clone();
 
-                    newItem.find("img.author-image ").attr("src", authors[i].avatar_path);
+                    newItem.find("img.author-image ").attr("src", authors[i].avatar);
                     newItem.find(".author-info").html(authors[i].name);
-                    newItem.find(".author-info").attr("href", url + authors[i].username + '/page/' + pageNumber);
+                    newItem.find(".author-info").attr("href",  "/profile/author/" + authors[i].username);
                     newItem.find(".biography").html(authors[i].biography);
                     newItem.find(".go-to-profile").attr("href",  "/profile/author/" + authors[i].username);
 
