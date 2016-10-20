@@ -21,7 +21,7 @@ on_plugin_import {
                 if (($request =~ '/author/' && !$user) || 
                     ($request =~ '/admin/' && !$user) ) {
 
-                    my $redir = $dsl->redirect( '/' );
+                    my $redir = $dsl->redirect( '/' ) unless $request =~ '/profile/author/' ;
                     return $redir;
                 }   
 

@@ -44,6 +44,10 @@ Display profile page
 
 get '/profile' => sub {
 
+  my $user_obj = resultset('Users')->find_by_session(session);
+  if (!$user_obj){
+    redirect ('/');
+  }
   template 'profile';
 
 };
