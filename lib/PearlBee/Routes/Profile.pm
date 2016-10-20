@@ -370,9 +370,10 @@ any '/blog-image/:size/blog/:blogname' => sub {
 
     template 'admin/settings/index',
       {
-        timezones => \@timezones,
-        blogs     => \@blogs,
-        success => $message
+        timezones     => \@timezones,
+        blogs         => \@blogs,
+        success       => $message,
+        selected_blog => $blog
       },
       { layout => 'admin' };
   }
