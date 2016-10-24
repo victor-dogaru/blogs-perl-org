@@ -138,6 +138,10 @@ color: #333333;
    background-repeat: repeat;
 }
 
+.tabs [id^="tab"]:checked + label, .tabs [id^="author-tab"]:checked + label{
+    color: #838383;
+    border-bottom: 4px solid #838383;
+}
 /*multiblog - search blogs[tab4]*/
 #tab-content4 .entry{
     border-bottom: 1px solid #eaeaea;

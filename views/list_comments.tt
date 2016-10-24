@@ -1,5 +1,5 @@
  <div class="comments" id="comments">
-    <div id="display_msg_commments" class="col-xs-12">
+    <div id="display_msg_commments" class="row">
         <div class="col-xs-2">
         </div>
         <h4 class="display_msg hidden col-xs-10">Your comment will be displayed after the post owner's approval</h4>

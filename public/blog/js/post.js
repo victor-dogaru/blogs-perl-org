@@ -54,7 +54,8 @@ $(document).ready(function(){
                     newItem.removeClass('hidden');
                 //}
                 } else if (posts.status === 'pending') {
-                    $(".display_msg").addClass("show");
+                    //$(".display_msg").addClass("show");
+                    $(".display_msg").removeClass("hidden");
                 }
             });
         }
