@@ -1365,7 +1365,6 @@ strong{
 .respond{
    border: none;
    margin:20px 0px;
-   padding:20px;
    background-color: transparent;
 }
 .respond h5{
@@ -2723,28 +2722,35 @@ a:focus {
  }
 
 /*individual posts page*/
-.individual-post .meta .bubble img {
-   border-radius: 50%;
-   height: 120px;
-   width: 120px;
-   z-index: 2;
-   position: absolute;
-   left: -155px;
+.individual-post .bubble .user-image{
+   float: left;
+   padding: 20px;
+}
+.individual-post .posts .entry{
+   padding: 20px;
+   border: 1px solid #152E4A;
+   padding-bottom: 0;
 }
 .individual-post .info-entry .user {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
-   font-size: 18px;
+   font-size: 20px;
    color: #43c8e7;
+   text-transform: uppercase;
+   font-weight: bold;
 }
 .individual-post .info-entry .date {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
-   font-size: 18px;
+   font-size: 14px;
    color: #8a8a8d;
 }
-.individual-post .info-entry .post-heading {
+.individual-post .post-heading {
    margin: 23px 0;
+   word-wrap: break-word;
 }
-.individual-post .info-entry .post-heading h2 {
+.individual-post .post-content p{
+   font-size: 18px;
+}
+.individual-post .post-heading h2 {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
    font-size: 24px;
    font-weight: bold;
@@ -2755,18 +2761,16 @@ a:focus {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
    font-size: 18px;
 }
+/*blog comment for individual page*/
 .blog-comment {
    background-color: #dadada;
    padding-bottom: 60px;
-}
-.individual-post-tags {
-   margin: 25px 0 0 0;
 }
 .individual-post-tags .label-tags {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
    display: inline-block;
    color: #999999;
-   text-transform: uppercase;
+   /*text-transform: uppercase;*/
    padding-right: 25px;
 }
 .individual-post-tags .label-tags h4 {
@@ -2782,8 +2786,13 @@ a:focus {
 .individual-post-tags a:hover {
    color: #16cbe6;
 }
-.individual-post-category {
-      margin-bottom: 50px;
+.tags-categories{
+   padding-top: 30px;
+   padding-bottom: 15px;
+}
+.tags-categories .label-tags h4{
+   font-size: 14px;
+   margin-bottom: 0;
 }
 .individual-post .pager-post li,
 .pages .pager-post li {
@@ -2823,12 +2832,11 @@ a:focus {
 }
 .comments .comment-list .bubble img {
    border-radius: 50%;
-   height: 70px;
-   width: 70px;
+   height: 100px;
+   width: 100px;
    z-index: 2;
    position: absolute;
-   top:28px;
-   left: -120px;
+   top:40px;
    background: #ffffff;
 }
 .comments .comment-list {
@@ -2840,6 +2848,7 @@ a:focus {
 }
 .comments .comment-list .comment-author a {
    color: #16cbe6;
+   text-transform: uppercase;
 }
 .comments .comment-list .comment-author a:hover {
    color: #0fa6bc;
@@ -2848,12 +2857,12 @@ a:focus {
    color: #333333;
 }
 .comment .cmeta {
-   font-size: 18px;
+   font-size: 14px;
    color: #a5a5a5;
 }
 .comments .comment p {
    margin-top: 15px;
-   font-size: 18px;
+   font-size: 16px;
    word-wrap: break-word;
 }
 .comments .comment {
@@ -2861,31 +2870,29 @@ a:focus {
 }
 .comments .list-of-comment{
    position: relative;
-   overflow: hidden;
    word-wrap: break-word;
 }
 .comments .comment .cmeta {
    font-style: normal;
 }
 
-@media all and (max-width: 815px) {
-   .individual-post .meta .bubble img {
-      left: -120px;
-   }
-}
+
 @media all and (max-width: 660px) {
    .comments .comment-list .bubble img,
    .individual-post .meta .bubble img {
-      left: -80px;
       width: 50px;
       height: 50px;
    }
 }
 
 @media all and (max-width: 480px) {
-   .comments .comment-list .bubble img {
+   .comments .comment-list .bubble {
       display: none;
    }
+   .comment-context{
+      width: 100%;
+   }
+
 }
 
 @media all and (max-width: 429px) {

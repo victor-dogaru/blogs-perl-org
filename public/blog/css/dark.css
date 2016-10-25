@@ -18,8 +18,11 @@
    background-color: #07001b;
 }
 
-.individual-post .info-entry .post-heading h2 {
+.individual-post .post-heading h2 {
    color: #ffffff;
+}
+.individual-post .post-content{
+    color: #fff;
 }
 
 .individual-post .meta {
@@ -27,7 +30,7 @@
 }
 
 .individual-post .pager-post li a {
-   color: #ffffff;
+   color: #16cbe6;
 }
 
 .search-page {
