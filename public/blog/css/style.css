@@ -2476,7 +2476,6 @@ a:focus {
      position: relative;
  }
  .text-listing-entries::before, .loading-posts .view-more::before{
-
      bottom: 0;
      content: "";
      left: -110px;
@@ -2502,7 +2501,9 @@ a:focus {
  .info-entry{
      padding-top: 30px;
  }
-
+   .author-post-loading.loading-posts{
+      margin-bottom: 0;
+   }
  .loading-posts {
    margin-bottom: 190px;
  }
@@ -2725,6 +2726,9 @@ a:focus {
 .individual-post .bubble .user-image{
    float: left;
    padding: 20px;
+   -webkit-border-radius: 50%;
+   -moz-border-radius: 50%;
+   border-radius: 50%;
 }
 .individual-post .posts .entry{
    padding: 20px;

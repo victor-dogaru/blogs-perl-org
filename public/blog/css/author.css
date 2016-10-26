@@ -43,22 +43,24 @@
     /*/author profile top: description*/
 
 /*tabs for author*/
-  .author-page .background-bar{
-      background-color: #dadada;
-      height: 110px;
-      width: 100%;
-  }
-    .author-page .background-bar .tabs{
-        padding-top: 15px;
-        /*background-color: #3F7F5F;*/
-    }
-    .author-page .background-bar .tabs label{
-        line-height: 5;
-    }
-    .entry .info-entry p.uppercase{
-        text-transform: uppercase;
-    }
-
+.author-page .background-bar{
+  background-color: #dadada;
+  height: 110px;
+  width: 100%;
+}
+.author-page .background-bar .tabs{
+    padding-top: 15px;
+    /*background-color: #3F7F5F;*/
+}
+.author-page .background-bar .tabs label{
+    line-height: 5;
+}
+.entry .info-entry p.uppercase{
+    text-transform: uppercase;
+}
+.blog_author{
+  padding-bottom: 40px;
+}
 
     /*style for tab 1*/
   #author-tab-content1 ul{
