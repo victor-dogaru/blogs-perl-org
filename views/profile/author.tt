@@ -157,7 +157,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="loading-posts loading-author-entries">
+                        <div class="author-post-loading loading-posts loading-author-entries">
                             <div class="col-xs-2">
                             </div>
                             <div class="view-more-entries col-xs-10">
