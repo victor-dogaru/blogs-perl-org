@@ -210,7 +210,10 @@ get '/author/comments/blog/:blog/:status/page/:page' => sub {
      }
     } 
   }
-
+  my %seen = ();
+  my @unique_comments = grep { ! $seen{ $_ }++ } @comments;
+  @comments           = @unique_comments;
+  
   my $all       = scalar @comments;
   my $approved  = 0;
   my $spam      = 0;
