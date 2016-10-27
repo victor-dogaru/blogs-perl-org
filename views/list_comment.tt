@@ -1,54 +1,45 @@
 <div class="comments" id="comments">
-  <!-- <div class="title"><h5>[% nr_of_comments %] Comments</h5></div> -->
-  <ul class="comment-list">
-
-          <li class="comment clearfix hidden " id="comment_[% comment.id %]">
-                <div class="col-xs-2">
+    <ul class="comment-list">
+        <li class="comment clearfix hidden" id="comment_[% comment.id %]">
+            <div class="col-xs-12 content-comment">
+                <div class="bubble col-xs-2">
+                    <img class="user-image" src="[% comment.uid.avatar %]">
                 </div>
-                <div class="col-xs-10 content-comment">
-                    <div class="bubble">
-            <img class="user-image" src="[% comment.uid.avatar %]">
-                    </div>
-                
+                <div class="content-comment col-xs-10">
                     <div class="comment-author comment-author-registered">
-                         <b><a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]</a></b>
+                        <b><a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]</a></b>
                     </div>
-                
-                <div class="cmeta">
-             <span class="hours">[% comment.comment_date_human %]</span>
-                </div>
-                <p>
-                    [% comment.content %]
-                </p>
-                <div class="clearfix">
-                </div>
-                
-                </div>
-            </li>
-    [% FOREACH comment in comments %]
-      <li class="comment  clearfix hidden " id="comment_[% comment.id %]">
-           <div class="col-xs-2">
-                </div>
-                <div class="col-xs-10 content-comment">
-                    <div class="bubble">
-                      <img class="user-image" src="[% comment.uid.avatar %]">
+                    <div class="cmeta">
+                        <span class="hours">[% comment.comment_date_human %]</span>
                     </div>
+                    <p>[% comment.content %]</p>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </li>
 
+        [% FOREACH comment in comments %]
+        <li class="comment clearfix hidden" id="comment_[% comment.id %]">
+            <div class="content-comment col-xs-12">
+                <div class="bubble col-xs-2">
+                  <img class="user-image" src="[% comment.uid.avatar %]">
+                </div>
+
+                <div class="comment-context col-xs-10">
                     <div class="comment-author comment-author-registered">
-                         <b><a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]</a></b>
+                        <b><a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]</a></b>
                     </div>
-                
-                <div class="cmeta">
-             <span class="hours">[% comment.comment_date_human %]</span>
+                    <div class="cmeta">
+                        <span class="hours">[% comment.comment_date_human %]</span>
+                    </div>
+                    <div class="comment-text">
+                        <p>[% comment.content %]</p>
+                    </div>
+                    <div class="clearfix">
+                    </div>
                 </div>
-                <p>
-                    [% comment.content %]
-                </p>
-                <div class="clearfix">
-                </div>
-                
-                </div>
-      </li>
-    [% END %]
-  </ul>
+            </div>
+        </li>
+        [% END %]
+    </ul>
 </div>

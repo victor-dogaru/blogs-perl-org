@@ -3,37 +3,37 @@
         <h4 class="display_msg hidden col-xs-12">Your comment will be displayed after the post owner's approval</h4>
     </div>
     <ul class="comment-list">
-        <li class="comment clearfix hidden " id="comment_[% comment.id %]">
-            <div class="col-xs-12 content-comment">
-                <div class="bubble">
-                    [% IF comment.uid.avatar_path %]
-                        <img class="user-image" src="/avatar/[% comment.uid.username %]" />
-                    [% ELSE %]
-                        <img class="user-image defaultAvatar" src="/avatar/" />
-                    [% END %]
+        <!--<li class="comment clearfix hidden " id="comment_[% comment.id %]">-->
+            <!--<div class="col-xs-12 content-comment">-->
+                <!--<div class="bubble">-->
+                    <!--[% IF comment.uid.avatar_path %]-->
+                        <!--<img class="user-image" src="/avatar/[% comment.uid.username %]" />-->
+                    <!--[% ELSE %]-->
+                        <!--<img class="user-image defaultAvatar" src="/avatar/" />-->
+                    <!--[% END %]-->
 
-                </div>
-                [% IF comment.fullname %]
-                    <div class="comment-author">
-                        <a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]<b></b></a>
-                    </div>
-                [% ELSE %]
-                    <div class="comment-author comment-author-registered">
-                         <a href="/profile/author/[% comment.uid.username | uri %]">[% comment.uid.name %]<b></b></a>
-                    </div>
-                [% END %]
+                <!--</div>-->
+                <!--[% IF comment.fullname %]-->
+                    <!--<div class="comment-author">-->
+                        <!--<a href="/profile/author/[% comment.uid.username | uri %]">[% comment.fullname %]<b></b></a>-->
+                    <!--</div>-->
+                <!--[% ELSE %]-->
+                    <!--<div class="comment-author comment-author-registered">-->
+                         <!--<a href="/profile/author/[% comment.uid.username | uri %]">[% comment.uid.name %]<b></b></a>-->
+                    <!--</div>-->
+                <!--[% END %]-->
 
-                <div class="cmeta">
-                    <span class="hours">[% comment.comment_date_human %]</span>
-                </div>
-                <p>
-                    [% comment.content %]
-                </p>
-                <div class="clearfix">
-                </div>
+                <!--<div class="cmeta">-->
+                    <!--<span class="hours">[% comment.comment_date_human %]</span>-->
+                <!--</div>-->
+                <!--<p>-->
+                    <!--[% comment.content %]-->
+                <!--</p>-->
+                <!--<div class="clearfix">-->
+                <!--</div>-->
 
-                </div>
-            </li>
+                <!--</div>-->
+            <!--</li>-->
 
         [% FOREACH comment in comments %]
             <li class="comment list-of-comment clearfix" id="comment_[% comment.id %]">
