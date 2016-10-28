@@ -101,18 +101,16 @@
 					</div>
 					<div class="col-lg-6">
 						<div class="col-lg-3 profile-pic blog-pic hidden-xs">
-							<div class="bubble">
+							<!--<div class="bubble">-->
 								[% IF blogs.0.large_avatar_path %]
 								<img id="blog_img_preview" class="user-image preview-avatar" src="/blog_avatar/[% blogs.0.name %]"/>
 								[% ELSE %]
 								<img id="blog_img_preview" class="user-image defaultAvatar" src="/blog-avatar/large/" />
 								[% END %]
-							</div>
+							<!--</div>-->
 							<div>
 								<button type="button" class="btn blog-change-pic change-pic" data-toggle="modal" data-target="#changeImgBlog">
-									Change your
-									<br>
-									blog avatar
+									Change your	blog avatar
 								</button>
 							</div>
 						</div>
