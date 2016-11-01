@@ -38,7 +38,7 @@
 							<div class="form-group">
 								<label class="col-xs-4 control-label">Blog Description*</label>
 								<div class="col-xs-8">
-									<textarea type="text"  maxlength="350" rows="10" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
+									<textarea type="text"  maxlength="350" rows="5" class="form-control" name="blog_description" placeholder="Blog Description" required></textarea>
 								</div>
 							</div>
 

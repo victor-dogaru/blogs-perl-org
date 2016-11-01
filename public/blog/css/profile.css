@@ -43,6 +43,9 @@
     margin: 10px 0 0 70px;
     width: 85%;
 }
+.input-group textarea#user_biography{
+    resize: none;
+}
 .credentials label:not(.error) {
     display: table-cell;
     padding-right: 20px;

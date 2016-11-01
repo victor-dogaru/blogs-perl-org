@@ -183,7 +183,6 @@ strong{
 }
 
 /* Logo & Navigation */
-
 .header.admin-header {
    height: 80px;
    line-height: 80px;
@@ -396,7 +395,6 @@ strong{
 /* END header for admin mobile resolution */
 
 /* Sidebar navigation */
-
 .sidey{
    margin-bottom:30px;
    width:220px;
@@ -451,11 +449,11 @@ strong{
 	padding: 15px 15px;
 	color: #999;
 	display: block;
-   font-weight:bold;
-   background:none;
+    font-weight:bold;
+    background:none;
 	text-decoration: none;
-   border-top:0px;
-   font-weight:bold;
+    border-top:0px;
+    font-weight:bold;
 }
 
 .sidey .nav > li > a > i{
@@ -539,7 +537,6 @@ strong{
 }
 
 /* Main */
-
 .mainy{
 	position: relative;
 	margin-left: 240px;
@@ -547,13 +544,11 @@ strong{
 	width: auto;
 	min-height: 900px;
 }
-
 .mainy .container{
 	width: 100%;
 }
 
 /* Make post */
-
 .make-post h5{
    margin:0px;
    margin-bottom:12px;
@@ -704,8 +699,6 @@ strong{
 
 
 /* Recent posts & Comments widgets starts */
-
-
 .recent-content .btn{
 	font-size: 12px !important;
 	margin-top: 5px;
@@ -1237,7 +1230,6 @@ footer .copy{
    }
 
 /* Comment list */
-
 .coments .comment-list.comment-replies-list {
    list-style: none;
    padding-left: 30px;
@@ -1258,7 +1250,7 @@ footer .copy{
    }
 }
 
-/*Set password style - Paul*/
+/*Set password style*/
 .set-password .buttons-group {
 	width: 100%;
 }
@@ -1296,7 +1288,7 @@ footer .copy{
    border: 1px solid #0fa6bc;
 }
 
-/*Make post style - Paul*/
+/*Make post style*/
 .make-post .awidget-body select {
    min-width: 90px;
    margin-top: 0;
@@ -1437,6 +1429,7 @@ span.header-badge {
 	text-transform: capitalize;
 }
 /*END - Comments section*/
+
 /*START - Users section*/
 .manage-users .form-group .users-dropdown {
 	float: left;
@@ -1447,6 +1440,9 @@ span.header-badge {
 	text-transform: uppercase;
 }
 /*END - Users section*/
+textarea.form-control{
+   resize: none;
+}
 
 @media screen and (min-width: 768px) and (max-width:999px){
    .admin-header ul.nav>li a{
@@ -1502,6 +1498,7 @@ span.header-badge {
    .small-date{
       font-size:11px;
    }
+
 
    /*post list page admin*/
    .awidget  .three-columns{
