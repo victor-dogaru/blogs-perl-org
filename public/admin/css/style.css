@@ -555,6 +555,9 @@ strong{
    padding:0px;
    font-weight:bold;
 }
+.make-post .chosen-container-single{
+   margin-left: 15px;
+}
 
 /* Admin hero */
 
