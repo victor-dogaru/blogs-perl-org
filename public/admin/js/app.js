@@ -1,4 +1,10 @@
-
+$(document).on('focus', 'input, textarea', function() {
+    $('div[data-role="header"]').css('position', 'absolute');
+    $.mobile.silentScroll($('input:focus').offset().top - 100);
+});
+$(document).on('blur', 'input, textarea', function() {
+    $('div[data-role="header"]').css('position', 'fixed');
+});
 // Prepare the Post status based on what button is pressed
 $(document).ready(function() {
 
