@@ -157,10 +157,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="author-post-loading loading-posts loading-author-entries">
-                            <div class="col-xs-2">
-                            </div>
-                            <div class="view-more-entries col-xs-10">
+                        <div class="author-post-loading loading-posts loading-author-entries row">
+                            <div class="view-more-entries col-xs-12">
                                 <div class="bubble">
                                     <button id="more-author-entries" data-page-number="0" class="btn btn-primary btn-xs more-posts" type="button">more</button>
                                 </div>
@@ -170,7 +168,6 @@
                                         <div class="bounce2"></div>
                                         <div class="bounce3"></div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
