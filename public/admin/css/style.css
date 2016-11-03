@@ -190,6 +190,12 @@ strong{
    border-top: 4px solid #0fa6bc;
    border-bottom: 1px solid #0fa6bc;
    position: fixed;
+   transform: translateZ(0);
+   -moz-transform: translatez(0);
+   -ms-transform: translatez(0);
+   -o-transform: translatez(0);
+   -webkit-transform: translateZ(0);
+   -webkit-font-smoothing: antialiased; /* seems to do the same in Safari */
    width: 100%;
    top: 0;
    z-index: 2147483647;
