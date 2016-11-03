@@ -2510,6 +2510,15 @@ a:focus {
  }
 
  /*button MORE*/
+button#more-author-entries{
+    position: relative;
+    top: 0;
+    left: 0;
+    /*margin-top: 35px;*/
+}
+.loading-author-entries .view-more-entries{
+    margin-top: 35px;
+}
  .loading-posts .more-posts {
      border: medium none;
      font-family: 'Open Sans', sans-serif;
