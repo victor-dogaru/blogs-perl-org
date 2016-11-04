@@ -103,4 +103,9 @@ span.fa{
 button[data-toggle="collapse"] {
   margin-top: 50px;
 }
+/*Safari*/
+/*input[type="file"]#file-upload {*/
+    /*visibility: hidden;*/
+    /*position: absolute;*/
+/*}*/
 /*END My profile page*/
