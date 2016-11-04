@@ -60,16 +60,16 @@
 					</div>
 					<div class="col-xs-12 col-sm-6 picture-btn">
 						<form action="/profile-image" enctype="multipart/form-data" method="post" id="upload-img">
-				<span class="file-input btn btn-file light-button buttons-group change-pic">
-					<p>Choose picture</p> <!-- <input type="file" name="file"> -->
-					<input type="file" id="file-upload" class="form-control" name="file">
-					<input type="text" class="form-control hidden" name="width">
-					<input type="text" class="form-control hidden" name="height">
-					<input type="text" class="form-control hidden" name="top">
-					<input type="text" class="form-control hidden" name="left">
-					<input type="text" class="form-control hidden" name="zoom">
-                    <input type="text" class="form-control hidden" name="action_form">
-				</span>
+							<span class="file-input btn btn-file light-button buttons-group change-pic">
+								<p>Choose picture</p> <!-- <input type="file" name="file"> -->
+								<input type="file" id="file-upload" class="form-control" name="file">
+								<input type="text" class="form-control hidden" name="width">
+								<input type="text" class="form-control hidden" name="height">
+								<input type="text" class="form-control hidden" name="top">
+								<input type="text" class="form-control hidden" name="left">
+								<input type="text" class="form-control hidden" name="zoom">
+								<input type="text" class="form-control hidden" name="action_form">
+							</span>
 						</form>
 						<label class="error_file">We only allows file types of PNG, JPG, GIF and BMP.</label>
 					</div>
