@@ -10,8 +10,8 @@ $(document).ready(function(){
         $("#reply_post_comment_form").trigger('reset');
         var themeinitial = $('#cmn-toggle-4').is(':checked');
 
-        console.log(comment);
-        console.log(slug);
+        //console.log(comment);
+        //console.log(slug);
         if (isEmpty == "") {
 // e.preventDefault();
 // e.stopPropagation();
