@@ -36,6 +36,9 @@ get '/post/:slug' => sub {
 
   my $slug       = route_parameters->{'slug'};
   my $post       = resultset('Post')->find({ slug => $slug });
+  if ($post->status ne 'published'){
+    redirect ('/');
+  }
 
   if ( $post ) {
     my @tags       = map { $_->as_hashref_sanitized } $post->tag_objects;
