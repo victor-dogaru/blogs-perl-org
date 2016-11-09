@@ -311,13 +311,20 @@ Check if the user has enough authorization for modifying
 =cut
 
 sub is_authorized {
-  my ($self, $user) = @_;
+
+  my ($self, $user) = @_;  
   my $schema        = $self->result_source->schema;
   my $user_obj      = $schema->resultset('Users')->
                       find({ username => $user->{username} });
+                      
+  my $blog_post  = $schema->resultset('BlogPost')->find({ post_id => $self->id});
+  my $blog_owner = $schema->resultset('BlogOwner')->find({ blog_id =>$blog_post->blog_id, 
+                                                           user_id => $user_obj->id});
+  my $check      = $blog_owner->is_admin == 1;
 
   return 1 if $user_obj->is_admin;
   return 1 if $self->user_id and $self->user_id == $user_obj->id;
+  return 1 if (!$user_obj->is_admin && $check);
   return 0;
 }
 
