@@ -117,15 +117,39 @@ get '/author/posts/:status/page/:page' => sub {
       warning => "Please log in before viewing your posts"
     }
   }
-  my @posts       = resultset('Post')->search({ user_id => $user_obj->id, status => $status }, { order_by => \'created_date DESC' });
-  my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
-  my $total = scalar @posts;
-  # if ($total == 0){
-  #   redirect request->referer;
-  # }
-  my ($all, $publish, $draft, $trash) = $count->get_all_status_counts;
-  my $status_count                    = $count->get_status_count($status);
+  my @posts;
+  my @blog_owners = resultset('BlogOwner')-> search({ user_id => $user_obj->id });
+  foreach my $iterator (@blog_owners){
+    if ($iterator->is_admin == 1){      
+    push @posts, resultset('Blog')-> find({ id =>$iterator->blog_id})->posts(1,$user_obj->id);
+    }
+    else{
+      push @posts, resultset('Blog')-> find({ id =>$iterator->blog_id})->posts(0, $user_obj->id);
+    }
 
+  }
+  #my $count       = resultset('View::Count::StatusPostAuthor')->search({}, { bind => [ $user_obj->id ] })->first;
+  my $all     = 0;
+  my $publish = 0;
+  my $draft   = 0;
+  my $trash   = 0;
+
+  foreach my $post (@posts){
+    if ($post->status eq 'published'){
+      $publish++;
+    }
+    elsif ($post->status eq 'draft'){
+      $draft++;
+    }
+    else {
+      $trash++;
+    }
+  }
+
+  $all             = scalar @posts;
+  @posts           = grep { $_->status eq $status } @posts;
+  
+  my $status_count = scalar @posts;
   # Calculate the next and previous page link
   my $total_pages                 = get_total_pages($all, $nr_of_rows);
   my ($previous_link, $next_link) = get_previous_next_link($page, $total_pages, '/author/posts/' . $status);
