@@ -43,7 +43,7 @@
 					</div>
 
 					<div class="form-group pull-right">
-						<button type="submit" class="btn btn-success " id="apply-filter" onclick="Javascript:getFilterOptions(); createURL();" >Apply</button>
+						<input type="submit" class="btn btn-success" id="apply-filter" onclick="javascript:getFilterOptions(); createURL();" value="Apply">
 <!--						<button type="button" class="btn btn-danger">Reset</button>-->
 					</div>
 
