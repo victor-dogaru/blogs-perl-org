@@ -1,9 +1,23 @@
-<li [% ( previous_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% previous_link %]">&laquo;</a></li>
+<div class="hidden-xs">
+    <ul class="pagination pull-right">
+        <li [% ( previous_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% previous_link %]">&laquo;</a></li>
 
-[% FOREACH page_number in pages %]
+        [% FOREACH page_number in pages %]
+              <li [% ( page_number == page ) ? 'class="active"' : '' %] ><a href="/[% action_url %]/[% page_number %]">[% page_number %]</a></li>
+        [% END %]
 
-  <li [% ( page_number == page ) ? 'class="active"' : '' %] ><a href="/[% action_url %]/[% page_number %]">[% page_number %]</a></li>
-                   
-[% END %]
+        <li [% ( next_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% next_link %]">&raquo;</a></li>
+    </ul>
+</div>
 
-<li [% ( next_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% next_link %]">&raquo;</a></li>
+<div class="visible-xs">
+    <ul class="pagination pull-right">
+        <li [% ( previous_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% previous_link %]">&laquo;</a></li>
+
+        <li class="active"><a href="/[% action_url %]/[% page %]">[% page %]</a></li>
+        <li><a href="/[% action_url %]/[% page + 1 %]">[% page + 1 %]</a></li>
+
+        <li [% ( next_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% next_link %]">&raquo;</a></li>
+
+    </ul>
+</div>
