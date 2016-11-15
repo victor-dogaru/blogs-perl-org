@@ -2739,6 +2739,8 @@ button#more-author-entries{
    -webkit-border-radius: 50%;
    -moz-border-radius: 50%;
    border-radius: 50%;
+   width: 140px;
+   height: 140px;
 }
 .individual-post .posts .entry{
    padding: 20px;
