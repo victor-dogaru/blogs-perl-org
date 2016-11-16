@@ -36,8 +36,9 @@ get '/post/:slug' => sub {
 
   my $slug       = route_parameters->{'slug'};
   my $post       = resultset('Post')->find({ slug => $slug });
+
   if ($post->status ne 'published'){
-    redirect ('/');
+    redirect ('author/posts/edit/'.$slug);
   }
 
   if ( $post ) {
