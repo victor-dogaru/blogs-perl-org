@@ -61,7 +61,7 @@
 
                                 <div class="buttons">
                                        <button id="draft_btn" class="btn btn-default">Save Draft</button> 
-                                       <button id="publish_btn" class="btn btn-info">Update</button>
+                                       <button id="publish_btn" class="btn btn-info">Publish</button>
                                        <button id="trash_btn" class="btn btn-danger">Trash</button>
                                 </div>
 
