@@ -39,8 +39,7 @@
 							<hr />
 
 							<h5>Blog Description</h5>
-							<textarea type="text" rows="10" class="form-control rows-for-mobile" name="blog_description" placeholder="Blog Description" ></textarea>
-							<textarea type="text" rows="5" class="form-control hidden-sm hidden-md hidden-lg" name="blog_description" placeholder="Blog Description" ></textarea>
+							<textarea type="text" rows="5" class="form-control rows-for-mobile" name="blog_description" placeholder="Blog Description" ></textarea>
 
 							<hr />
 
