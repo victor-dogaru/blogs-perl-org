@@ -85,9 +85,11 @@
 								</td>
 
 								<td class="hidden-xs" width="11%">
+									[%IF post.status == 'published'%]
 									<a href="/post/[% post.slug %]">
 										<button class="btn btn-xs btn-success"><i class="icon-eye-open"></i> </button>
 									</a>
+									[%END%]
 									<a href="/[% role %]/posts/edit/[% post.slug %]">
 										<button class="btn btn-xs btn-warning"><i class="icon-pencil"></i> </button>
 									</a>
