@@ -1448,6 +1448,15 @@ span.header-badge {
 .users-filter #role_dropdown a.chosen-single span::first-letter {
 	text-transform: uppercase;
 }
+
+/*Users mobile version*/
+.users-list-mobile p{
+   margin-left: 10px;
+   font-weight: bold;
+}
+.users-list-mobile span{
+   font-weight: normal;
+}
 /*END - Users section*/
 textarea.form-control{
    resize: none;

@@ -3325,12 +3325,6 @@ input[readonly] {
    border-radius: 50%;
 }
 
-@media all and (max-width: 400px){
-   .blog-top-part .bubble .blog-image {
-      width: 70px;
-      height: 70px;
-   }
-}
 
 .error_ascii,
 .error_username,
@@ -3438,4 +3432,11 @@ input[readonly] {
 }
 .search-page .tabs .loading-posts {
    margin-bottom: 115px;
+}
+@media all and (max-width: 400px){
+   .blog-top-part .bubble .blog-image {
+      width: 70px;
+      height: 70px;
+      margin-left: 15px;
+   }
 }
