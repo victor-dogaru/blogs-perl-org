@@ -66,6 +66,7 @@
   #author-tab-content1 ul{
       list-style-type: none;
       padding-left: 0;
+      word-wrap: break-word;
   }
   #author-tab-content1 ul li{
       font-size: 17px;
@@ -148,8 +149,8 @@
 
 /*avatars to user profile*/
 .author-page .description .bubble img.user-image{
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
 }
 
@@ -188,13 +189,13 @@
 }
 @media screen and (min-width: 320px) and (max-width:480px){
     .author-description .author-info {
-        padding-left: 10%;
+        padding-left: 0;
     }
     #author-tab-content1 .info-entry p.uppercase{
         font-size: 18px;
     }
     .author-description .profile-description p{
-        font-size: 15px;
+        font-size: 12px;
     }
     .author-name a{
         font-size: 15px;
@@ -229,5 +230,11 @@
 @media screen and (min-width: 780px) and (max-width:980px){
     .author-description .author-info {
         padding-left: 5%;
+    }
+}
+@media screen and (min-width: 320px) and (max-width:480px){
+    .author-page .description .bubble img.user-image{
+        width: 70px;
+        height: 70px;
     }
 }
