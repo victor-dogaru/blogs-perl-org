@@ -13,10 +13,7 @@
 <div class="visible-xs">
     <ul class="pagination pull-right">
         <li [% ( previous_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% previous_link %]">&laquo;</a></li>
-
         <li class="active"><a href="/[% action_url %]/[% page %]">[% page %]</a></li>
-        <li><a href="/[% action_url %]/[% page + 1 %]">[% page + 1 %]</a></li>
-
         <li [% ( next_link == '#' ) ? 'class="disabled"' : '' %]><a href="[% next_link %]">&raquo;</a></li>
 
     </ul>
