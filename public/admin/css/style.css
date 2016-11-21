@@ -1491,6 +1491,9 @@ textarea.form-control{
    }
 
    /*blog page from admin*/
+   #new-blog-form label.col-xs-4.control-label{
+      padding-left: 5px;
+   }
    .page-title small{
       font-size: 15px;
       display: block;
