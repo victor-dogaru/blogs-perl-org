@@ -1727,7 +1727,7 @@ footer .fwidget #powered_by {
       margin: 10px auto !important;
       width: auto !important;
    }
-   .credentials label {
+   .credentials label:not(#already-connected) {
       display: inherit !important;
    }
    .credentials h2 {

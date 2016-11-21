@@ -103,9 +103,12 @@ span.fa{
 button[data-toggle="collapse"] {
   margin-top: 50px;
 }
-@media screen and (min-width: 320px) and (max-width:480px){
+@media screen and (max-width:480px){
     .myprofile-head h5{
         display: block;
+    }
+    .credentials label {
+        display: inline-block;
     }
 }
 
