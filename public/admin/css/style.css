@@ -1551,7 +1551,7 @@ textarea.form-control{
       display: none;
    }
    .new-category-mobile button{
-      width: 49%;
+      margin-left: 15px;
    }
 
    /*tag page admin*/
@@ -1559,7 +1559,7 @@ textarea.form-control{
       display: none;
    }
    .tag-page-admin button{
-      width: 49%;
+      margin-left: 15px;
    }
 
    /*settings general page admin*/
@@ -1567,7 +1567,7 @@ textarea.form-control{
       display: none;
    }
    .settings-page-admin button{
-      width: 49%;
+      margin-left: 15px;
    }
    
    /*notification page admin*/
