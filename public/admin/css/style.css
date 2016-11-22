@@ -1331,11 +1331,7 @@ footer .copy{
 }
 
 #invitation_modal .modal-dialog {
-  right: auto;
-  left: auto;
-  width: 600px;
-  padding-top: 30px;
-  padding-bottom: 30px;
+  padding-top: 110px;
 }
 #invitation_modal .modal-footer {
   margin-top: 30px;
