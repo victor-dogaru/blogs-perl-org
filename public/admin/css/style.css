@@ -1309,7 +1309,11 @@ footer .copy{
 #blog_select_chosen{
    margin-left: 0;
 }
-/*Manage tags style -Paul*/
+#new-post-form .buttons{
+   padding-bottom: 40px;
+}
+
+/*Manage tags style*/
 .manage-tags td.long-input {
 	word-break: break-all;
 /*	width: 15% !important;*/
@@ -1526,6 +1530,9 @@ textarea.form-control{
    }
    .awidget table b{
       font-weight: normal;
+   }
+   #new-post-form .buttons button{
+      font-size: 11px;
    }
 
    /*comments page admin*/
