@@ -14,7 +14,8 @@ use Try::Tiny;
 use Getopt::Long;
 
 my ( $in_driver,   $out_driver   ) = ( 'mysql', 'Pg' );
-my ( $in_database, $out_database ) = ( 'mt_blogs_perl_org', 'blogs_perl_org' );
+my ( $in_database, $out_database ) = ( 'mt_blogs_perl_org_20161129',
+				       'blogs_perl_org_20161129' );
 my ( $in_user,     $out_user     ) = ( 'root', 'jgoff' );
 my ( $in_password, $out_password ) = ( '', '' );
 my ( $dry_run                    ) = ( 0 );
@@ -191,6 +192,8 @@ sub map_blog {
     description  => decode_utf8( $blog->{blog_description} ),
     created_date => $blog->{blog_created_on},
     edited_date  => $blog->{blog_modified_on},
+    timezone     => 'Europe/Bucharest', # XXX Can't be derived from movabletype?
+    is_admin     => 0, # XXX Propagated from elsewhere?
   };
 }
 
@@ -213,16 +216,16 @@ LEFT JOIN mt_association a
 ORDER BY blog_id
 EOS
 
-  my @fields = qw( id name slug description created_date edited_date );
+  my @fields = qw( id name slug description created_date edited_date timezone );
   my $out_sth = $out_dbh->prepare( <<'EOS' );
-INSERT INTO blog(id,name,slug,description,created_date,edited_date)
-          VALUES(?,?,?,?,?,?)
+INSERT INTO blog(id,name,slug,description,created_date,edited_date,timezone)
+          VALUES(?,?,?,?,?,?,?)
 EOS
 
-  my @fields_owner = qw( id user_id );
+  my @fields_owner = qw( id user_id is_admin created_date );
   my $out_owner_sth = $out_dbh->prepare( <<'EOS' );
-INSERT INTO blog_owners(blog_id,user_id)
-          VALUES(?,?)
+INSERT INTO blog_owners(blog_id,user_id,is_admin,created_date)
+          VALUES(?,?,?,?)
 EOS
 
   $in_sth->execute;
@@ -456,6 +459,56 @@ EOS
   while ( my $in_category = $in_sth->fetchrow_hashref ) {
     print '.' if $count++ % 100 == 0;
 #    $tag->{$in_category->{tag_name}} = 1;
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub synthesize_blog_pages {
+  my ( $blog_page ) = @_;
+  print "synthesizing blog pages ";
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO blog_page( blog_id, page_id ) VALUES( ?, ? )
+EOS
+
+  my $count = 0;
+  for my $blog_id ( keys %blog_page ) {
+
+    unless ( $blog_page->{$blog_id} ) {
+      warn "*** Skipping blog ID $blog_id: no pages\n";
+      next;
+    }
+
+    for my $page_id ( @{ $blog_page->{$blog_id} } ) {
+      $out_sth->execute($blog_id, $page_id)
+        unless $dry_run;
+    }
+  }
+  print "\n";
+}
+
+###############################################################################
+
+sub synthesize_blog_posts {
+  my ( $blog_post ) = @_;
+  print "synthesizing blog posts ";
+  my $out_sth = $out_dbh->prepare( <<'EOS' );
+INSERT INTO blog_post( blog_id, post_id ) VALUES( ?, ? )
+EOS
+
+  my $count = 0;
+  for my $blog_id ( keys %blog_post ) {
+
+    unless ( $blog_post->{$blog_id} ) {
+      warn "*** Skipping blog ID $blog_id: no posts\n";
+      next;
+    }
+
+    for my $post_id ( @{ $blog_post->{$blog_id} } ) {
+      $out_sth->execute($blog_id, $post_id)
+        unless $dry_run;
+    }
   }
   print "\n";
 }
@@ -804,6 +857,8 @@ create_avatars;
 migrate_blogs( \%users );
 migrate_posts( \%tag, \%tag_split );
 migrate_pages( \%tag, \%tag_split );
+synthesize_blog_pages( \%blog_page );
+synthesize_blog_posts( \%blog_post );
 migrate_some_tags( \%tag );
 synthesize_tags( \%tag, \%tag_split );
 synthesize_post_tags( \%tag, \%tag_split );
