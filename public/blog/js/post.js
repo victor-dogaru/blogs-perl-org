@@ -13,8 +13,6 @@ $(document).ready(function(){
         //console.log(comment);
         //console.log(slug);
         if (isEmpty == "") {
-// e.preventDefault();
-// e.stopPropagation();
             return false;
         } else {
             $.ajax({

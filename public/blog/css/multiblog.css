@@ -26,7 +26,8 @@
     font-size: 15px;
 }
 #author-modal{
-    overflow: hidden;
+    overflow-y: auto!important;
+    
 }
 
 #author-modal .modal-body {
@@ -36,16 +37,16 @@
     /*height: 85%;*/
 }
 #author-modal .row{
-    margin-bottom: 35px;
+    margin-bottom: 10px;
 }
 #author-modal ul li a.author-info{
     text-transform: uppercase;
-    font-size: 18px;
+    font-size: 15px;
     color: #428bca;
 }
 #author-modal img.author-image{
-    width: 75px;
-    height: 75px;
+    width: 50px;
+    height: 50px;
     -webkit-border-radius: 50%;
     -moz-border-radius: 50%;
     border-radius: 50%;
@@ -57,7 +58,7 @@
     line-height: 25px;
 }
 #author-modal .link-for-author{
-    height: 40px;
+    /*height: 40px;*/
     line-height: 80px;
     text-align: center;
     text-transform: uppercase;
@@ -80,4 +81,20 @@ and (-webkit-min-device-pixel-ratio: 1) {
         font-size: 12px;
     }
 }
+
+@media all and (max-width: 480px){
+    #author-modal .link-for-author{
+        line-height: 15px;
+        font-size: 10px;
+        font-weight: normal;
+    }
+    #author-modal ul li a.author-info{
+        font-size: 12px;
+    }
+    #author-modal li.biography{
+        font-size: 10px;
+        line-height: 10px;
+    }
+}
+
 

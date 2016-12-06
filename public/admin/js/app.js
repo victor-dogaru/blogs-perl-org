@@ -61,7 +61,7 @@ $(document).ready(function() {
 			displayAlertMessage("Please fill in the required fields.", 'danger');
 		}
 	});
-//for safari display error on Create Post/ Admin => trash
+//Create Post/ Admin => trash
 	$('#new-post-form button[type=button]').click(function(e) {
 		e.preventDefault();
 		$('#new-post-form')[0].reset();
