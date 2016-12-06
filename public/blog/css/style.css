@@ -2766,6 +2766,9 @@ button#more-author-entries{
 .individual-post .post-content p{
    font-size: 18px;
 }
+.individual-post .post-content p img{
+   width: 100%!important;
+}
 .individual-post .post-heading h2 {
    font-family: 'Montserrat', 'Open Sans', sans-serif;
    font-size: 24px;
