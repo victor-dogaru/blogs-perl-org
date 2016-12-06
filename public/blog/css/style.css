@@ -3307,9 +3307,9 @@ input[readonly] {
 }
 
 @media all and (max-width: 380px) {
-   .modal-body .col-xs-6 {
-      width: 100%
-   }
+   /*.modal-body .col-xs-6 {*/
+      /*width: 100%*/
+   /*}*/
    .modal .modal-body .profile-pic .btn-file {
       display: block;
    }

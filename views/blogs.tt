@@ -50,14 +50,14 @@
                                                     <div class="modal-body">
                                                         [% FOREACH author in authors %]
                                                         <div class="row">
-                                                            <div class="col-sm-3">
+                                                            <div class="col-xs-3">
                                                                 [% IF author.avatar_path %]  
                                                                     <img class="author-image" src="[% author.avatar_path %]">
                                                                 [%ELSE %]
                                                                     <img class="author-image" src="/avatar/" />                                                      
                                                                 [%END%]
                                                             </div>
-                                                            <div class="col-sm-6">
+                                                            <div class="col-xs-6">
                                                                 <ul>
                                                                     <li>
                                                                         <a class="author-info" href="/profile/author/[% author.username %]">[% author.name %]</a>
@@ -65,7 +65,7 @@
                                                                     <li class="biography">[% author.biography %]</li>
                                                                 </ul>
                                                             </div>
-                                                            <div class="col-sm-3 link-for-author">
+                                                            <div class="col-xs-3 link-for-author">
                                                                 <a class="go-to-profile" href="/profile/author/[% author.username %]">go to profile</a>
                                                             </div>
                                                         </div>
