@@ -45,6 +45,12 @@ $(document).ready(function() {
 			displayAlertMessage("Please fill in all the required fields", 'danger');
 		}
 	});
+//	for safari remove error, when is pressed CANCEL => Create Blog/Admin
+	$('#reset-new-blog').click(function(){
+		$('#new-blog-form')[0].reset();
+		$('#new-blog-form .chosen-select').trigger("chosen:updated");
+		$(".alert-message").remove();
+	});
 
 //for safari display error on Create Post/Admin => submit
 	$('#new-post-form button[type=submit]').click(function(e) {
@@ -66,6 +72,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		$('#new-post-form')[0].reset();
 		CKEDITOR.instances.post.setData('');
+		$(".select2-search-choice").remove();
 	});
 
 
@@ -83,10 +90,7 @@ $(document).ready(function() {
 		});
 
 	});
-	$('#reset-new-blog').click(function(){
-		$('#new-blog-form')[0].reset();
-		$('#new-blog-form .chosen-select').trigger("chosen:updated");
-	});
+
 
 //	for safari Users Page/Admin =>add email-user =>cancel
 	$('#new-user-email button[type=button]').click(function(e) {
