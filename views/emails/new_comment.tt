@@ -113,7 +113,7 @@
 														</tr>
 														<tr>
 															<td valign="top" width="720" style="padding-top:0px;">
-[% author_redirect = '/author/comments/page/1' %]
+[% author_redirect = '/author/comments/blog/all/all/page/1' %]
 																<a href="[% app_url %]/login?redirect=[% author_redirect | uri %]">
 																	<button style="background-color:#152F4A; color:#43C8E7; padding:15px 25px; border:0;border-radius:5px; margin-left:10px; font-size: 15px; text-transform:uppercase; font-weight:bold; cursor:pointer;">View comment</button>
 																</a>
