@@ -1,6 +1,5 @@
 $(document).on('focus', 'input, textarea', function() {
     $('div[data-role="header"]').css('position', 'absolute');
-    $.mobile.silentScroll($('input:focus').offset().top - 100);
 });
 $(document).on('blur', 'input, textarea', function() {
     $('div[data-role="header"]').css('position', 'fixed');
@@ -49,7 +48,7 @@ $(document).ready(function() {
 	$('#reset-new-blog').click(function(){
 		$('#new-blog-form')[0].reset();
 		$('#new-blog-form .chosen-select').trigger("chosen:updated");
-		$(".alert-message").remove();
+		$('.alert-message').hide();
 	});
 
 //for safari display error on Create Post/Admin => submit
