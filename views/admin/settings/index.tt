@@ -28,7 +28,9 @@
 
 									[% FOREACH blog IN blogs %]
 									[% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
-									<option value="[% blog.name %]" data-slug="[%blog.slug%]"> [% blog.name %] </option>
+									<option value="[% blog.name %]" data-slug="[%blog.slug%]" [% IF blog.slug == selected_blog.slug %] selected [% END %]>
+										[% blog.name %]
+									</option>
 									[% END %]
 								</select>
 							</div>
