@@ -246,7 +246,7 @@ Index of settings page
 
 =cut
 
-get '/author/settings' => sub {
+get '/author/settings/blogname/:blogname' => sub {
 
   my $settings  = resultset('Setting')->first;
   my @timezones = DateTime::TimeZone->all_names;
@@ -258,12 +258,17 @@ get '/author/settings' => sub {
   }
   @blogs = map { $_->as_hashref } @blogs;
 
+  my $blog = resultset('Blog')-> find({
+  name => params->{blogname}
+  });
+
   template 'admin/settings/index.tt', 
     { 
       setting   => $settings,
       blogs     => \@blogs,
       timezones => \@timezones,
-      blogs     => \@blogs
+      blogs     => \@blogs,
+      selected_blog => $blog
     }, 
     { layout => 'admin' };
 };
