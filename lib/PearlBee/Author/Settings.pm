@@ -198,7 +198,7 @@ post '/blog/profile' => sub {
       timezones => \@timezones,
       blogs     => \@blogs,
       selected_blog => $blog,
-      warning   => "The blog name must not exceed 40 characters"
+      warning   => "The blog name must not exceed 30 characters"
       },
       { layout => 'admin' };
     }
