@@ -21,7 +21,7 @@
 						<div class="form-group choose-blog">
 							<label class="col-lg-2 control-label">Blog*</label>
 							<div class="options-drop col-lg-10">
-								<select id="blog_for_users" name="blog_name" class="chosen-select">
+								<select id="blog_for_users" name="blog_name" class="chosen-select" required>
 									<option value="" id="selected"> </option>
 									[% FOREACH blog IN blogs %] [% SET role = ( session.user.is_admin ) ? "admin" : "author" %]
 									<option [% selected %] value="[% blog.name %]"> [% blog.name %] </option>
