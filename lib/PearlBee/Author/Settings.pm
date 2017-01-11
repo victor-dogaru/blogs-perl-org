@@ -17,7 +17,7 @@ post '/blog/profile' => sub {
   my @blogs; 
   my $params      = body_parameters;
   my $res_user    = resultset('Users')->find_by_session(session);
-  my @blog_owners = resultset('BlogOwner')->search({user_id => $res_user->id});
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $res_user->id, is_admin => '1'});
   
   unless ( $res_user and $res_user->can_do( 'update blog' ) ) {
     return template 'author/settings', {

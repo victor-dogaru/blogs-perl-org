@@ -97,6 +97,7 @@ $(document).ready(function() {
 		$("#new-user-email")[0].reset();
 		$("#blog_for_users").trigger("chosen:updated");
 	});
+
 //	for safari Users Page/Admin =>add email-user =>submit
 	$('#new-user-email button[type=submit]').click(function(e) {
 		e.preventDefault();
@@ -112,7 +113,7 @@ $(document).ready(function() {
 			displayAlertMessage("Please fill in the required fields.", 'danger');
 		}
 	});
-//	for safari Users Page/Admin =>add email-user =>remove fields, when cancel
+//	Users Page/Admin =>add email-user =>remove fields, when cancel
 	$('#reset-user-email').click(function(){
 		$('#new-user-email')[0].reset();
 	});
