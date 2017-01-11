@@ -79,7 +79,7 @@ post '/blog/profile' => sub {
       }
 
       if ($params->{'social_media'} eq 'on'){
-            
+
           $new_columns->{'social_media'} = 1;
       }
       else{
@@ -124,6 +124,7 @@ post '/blog/profile' => sub {
           {
           timezones => \@timezones,
           blogs     => \@blogs,
+          selected_blog => $blog,
           success   => "Everything was successfully updated."
           },
           { layout  => 'admin' };
@@ -142,6 +143,7 @@ post '/blog/profile' => sub {
           {
           timezones => \@timezones,
           blogs     => \@blogs,
+          selected_blog => $blog,
           warning   => "Some fields were updated, but ". join( "\n", @message ) 
           },
           { layout  => 'admin' };
@@ -161,6 +163,7 @@ post '/blog/profile' => sub {
         {
         timezones => \@timezones,
         blogs     => \@blogs,
+        selected_blog => $blog,
         warning   => "No fields changed"
         },
         { layout  => 'admin' };   
@@ -178,6 +181,7 @@ post '/blog/profile' => sub {
       {
       timezones => \@timezones,
       blogs     => \@blogs,
+      selected_blog => $blog,
       warning   => "Special characters (like the pound sign)  are not allowed."
       },
       { layout => 'admin' };
@@ -193,6 +197,7 @@ post '/blog/profile' => sub {
       {
       timezones => \@timezones,
       blogs     => \@blogs,
+      selected_blog => $blog,
       warning   => "The blog name must not exceed 40 characters"
       },
       { layout => 'admin' };
@@ -210,6 +215,7 @@ post '/blog/profile' => sub {
       {
       timezones => \@timezones,
       blogs     => \@blogs,
+      selected_blog => $blog,
       warning   => "You are not an admin on that blog"
       },
       { layout => 'admin' };
@@ -252,7 +258,7 @@ get '/author/settings/blogname/:blogname' => sub {
   my @timezones = DateTime::TimeZone->all_names;
   my $user_obj  = resultset('Users')->find_by_session(session);
   my @blogs;
-  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id});
+  my @blog_owners = resultset('BlogOwner')->search({user_id => $user_obj->id, is_admin => '1' });
   for my $blog_owner (@blog_owners){
     push @blogs, resultset('Blog')->search({ id => $blog_owner->get_column('blog_id')});
   }
@@ -265,11 +271,10 @@ get '/author/settings/blogname/:blogname' => sub {
   template 'admin/settings/index.tt', 
     { 
       setting   => $settings,
-      blogs     => \@blogs,
       timezones => \@timezones,
       blogs     => \@blogs,
       selected_blog => $blog
-    }, 
+    },
     { layout => 'admin' };
 };
 

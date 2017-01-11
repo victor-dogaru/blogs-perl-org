@@ -62,8 +62,11 @@
                     </a>
                     <!-- Sub menu -->
                     <ul>
-                       <li><a href="/[% role %]/settings">General</a></li>
-<!--                       <li><a href="/[% role %]/settings/import">Import</a></li>-->
+                        [%IF role == 'admin'%]
+                        <li><a href="/admin/settings">General</a></li>
+                        [%ELSE%]
+                       <li><a href="/blog/profile">General</a></li>
+                        [%END%]
                     </ul>
                 </li>
                 <li><a href="/notification"><i class="icon-list"></i> Notifications</a></li>
