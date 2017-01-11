@@ -1,5 +1,5 @@
 <!--modal for confirmation popup-->
-<div id="alerts-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+<div id="alerts-modal" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false" style="top: 10%;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
