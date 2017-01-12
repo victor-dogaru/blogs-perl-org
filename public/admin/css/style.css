@@ -1207,6 +1207,9 @@ footer .copy{
 .table.table-striped.table-bordered td {
   vertical-align: middle;
 }
+.table.table-striped.table-bordered td.slug {
+   word-break: break-all;
+}
 
 #cover.form-control {
   height: auto !important;
