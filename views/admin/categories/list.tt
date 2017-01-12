@@ -129,7 +129,7 @@
 
 						<tr>
 							<td> [% category.name %] </td>
-							<td> [% category.slug %] </td>
+							<td class="slug"> [% category.slug %] </td>
 							<td> [% category.user.name %] </td>
 							<td> [% IF category.blog_role == 0 %]
 								 author 
