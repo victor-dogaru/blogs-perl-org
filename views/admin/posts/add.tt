@@ -45,7 +45,7 @@
                     </div>
 
                     <div class="awidget-body">
-                        <input class="form-control" required maxlength="180" id="title" name="title" type="text" placeholder="Title">
+                        <input class="form-control" required  maxlength="50" size="20" id="title" name="title" type="text" placeholder="Title">
                         <br />
                         <input class="form-control" required id="slug" name="slug" type="text" placeholder="Slug">
                         <br />
